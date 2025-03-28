@@ -1,0 +1,19 @@
+{
+    "titulo": "App de Oficios",
+    "registrarse": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "nombre": "Nombre completo",
+    "iniciar_sesion": "Iniciar sesión",
+    "error_usuario_password": "Usuario o contraseña incorrectos",
+    "error_inicio_sesion_google": "Error al iniciar sesión con Google",
+    "error_inicio_sesion_facebook": "Error al iniciar sesión con Google",
+    "ingresar": "Ingresar",
+    "ingresar_con_google": "Ingresar con Google",
+    "ingresar_con_facebook": "Ingresar con Facebook",
+
+    "bienvenido": "Bienvenido",
+    "salir": "Salir",
+    "error_zonas_oficios": "Zonas y Oficios son obligatorios para el perfil profesional"
+  }
+  

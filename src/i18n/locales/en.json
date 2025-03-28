@@ -1,0 +1,15 @@
+{
+    "titulo": "Trades App",
+    "registrarse": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "nombre": "Full name",
+    "iniciar_sesion": "Log in",
+    "error_usuario_password": "Incorrect email or password",
+    "error_inicio_sesion_google": "Error logging in with Google",
+    "error_inicio_sesion_facebook": "Error logging in with Facebook",
+    "ingresar": "Enter",
+    "ingresar_con_google": "Log in with Google",
+    "ingresar_con_facebook": "Log in with Facebook"
+}
+  
