@@ -14,6 +14,42 @@
 
     "bienvenido": "Bienvenido",
     "salir": "Salir",
-    "error_zonas_oficios": "Zonas y Oficios son obligatorios para el perfil profesional"
+    "error_zonas_oficios": "Zonas y Oficios son obligatorios para el perfil profesional",
+    "landing_titulo": "Tu arreglo en un click",
+    "necesitas_arreglo": "¿Necesitas un arreglo?",
+    "contactas_profesional": "Contacta a un profesional",
+    "calificas_servicio": "Califica el servicio",
+    "registrate_y_arregla": "Regístrate y comenzá tus arreglos",
+    "iniciar_sesion_con": "Iniciar sesión con",
+    "o_ingresar_con_credenciales": "o ingresar con tus credenciales",
+    "recordarme": "Recordarme",
+
+    "registrarse_con": "Registrarse con",
+    "registrarse_con_credenciales": "O registrate con tus credenciales",
+    "nombre": "Nombre completo",
+    "email": "Email",
+    "password": "Contraseña",
+    "tipo_usuario": "Tipo de usuario",
+    "cliente": "Cliente",
+    "profesional": "Profesional",
+    "zonas": "Zonas donde trabaja",
+    "oficios": "Oficios",
+    "crear_cuenta": "Crear cuenta",
+    "error_zonas_oficios": "Debes seleccionar al menos una zona y un oficio",
+    "cerrar_sesion": "Cerrar sesión",
+    "actualizar_perfil": "Actualizar perfil",
+    "completar_perfil": "Completar perfil",
+    "guardar_perfil": "Guardar perfil",
+    "completar_datos_para_continuar": "Necesitamos tus datos para completar el perfil",
+    "perfil":"Perfil",
+    "actualiza_tu_informacion":"Actualiza tu información",
+    "perfil_actualizado_exito":"Perfil actualizado con éxito",
+    "idioma": "Idioma",	
+    "espanol": "Español",
+    "ingles": "Inglés",
+    "buscar_profesionales": "Buscar ayuda",
+    "elige_zonas_y_oficios": "Elige zonas y oficios",
+    "buscar": "Buscar"
+
   }
   

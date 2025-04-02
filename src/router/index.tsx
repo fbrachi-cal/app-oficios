@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import Login from "../views/Login";
 import Registro from "../views/Registro";
-import Home from "../views/Home";
+import Landing from "../views/Landing";
 
 export const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
-  { path: "/login", element: <Login /> },
-  { path: "/registro", element: <Registro /> }
+  { path: "/", element: <Landing /> },
+  { path: "/auth/login", element: <Login /> },
+  { path: "/auth/registro", element: <Registro /> }
 ]);

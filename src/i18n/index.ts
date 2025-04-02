@@ -5,10 +5,13 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import es from './locales/es.json';
 import en from './locales/en.json';
 
+const savedLanguage = localStorage.getItem("idioma") || "es"; // o "en"
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    lng: savedLanguage,
     resources: {
       es: { translation: es },
       en: { translation: en },
