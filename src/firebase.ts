@@ -15,5 +15,8 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+// 👇 HACK: Solo para testing (¡no subir a producción!)
+(auth as any).settings.appVerificationDisabledForTesting = true;
+
 export const storage = getStorage(app); 
 

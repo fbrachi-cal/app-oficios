@@ -9,6 +9,8 @@ import './index.css';
 import './tailwind.css';
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
+import { LoadingProvider } from "./context/LoadingContext";
+import { ChatProvider } from "./context/ChatContext";
 
 
 
@@ -18,7 +20,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <BrowserRouter>
         <AuthProvider>
           <UserProvider>
-            <App />
+            <LoadingProvider>
+              <ChatProvider>
+                <App />
+              </ChatProvider>
+            </LoadingProvider>
           </UserProvider>
         </AuthProvider>
       </BrowserRouter>

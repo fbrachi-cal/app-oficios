@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import config from "../../config";
@@ -12,6 +12,8 @@ import { auth } from "../../firebase";
 import facebookIcon from "../../assets/img/facebook.svg";
 import googleIcon from "../../assets/img/google.svg";
 import { useUser } from "../../context/UserContext";
+import { useLoading } from "../../context/LoadingContext";
+import { JSX } from "react/jsx-runtime";
 
 
 
@@ -24,10 +26,12 @@ const Login = (): JSX.Element => {
   const [error, setError] = useState("");
   const { refrescarUsuario } = useUser();
 
+  const { setLoading } = useLoading();
 
 
   const handleLogin = async (e: React.FormEvent) => {
-    console.log("HANDLE LOGIN!");
+    console.log("HANDLE LOGIN LOADING true!");
+    setLoading(true);
     e.preventDefault();
     setError("");
   
@@ -62,12 +66,17 @@ const Login = (): JSX.Element => {
     } catch (err) {
       console.error(err);
       setError(t("error_usuario_password"));
+    }finally{ 
+      console.log("HANDLE LOGIN LOADING false!");
+      setLoading(false);
     }
   };
   
 
   const handleSocialLogin = async (providerInstance: any) => {
     try {
+      console.log("SET LOADING A TRUE");
+      setLoading(true);
       console.log("🚀 Antes del popup");
       const result = await signInWithPopup(auth, providerInstance);
       console.log("✅ Después del popup"); // <-- este no va a aparecer si el componente se desmonta
@@ -103,6 +112,10 @@ const Login = (): JSX.Element => {
     } catch (err) {
       console.error(err);
       setError(t("error_inicio_sesion"));
+    }finally{
+      console.log("SET LOADING A FALSE");
+      setTimeout(() => setLoading(false), 500); // 500 ms de delay      
+      //setLoading(true);
     }
   };
 
@@ -201,6 +214,10 @@ const Login = (): JSX.Element => {
                     >
                       {t("ingresar")}
                     </button>
+                    <button onClick={() => {
+  setLoading(true);
+  setTimeout(() => setLoading(false), 9000);
+}}>Ver Loading</button>
                   </div>
                 </form>
               </div>

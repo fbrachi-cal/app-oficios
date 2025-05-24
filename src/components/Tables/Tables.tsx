@@ -1,5 +1,5 @@
 import React from "react";
-import CardTable from "../components/Cards/CardTable"; // corregí el path si es necesario
+import CardTable from "../../components/Cards/CardTable"; // corregí el path si es necesario
 
 const Tables: React.FC = () => {
   return (

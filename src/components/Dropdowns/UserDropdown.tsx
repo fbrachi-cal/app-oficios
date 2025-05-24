@@ -6,9 +6,13 @@ import { createPopper } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import i18n from "../../i18n";
+import default_avatar from "../../assets/img/default_avatar.png";
 
+interface UserDropdownProps {
+    usuario: any; // Reemplazá `any` por un tipo más específico si lo tenés
+}
 
-const UserDropdown: React.FC = () => {
+const UserDropdown: React.FC<UserDropdownProps> = ({usuario}) => {    
     const { t } = useTranslation();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -21,7 +25,7 @@ const UserDropdown: React.FC = () => {
 
     const irAlPerfil = () => {
         setOpen(false);
-        navigate("/auth/perfil");
+        navigate("/auth/actualizar-perfil");
     };
 
     const openDropdown = () => {
@@ -71,7 +75,7 @@ const UserDropdown: React.FC = () => {
                         <img
                             alt="Avatar"
                             className="w-full rounded-full align-middle border-none shadow-lg"
-                            src={user.foto || "/default-avatar.png"}
+                            src={user.foto || default_avatar}
                         />
                     </span>
                 </div>

@@ -2,21 +2,19 @@ const plugin = require("tailwindcss/plugin");
 const colors = require("tailwindcss/colors");
 
 module.exports = {
-  purge: {
-    enabled: true,
-    content: [
+  content: {
+    files: [
       "./public/**/*.html",
-      "./public/*.html",
-      "./src/**/*.js",
-      "./src/*.js",
-      "./src/**/*.html",
-      "./src/*.html",
-      "./public/**/*.js",
-      "./public/*.js",
+      "./src/**/*.{js,jsx,ts,tsx}",
     ],
-    options: {
-      safelist: [],
-    },
+    safelist: [
+      'hidden',
+      'block',
+      'flex',
+      'lg:hidden',
+      'lg:block',
+      'lg:flex',
+    ],
   },
   theme: {
     colors: {
@@ -81,20 +79,13 @@ module.exports = {
       },
     },
   },
-  variants: [
-    "responsive",
-    "group-hover",
-    "focus-within",
-    "first",
-    "last",
-    "odd",
-    "even",
-    "hover",
-    "focus",
-    "active",
-    "visited",
-    "disabled",
-  ],
+  variants: {
+    extend: {
+      display: ['responsive'],
+      visibility: ['responsive'],
+      opacity: ['responsive'],
+    },
+  },
   plugins: [
     require("@tailwindcss/forms"),
     plugin(function ({ addComponents, theme }) {

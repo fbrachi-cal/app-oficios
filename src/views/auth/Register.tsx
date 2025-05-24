@@ -7,13 +7,14 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
 } from "firebase/auth";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { auth } from "../../firebase";
 import config from "../../config";
 
 import facebookIcon from "../../assets/img/facebook.svg";
 import googleIcon from "../../assets/img/google.svg";
-import { subirImagenPerfil } from "../../utils/subirImagenPerfil"; 
+import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
+import { useAuth } from "../../context/AuthContext";
+import { JSX } from "react/jsx-runtime";
 
 
 
@@ -27,23 +28,23 @@ const Register = (): JSX.Element => {
   const [password, setPassword] = useState("");
   const [tipo, setTipo] = useState<"cliente" | "profesional">("cliente");
   const [zonas, setZonas] = useState<string[]>([]);
-  const [oficios, setOficios] = useState<string[]>([]);
+  const [subcategoriasSeleccionadas, setSubcategoriasSeleccionadas] = useState<string[]>([]);
+  const [categorias, setCategorias] = useState<any[]>([]);
+  const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<{ nombre: string, orden: number }[]>([]);
   const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
-  const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [descripcion, setDescripcion] = useState<string>("");
+  const [disponibilidad, setDisponibilidad] = useState<string>("");
+  const { setUsuario } = useAuth();
 
+  useEffect(() => {
+    auth.signOut().then(() => {
+      console.log("Sesión cerrada");
+    });
+  }, []);
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       navigate("/home", { replace: true }); // o a "/admin/dashboard"
-  //     }
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [navigate]);
 
   useEffect(() => {
     return () => {
@@ -52,16 +53,31 @@ const Register = (): JSX.Element => {
       }
     };
   }, [preview]);
-  
+
 
   useEffect(() => {
     fetch(`${config.apiBaseUrl}/utils/zonas`)
       .then((res) => res.json())
       .then(setZonasDisponibles);
 
-    fetch(`${config.apiBaseUrl}/utils/oficios`)
+    fetch(`${config.apiBaseUrl}/utils/categorias`)
       .then((res) => res.json())
-      .then(setOficiosDisponibles);
+      .then(setCategorias);
+  }, []);
+
+  useEffect(() => {
+    fetch(`${config.apiBaseUrl}/utils/categorias`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCategorias(data);
+        const todas = data.flatMap((cat: any) =>
+          cat.subcategorias.map((sub: any) => ({
+            nombre: sub.nombre,
+            categoria: cat.nombre,
+          }))
+        );
+        setSubcategoriasDisponibles(todas);
+      });
   }, []);
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,6 +97,7 @@ const Register = (): JSX.Element => {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
       const user = cred.user;
+      setUsuario?.(user);
       const token = await user.getIdToken();
 
       // ⬆️ Subir foto si hay
@@ -93,15 +110,17 @@ const Register = (): JSX.Element => {
         id: user.uid,
         nombre,
         tipo,
-        foto: fotoPerfil
+        foto: fotoPerfil,
+        descripcion,
+        disponibilidad,
       };
 
       if (tipo === "profesional") {
-        if (zonas.length === 0 || oficios.length === 0) {
-          throw new Error(t("error_zonas_oficios"));
+        if (zonas.length === 0 || subcategoriasSeleccionadas.length === 0) {
+          throw new Error(t("error_zonas_subcategorias"));
         }
         payload.zonas = zonas;
-        payload.oficios = oficios;
+        payload.subcategorias = subcategoriasSeleccionadas;
       }
 
       const res = await fetch(`${config.apiBaseUrl}/usuarios/`, {
@@ -116,6 +135,8 @@ const Register = (): JSX.Element => {
       if (!res.ok) throw new Error("Error al guardar en backend");
 
       navigate("/");
+      navigate(0);
+
     } catch (err: any) {
       console.error(err);
       setError("Error al registrar: " + err.message);
@@ -234,10 +255,10 @@ const Register = (): JSX.Element => {
                   {/* Vista previa */}
                   {preview && (
                     <img
-                    src={preview}
-                    alt="Preview"
-                    className="mb-3 rounded-full shadow-md w-20 h-20 object-cover mx-auto"
-                  />
+                      src={preview}
+                      alt="Preview"
+                      className="mb-3 rounded-full shadow-md w-20 h-20 object-cover mx-auto"
+                    />
                   )}
                   <input
                     id="foto"
@@ -307,25 +328,50 @@ const Register = (): JSX.Element => {
                       ))}
                     </select>
 
-                    <label className="block mb-1 font-medium">{t("oficios")}</label>
-                    <select
-                      multiple
-                      className="w-full mb-4 p-2 border rounded"
-                      onChange={(e) =>
-                        setOficios(
-                          Array.from(
-                            e.target.selectedOptions,
-                            (option) => option.value
-                          )
-                        )
+                    <label className="block mb-1 font-medium">{t("categoria")}</label>
+                    <select multiple
+                      className="w-full mb-3 p-2 border rounded"
+                      value={subcategoriasSeleccionadas}
+                      onChange={e =>
+                        setSubcategoriasSeleccionadas(Array.from(e.target.selectedOptions, o => o.value))
                       }
                     >
-                      {oficiosDisponibles.map((o) => (
-                        <option key={o} value={o}>
-                          {o}
-                        </option>
+                      {categorias.map((cat) => (
+                        <optgroup key={cat.id} label={cat.nombre}>
+                          {cat.subcategorias.map((sc: { nombre: string }) => (
+                            <option key={`${cat.nombre}-${sc.nombre}`} value={sc.nombre}>
+                              {sc.nombre}
+                            </option>
+                          ))}
+                        </optgroup>
                       ))}
                     </select>
+
+
+
+                    <div className="relative w-full mb-3">
+                      <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        {t("descripcion")}
+                      </label>
+                      <textarea
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      />
+                    </div>
+
+                    <div className="relative w-full mb-3">
+                      <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        {t("disponibilidad")}
+                      </label>
+                      <input
+                        type="text"
+                        value={disponibilidad}
+                        onChange={(e) => setDisponibilidad(e.target.value)}
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      />
+                    </div>
+
                   </>
                 )}
 

@@ -4,22 +4,33 @@ import { useUser } from "../../context/UserContext";
 import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
 import config from "../../config";
 import { auth } from "../../firebase";
+import { JSX } from "react/jsx-runtime";
+import default_avatar from "../../assets/img/default_avatar.png";
+import { useNavigate } from "react-router-dom";
 
-const Perfil = (): JSX.Element => {
+
+const UpdateProfile = (): JSX.Element => {
   const { t } = useTranslation();
   const { user, refrescarUsuario } = useUser();
+  const navigate = useNavigate();
+
 
   const [foto, setFoto] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(user?.foto || null);
+  const [preview, setPreview] = useState<string | null>(user?.foto || default_avatar);
   const [mensajeExito, setMensajeExito] = useState("");
 
   const [nombre, setNombre] = useState(user?.nombre || "");
-  const [tipo, setTipo] = useState<"cliente" | "profesional">(user?.tipo || "cliente");
+  const [tipo] = useState<"cliente" | "profesional">(user?.tipo as "cliente" | "profesional");
   const [zonas, setZonas] = useState<string[]>(user?.zonas || []);
-  const [oficios, setOficios] = useState<string[]>(user?.oficios || []);
+  const [subcategoriasSeleccionadas, setSubcategoriasSeleccionadas] = useState<string[]>([]);
+  const [categorias, setCategorias] = useState<any[]>([]);
+  const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<{ nombre: string, orden: number }[]>([]);
   const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
   const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const [descripcion, setDescripcion] = useState<string>(user?.descripcion || "");
+  const [disponibilidad, setDisponibilidad] = useState<string>(user?.disponibilidad || "");
+
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,10 +51,31 @@ const Perfil = (): JSX.Element => {
       .then((res) => res.json())
       .then(setZonasDisponibles);
 
-    fetch(`${config.apiBaseUrl}/utils/oficios`)
+    fetch(`${config.apiBaseUrl}/utils/categorias`)
       .then((res) => res.json())
-      .then(setOficiosDisponibles);
+      .then(setCategorias);
   }, []);
+
+  useEffect(() => {
+    fetch(`${config.apiBaseUrl}/utils/categorias`)
+      .then((res) => res.json())
+      .then((data) => {
+        setCategorias(data);
+        const todas = data.flatMap((cat: any) =>
+          cat.subcategorias.map((sub: any) => ({
+            nombre: sub.nombre,
+            categoria: cat.nombre,
+          }))
+        );
+        setSubcategoriasDisponibles(todas);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (mensajeExito || error) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [mensajeExito, error]);
 
   const handleActualizarPerfil = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,14 +93,16 @@ const Perfil = (): JSX.Element => {
         nombre,
         tipo,
         foto: fotoURL,
+        descripcion,
+        disponibilidad,
       };
 
       if (tipo === "profesional") {
-        if (zonas.length === 0 || oficios.length === 0) {
-          throw new Error(t("error_zonas_oficios"));
+        if (zonas.length === 0 || subcategoriasSeleccionadas.length === 0) {
+          throw new Error(t("error_zonas_subcategorias"));
         }
         payload.zonas = zonas;
-        payload.oficios = oficios;
+        payload.subcategorias = subcategoriasSeleccionadas;
       }
 
       const token = await auth.currentUser?.getIdToken();
@@ -189,37 +223,66 @@ const Perfil = (): JSX.Element => {
                       ))}
                     </select>
 
-                    <label className="block mb-1 font-medium">{t("oficios")}</label>
-                    <select
-                      multiple
-                      className="w-full mb-4 p-2 border rounded"
-                      value={oficios}
-                      onChange={(e) =>
-                        setOficios(
-                          Array.from(
-                            e.target.selectedOptions,
-                            (option) => option.value
-                          )
-                        )
+                    <label className="block mb-1 font-medium">{t("categoria")}</label>
+                    <select multiple
+                      className="w-full mb-3 p-2 border rounded"
+                      value={subcategoriasSeleccionadas}
+                      onChange={e =>
+                        setSubcategoriasSeleccionadas(Array.from(e.target.selectedOptions, o => o.value))
                       }
                     >
-                      {oficiosDisponibles.map((o) => (
-                        <option key={o} value={o}>
-                          {o}
-                        </option>
+                      {categorias.map((cat) => (
+                        <optgroup key={cat.id} label={cat.nombre}>
+                          {cat.subcategorias.map((sc: { nombre: string }) => (
+                            <option key={`${cat.nombre}-${sc.nombre}`} value={sc.nombre}>
+                              {sc.nombre}
+                            </option>
+                          ))}
+                        </optgroup>
                       ))}
                     </select>
+                    <div className="relative w-full mb-3">
+                      <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        {t("descripcion")}
+                      </label>
+                      <textarea
+                        value={descripcion}
+                        onChange={(e) => setDescripcion(e.target.value)}
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      />
+                    </div>
+
+                    <div className="relative w-full mb-3">
+                      <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        {t("disponibilidad")}
+                      </label>
+                      <input
+                        type="text"
+                        value={disponibilidad}
+                        onChange={(e) => setDisponibilidad(e.target.value)}
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      />
+                    </div>
                   </>
                 )}
 
-                <div className="text-center mt-6">
-                  <button
-                    type="submit"
-                    className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                  >
-                    {t("guardar_perfil")}
-                  </button>
-                </div>
+<div className="flex justify-between gap-4 mt-6">
+  <button
+    type="button"
+    onClick={() => navigate(-1)} // ← esto te lleva a la página anterior
+    className="bg-gray-300 text-gray-800 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-md w-1/2 transition-all duration-150"
+  >
+    {t("volver")}
+  </button>
+
+  <button
+    type="submit"
+    className="bg-blueGray-800 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg w-1/2 transition-all duration-150"
+  >
+    {t("guardar_perfil")}
+  </button>
+</div>
+
               </form>
             </div>
           </div>
@@ -229,4 +292,4 @@ const Perfil = (): JSX.Element => {
   );
 };
 
-export default Perfil;
+export default UpdateProfile;

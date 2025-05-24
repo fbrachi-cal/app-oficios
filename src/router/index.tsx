@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../views/Login";
-import Registro from "../views/Registro";
+import Login from "../views/auth/Login";
+import Registro from "../views/auth/Register";
 import Landing from "../views/Landing";
 
 export const router = createBrowserRouter([

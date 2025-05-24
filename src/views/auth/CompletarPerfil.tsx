@@ -2,31 +2,36 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { auth } from "../../firebase";
+import VerificacionTelefono from "../../components/Screens/VerificacionTelefono";
+
+
 import config from "../../config";
 import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
 import { useUser } from "../../context/UserContext";
-
+import { JSX } from "react/jsx-runtime";
 
 
 const CompletarPerfil = (): JSX.Element => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
   const { refrescarUsuario } = useUser();
 
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-
   const [nombre, setNombre] = useState("");
   const [tipo, setTipo] = useState<"cliente" | "profesional">("cliente");
   const [zonas, setZonas] = useState<string[]>([]);
   const [oficios, setOficios] = useState<string[]>([]);
+  
   const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
   const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
   const [error, setError] = useState("");
 
   const [uid, setUid] = useState("");
   const [token, setToken] = useState("");
+
+  const [telefonoValidado, setTelefonoValidado] = useState("");
+
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -63,21 +68,22 @@ const CompletarPerfil = (): JSX.Element => {
       .then(setOficiosDisponibles);
   }, [navigate]);
 
+  
   const handleGuardarPerfil = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     let fotoURL = auth.currentUser?.photoURL || "";
 
     if (foto) {
-        fotoURL = await subirImagenPerfil(foto, uid);
+      fotoURL = await subirImagenPerfil(foto, uid);
     }
-
 
     try {
       const payload: any = {
         id: uid,
         nombre,
         tipo,
+        telefono: telefonoValidado,
         foto: fotoURL
       };
 
@@ -129,60 +135,28 @@ const CompletarPerfil = (): JSX.Element => {
               )}
               <form onSubmit={handleGuardarPerfil}>
                 <div className="relative w-full mb-3">
-                  <label
-                    htmlFor="nombre"
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                  >
+                  <label htmlFor="nombre" className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                     {t("nombre")}
                   </label>
-                  <input
-                    id="nombre"
-                    type="text"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder={t("nombre")}
-                  />
+                  <input id="nombre" type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" placeholder={t("nombre")} />
                 </div>
+
+                <VerificacionTelefono
+                    t={t}
+                    onVerified={(telefono:string) => setTelefonoValidado(telefono)}
+                    />
+
                 <div className="relative w-full mb-3">
-                  <label
-                    htmlFor="foto"
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                  >
-                    Foto de perfil
-                  </label>
-                  {/* Vista previa */}
-                  {preview && (
-                    <img
-                    src={preview}
-                    alt="Preview"
-                    className="mb-3 rounded-full shadow-md w-20 h-20 object-cover mx-auto"
-                  />
-                  )}
-                  <input
-                    id="foto"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFotoChange}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  />
+                  <label htmlFor="foto" className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Foto de perfil</label>
+                  {preview && (<img src={preview} alt="Preview" className="mb-3 rounded-full shadow-md w-20 h-20 object-cover mx-auto" />)}
+                  <input id="foto" type="file" accept="image/*" onChange={handleFotoChange} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full" />
                 </div>
 
                 <div className="relative w-full mb-3">
-                  <label
-                    htmlFor="tipo"
-                    className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                  >
+                  <label htmlFor="tipo" className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                     {t("tipo_usuario")}
                   </label>
-                  <select
-                    id="tipo"
-                    value={tipo}
-                    onChange={(e) =>
-                      setTipo(e.target.value as "cliente" | "profesional")
-                    }
-                    className="w-full mb-3 p-3 bg-white text-blueGray-600 rounded text-sm shadow"
-                  >
+                  <select id="tipo" value={tipo} onChange={(e) => setTipo(e.target.value as "cliente" | "profesional")} className="w-full mb-3 p-3 bg-white text-blueGray-600 rounded text-sm shadow">
                     <option value="cliente">{t("cliente")}</option>
                     <option value="profesional">{t("profesional")}</option>
                   </select>
@@ -190,57 +164,19 @@ const CompletarPerfil = (): JSX.Element => {
 
                 {tipo === "profesional" && (
                   <>
-                    <label className="block mb-1 font-medium">
-                      {t("zonas")}
-                    </label>
-                    <select
-                      multiple
-                      className="w-full mb-3 p-2 border rounded"
-                      onChange={(e) =>
-                        setZonas(
-                          Array.from(
-                            e.target.selectedOptions,
-                            (option) => option.value
-                          )
-                        )
-                      }
-                    >
-                      {zonasDisponibles.map((z) => (
-                        <option key={z} value={z}>
-                          {z}
-                        </option>
-                      ))}
+                    <label className="block mb-1 font-medium">{t("zonas")}</label>
+                    <select multiple className="w-full mb-3 p-2 border rounded" onChange={(e) => setZonas(Array.from(e.target.selectedOptions, (option) => option.value))}>
+                      {zonasDisponibles.map((z) => (<option key={z} value={z}>{z}</option>))}
                     </select>
-
-                    <label className="block mb-1 font-medium">
-                      {t("oficios")}
-                    </label>
-                    <select
-                      multiple
-                      className="w-full mb-4 p-2 border rounded"
-                      onChange={(e) =>
-                        setOficios(
-                          Array.from(
-                            e.target.selectedOptions,
-                            (option) => option.value
-                          )
-                        )
-                      }
-                    >
-                      {oficiosDisponibles.map((o) => (
-                        <option key={o} value={o}>
-                          {o}
-                        </option>
-                      ))}
+                    <label className="block mb-1 font-medium">{t("oficios")}</label>
+                    <select multiple className="w-full mb-4 p-2 border rounded" onChange={(e) => setOficios(Array.from(e.target.selectedOptions, (option) => option.value))}>
+                      {oficiosDisponibles.map((o) => (<option key={o} value={o}>{o}</option>))}
                     </select>
                   </>
                 )}
 
                 <div className="text-center mt-6">
-                  <button
-                    type="submit"
-                    className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
-                  >
+                  <button type="submit" className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg w-full ease-linear transition-all duration-150">
                     {t("guardar_perfil")}
                   </button>
                 </div>

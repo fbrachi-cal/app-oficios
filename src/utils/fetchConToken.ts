@@ -15,7 +15,7 @@ export const fetchConToken = async (
   try {
     // Refresca el token si está vencido
     const token = await user.getIdToken(true); // true = fuerza refresh si está cerca de expirar
-    console.log("TOKEN: "+token)
+    //console.log("TOKEN: "+token)
 
     const headers = {
       ...(options.headers || {}),
@@ -32,3 +32,4 @@ export const fetchConToken = async (
     throw error;
   }
 };
+

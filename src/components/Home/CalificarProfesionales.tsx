@@ -6,15 +6,13 @@ import { useTranslation } from "react-i18next";
 import ProfessionalCard from "../Cards/ProfessionalCard";
 import { useNavigate } from 'react-router-dom';
 
-const BuscadorProfesionales: React.FC = () => {
+const CalificarProfesionales: React.FC = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const [zonas, setZonas] = useState<string[]>([]);
-    const [categorias, setCategorias] = useState<any[]>([]);
-    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
-    const [subcategoriasSeleccionadas, setSubcategoriasSeleccionadas] = useState<string[]>([]);
-    const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<{ nombre: string, orden: number }[]>([]);
+    const [oficios, setOficios] = useState<string[]>([]);
     const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
+    const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
     const [resultados, setResultados] = useState<any[]>([]);
     const [expandido, setExpandido] = useState(false);
     const [limit] = useState(6); // cantidad por página
@@ -26,24 +24,16 @@ const BuscadorProfesionales: React.FC = () => {
             .then((res) => res.json())
             .then(setZonasDisponibles);
 
-        fetchConToken(`${config.apiBaseUrl}/utils/categorias`)
+        fetch(`${config.apiBaseUrl}/utils/oficios`)
             .then((res) => res.json())
-            .then((data) => setCategorias(data));
+            .then(setOficiosDisponibles);
     }, []);
-
-    useEffect(() => {
-        const categoria = categorias.find((c) => c.nombre === categoriaSeleccionada);
-        setSubcategoriasDisponibles(categoria?.subcategorias || []);
-        setSubcategoriasSeleccionadas([]);
-    }, [categoriaSeleccionada, categorias]);
 
     const buscarProfesionales = async (reset = true) => {
         try {
-            console.log("BUSCAR PROFESIONALES CAT SELECCIONADA: "+categoriaSeleccionada);
             const body = {
                 zonas,
-                categoria: categoriaSeleccionada,
-                subcategorias: subcategoriasSeleccionadas,
+                oficios,
                 limit,
                 ...(ultimoId && !reset ? { start_after_id: ultimoId } : {}),
             };
@@ -91,8 +81,8 @@ const BuscadorProfesionales: React.FC = () => {
                         <FaSearch className="text-white" />
                     </div>
 
-                    <h6 className="text-xl font-semibold">{t('necesitas_arreglo')}</h6>
-                    <p className="mt-2 mb-4 text-blueGray-500">{t("elige_zonas_y_categoria")}</p>
+                    <h6 className="text-xl font-semibold">{t("buscar_profesionales")}</h6>
+                    <p className="mt-2 mb-4 text-blueGray-500">{t("elige_zonas_y_oficios")}</p>
 
                     <select
                         multiple
@@ -106,32 +96,19 @@ const BuscadorProfesionales: React.FC = () => {
                             <option key={z} value={z}>{z}</option>
                         ))}
                     </select>
+
                     <select
+                        multiple
                         className="w-full mb-3 p-2 border rounded"
-                        value={categoriaSeleccionada}
-                        onChange={(e) => {
-                            setCategoriaSeleccionada(e.target.value);
-                        }}
+                        value={oficios}
+                        onChange={(e) =>
+                            setOficios(Array.from(e.target.selectedOptions, (opt) => opt.value))
+                        }
                     >
-                        <option value="">{t("elegir_categoria")}</option>
-                        {categorias.map((c) => (
-                            <option key={c.id} value={c.nombre}>{t(`categorias.${c.nombre}`)}</option>
+                        {oficiosDisponibles.map((o) => (
+                            <option key={o} value={o}>{o}</option>
                         ))}
                     </select>
-
-                    {categoriaSeleccionada && (
-                        <select
-                            multiple
-                            className="w-full mb-3 p-2 border rounded"
-                            value={subcategoriasSeleccionadas}
-                            onChange={e =>
-                                setSubcategoriasSeleccionadas(Array.from(e.target.selectedOptions, o => o.value))
-                            }
-                        >
-                            {subcategoriasDisponibles.map(sc => (<option key={sc.nombre} value={sc.nombre}>
-                                {t(`categorias.${sc.nombre}`)}</option>))}
-                        </select>
-                    )}
 
                     <button
                         onClick={() => buscarProfesionales(true)}
@@ -167,15 +144,10 @@ const BuscadorProfesionales: React.FC = () => {
                             )}
                         </div>
                     )}
-                    {resultados.length === 0 && ultimoId === null && (
-                        <div className="mt-6 text-blueGray-400 text-sm">
-                            {t("sin_resultados")}
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
     );
 };
 
-export default BuscadorProfesionales;
+export default CalificarProfesionales;

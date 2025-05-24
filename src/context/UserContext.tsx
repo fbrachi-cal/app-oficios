@@ -9,6 +9,8 @@ type UserData = {
     zonas?: string[];
     oficios?: string[];
     foto?: string;
+    descripcion: string;
+    disponibilidad: string;    
 };
 
 const UserContext = createContext<{

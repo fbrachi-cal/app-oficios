@@ -1,16 +1,14 @@
-import React from "react";
+
 import { Outlet } from "react-router-dom";
-import { Routes, Route, Navigate } from "react-router-dom";
 
 // components
 import Navbar from "../components/Navbars/AuthNavbar";
 import FooterSmall from "../components/Footers/Footer";
 
 // views
-import Login from "../views/auth/Login";
-import Register from "../views/auth/Register";
 
 import backgroundImage from "../assets/img/register_bg_2.png";
+import { JSX } from "react/jsx-runtime";
 
 
 const Auth = (): JSX.Element => {
@@ -27,7 +25,7 @@ const Auth = (): JSX.Element => {
           ></div>
           <Outlet />
           
-          <FooterSmall absolute />
+          <FooterSmall/>
         </section>
       </main>
     </>

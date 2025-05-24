@@ -1,20 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 
 // Reemplazamos íconos con react-icons
-import { FaAward, FaRetweet, FaFingerprint, FaUserFriends, FaRocket, FaHtml5, FaPaperPlane, FaMedal, FaPoll, FaLightbulb, FaTwitter, FaFacebookF, FaDribbble, FaInstagram, FaGoogle, FaCalculator } from "react-icons/fa";
+import { FaAward, FaFingerprint, FaCalculator } from "react-icons/fa";
 
 import Navbar from "../components/Navbars/AuthNavbar";
 import Footer from "../components/Footers/Footer";
 
-import team1 from "../assets/img/team-1-800x800.jpg";
-import team2 from "../assets/img/team-2-800x800.jpg";
-import team3 from "../assets/img/team-3-800x800.jpg";
-import team4 from "../assets/img/team-4-470x470.png";
-
 import { useTranslation } from 'react-i18next';
 import BuscadorProfesionales from "../components/Home/BuscadorProfesionales";
+import PanelSolicitudes from "../components/Home/PanelSolicitudes";
 
 
 const Landing: React.FC = () => {
@@ -78,21 +73,7 @@ const Landing: React.FC = () => {
 
           <section className="pb-20 bg-blueGray-200 -mt-24">
             <div className="container mx-auto px-4">
-              <div className="flex flex-wrap">
-                <div className="lg:pt-12 pt-6 w-full md:w-4/12 px-4 text-center">
-                  <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
-                    <div className="px-4 py-5 flex-auto">
-                      <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-red-400">
-                        <FaAward className="text-white" />
-                      </div>
-                      <h6 className="text-xl font-semibold">{t('necesitas_arreglo')}</h6>
-                      <p className="mt-2 mb-4 text-blueGray-500">
-                        Divide details about your product or agency work into
-                        parts. A paragraph describing a feature will be enough.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              <div className="flex flex-wrap">                  
                 {user?.tipo === "cliente" ? (
                   <BuscadorProfesionales />
                 ): (
@@ -112,7 +93,7 @@ const Landing: React.FC = () => {
                   </div>
                 </div>
                 )}
-                
+                <PanelSolicitudes />
 
                 <div className="pt-6 w-full md:w-4/12 px-4 text-center">
                   <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
