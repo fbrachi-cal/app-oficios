@@ -1,0 +1,33 @@
+# Cache de Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Archivos temporales
+*.log
+*.tmp
+*.swp
+
+# Logs
+logs/
+*.log
+
+# Archivos de entorno
+.env
+.env.*
+
+# Archivos de configuración del IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Virtualenv
+venv/
+.env/
+
+# Base de datos sqlite temporal (si aplica)
+*.sqlite3
+

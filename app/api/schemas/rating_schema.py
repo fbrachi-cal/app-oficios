@@ -1,9 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
-class CalificacionRegistro(BaseModel):
-    id: str
-    cliente_id: str
-    profesional_id: str
-    puntuacion: int
-    comentario: Optional[str] = None
+class RatingRequest(BaseModel):
+    solicitud_id: str    
+    calificacion: int = Field(..., ge=1, le=5)
+    observacion: Optional[str] = ""
+    calificado_id: Optional[str] = None

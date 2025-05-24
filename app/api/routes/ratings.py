@@ -1,27 +1,34 @@
-from fastapi import APIRouter, HTTPException, Depends
-from app.adapters.firebase.firebase_rating_repo import FirebaseRatingRepository
+from fastapi import APIRouter, Depends, HTTPException
+from app.ports.rating_repository import RatingRepository
+from app.ports.user_repository import UserRepository
 from app.domain.services.rating_service import RatingService
-from app.shared.firebase_auth import verify_token
-from app.api.schemas.rating_schema import CalificacionRegistro
-from app.shared.roles import require_role
-from uuid import uuid4
+from app.api.schemas.rating_schema import RatingRequest
+from app.api.dependencies import get_current_user_id, get_calificacion_repo, get_request_repo, get_user_repo
+from app.ports.request_repository import RequestRepository
+from app.shared.logger import log
 
 
-
-router = APIRouter()
-service = RatingService(FirebaseRatingRepository())
+router = APIRouter(prefix="/calificaciones", tags=["calificaciones"])
 
 @router.post("/")
-def agregar_calificacion(calificacion: CalificacionRegistro, user_data: dict = Depends(require_role("cliente"))):
+def calificar_usuario(
+    payload: RatingRequest,
+    user_id: str = Depends(get_current_user_id),
+    repo: RatingRepository = Depends(get_calificacion_repo),
+    request_repo: RequestRepository = Depends(get_request_repo),
+    user_repo: UserRepository = Depends(get_user_repo)
+):
+    log.info("Calificar usuario")
     try:
-        calificacion_data = calificacion.dict()
-        calificacion_data["cliente_id"] = user_data["uid"]
-        calificacion_data["id"] = str(uuid4())
-        service.agregar_calificacion(calificacion.dict())
-        return {"mensaje": "Calificación guardada con éxito"}
-    except ValueError as e:
+        service = RatingService(repo, request_repo, user_repo)
+        
+        return service.calificar_usuario(
+            solicitud_id=payload.solicitud_id,
+            calificador_id=user_id,
+            calificado_id=payload.calificado_id,
+            calificacion=payload.calificacion,
+            observacion=payload.observacion,
+        )
+    except Exception as e:
+        log.error(f"Error al calificar usuario: {e}")
         raise HTTPException(status_code=400, detail=str(e))
-
-@router.get("/profesional/{profesional_id}")
-def obtener_calificaciones(profesional_id: str, user_data: dict = Depends(require_role("profesional"))):
-    return service.obtener_calificaciones_por_profesional(profesional_id)

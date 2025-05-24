@@ -21,9 +21,9 @@ if not firebase_admin._apps:
         "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
         "token_uri": os.getenv("FIREBASE_TOKEN_URI"),
         "auth_provider_x509_cert_url": os.getenv("FIREBASE_AUTH_PROVIDER_X509_CERT_URL"),
-        "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL")
+        "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),        
     })
-    firebase_admin.initialize_app(cred)
+    firebase_admin.initialize_app(cred,{"storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET")})
 
 security = HTTPBearer()
 
@@ -33,7 +33,7 @@ def verify_token(auth_credentials: HTTPAuthorizationCredentials = Security(secur
         id_token = auth_credentials.credentials
         log.info(f"🔐 Verificando token... {id_token}")
         decoded_token = auth.verify_id_token(id_token)
-        log.info("✅ Token válido. UID: {}", decoded_token.get("uid"))
+        log.info(f"✅ Token válido. UID: {decoded_token.get('uid')}")
         return decoded_token
     except Exception:
         raise HTTPException(status_code=401, detail="Token inválido o expirado")

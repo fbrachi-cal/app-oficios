@@ -6,4 +6,20 @@ class UsuarioRegistro(BaseModel):
     nombre: str
     tipo: str  # "cliente" o "profesional"
     zonas: Optional[List[str]] = None
-    oficios: Optional[List[str]] = None
+    categorias: Optional[List[str]] = []
+    subcategorias: Optional[List[str]] = None
+    foto: Optional[str] = None
+    descripcion: Optional[str] = ""
+    disponibilidad: Optional[str] = ""
+    
+class UsuarioUpdate(BaseModel):
+    id: Optional[str]
+    nombre: Optional[str]
+    tipo: Optional[str]
+    zonas: Optional[List[str]] = None
+    categorias: Optional[List[str]] = []
+    subcategorias: Optional[List[str]] = None
+    foto: Optional[str] = None
+    descripcion: Optional[str] = ""
+    disponibilidad: Optional[str] = ""
+    
