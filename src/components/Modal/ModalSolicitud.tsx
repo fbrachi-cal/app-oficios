@@ -25,8 +25,8 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
   onConfirm,
   titulo,
   mensaje,
-  textoCancelar = "Volver atrás",
-  textoConfirmar = "Confirmar",
+  textoCancelar,
+  textoConfirmar,
   confirmColor,
   children,
   mostrarMotivos = false,
@@ -67,13 +67,13 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
 
             {mostrarMotivos && (
               <div className="mb-4">
-                <label className="block mb-1 font-semibold">Motivo</label>
+                <label className="block mb-1 font-semibold">{t("motivo")}</label>
                 <select
                   value={motivoSeleccionado}
                   onChange={(e) => setMotivoSeleccionado(e.target.value)}
                   className="w-full p-2 border rounded"
                 >
-                  <option value="">Seleccione un motivo</option>
+                  <option value="">{t("seleccione_motivo")}</option>
                   {motivos.map((m) => (
                     <option key={m.id} value={m.key}>
                       {t(`${m.key}`)}
@@ -85,13 +85,13 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
 
             {mostrarObservacion && (
               <div className="mb-4">
-                <label className="block mb-1 font-semibold">Observación (opcional)</label>
+                <label className="block mb-1 font-semibold">{t("observacion_opcional")}</label>
                 <textarea
                   value={observacion}
                   onChange={(e) => setObservacion(e.target.value)}
                   rows={3}
                   className="w-full p-2 border rounded"
-                  placeholder="Escribí tu observación"
+                  placeholder={t("escribi_observacion")}
                 />
               </div>
             )}
@@ -101,7 +101,7 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
                 onClick={onClose}
                 className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
               >
-                {textoCancelar}
+                {textoCancelar || t("volver_atras")}
               </button>
               {onConfirm && (
                 <button
@@ -118,7 +118,7 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
                         : "bg-red-600 hover:bg-red-700"
                     }`}
                 >
-                  {textoConfirmar}
+                  {textoConfirmar || t("confirmar")}
                 </button>
               )}
             </div>

@@ -114,21 +114,21 @@ const PanelSolicitudes: React.FC = () => {
                         <>
                             <h6 className="text-xl font-semibold">{t("tus_solicitudes")}</h6>
                             <p className="mt-2 mb-4 text-blueGray-500">
-                                Aquí podés ver las solicitudes que enviaste a profesionales.
+                                {t("descripcion_tus_solicitudes")}
                             </p>
                         </>
                     ) : user?.tipo === "profesional" ? (
                         <>
                             <h6 className="text-xl font-semibold">{t("solicitudes_recibidas")}</h6>
                             <p className="mt-2 mb-4 text-blueGray-500">
-                                Estas son las solicitudes que recibiste. Podés responderlas o ignorarlas.
+                                {t("descripcion_solicitudes_recibidas")}
                             </p>
                         </>
                     ) : (
                         <>
                             <h6 className="text-xl font-semibold">{t("necesitas_arreglo")}</h6>
                             <p className="mt-2 mb-4 text-blueGray-500">
-                                Iniciá sesión como cliente o profesional para ver tus solicitudes.
+                                {t("inicia_sesion_ver_solicitudes")}
                             </p>
                         </>
                     )}
@@ -236,10 +236,10 @@ const PanelSolicitudes: React.FC = () => {
                                             )}
 
 
-                                            <p><strong>Zona:</strong> {s.zona}</p>
-                                            <p><strong>Subcategoría:</strong> {s.subcategoria}</p>
-                                            <p><strong>Descripción:</strong> {s.descripcion}</p>
-                                            <p><strong>Estado:</strong> {s.estado}</p>
+                                            <p><strong>{t("zona", "Zona")}:</strong> {s.zona}</p>
+                                            <p><strong>{t("subcategoria")}:</strong> {s.subcategoria}</p>
+                                            <p><strong>{t("descripcion")}:</strong> {s.descripcion}</p>
+                                            <p><strong>{t("estado_fijo")}:</strong> {s.estado ? t(`estado.${s.estado.toLowerCase()}`, s.estado) : ""}</p>
                                             {s.fotos_urls?.length > 0 && (
                                                 <div className="mt-2 flex gap-2 flex-wrap">
                                                     {s.fotos_urls.map((url: any, j: number) => (
@@ -281,7 +281,7 @@ const PanelSolicitudes: React.FC = () => {
                         isOpen={modalCalificarAbierta}
                         onClose={() => setModalCalificarAbierta(false)}
                         onSubmit={enviarCalificacion}
-                        titulo="Calificá al profesional"
+                        titulo={t("califica_al_profesional")}
                     />
 
                 </div>

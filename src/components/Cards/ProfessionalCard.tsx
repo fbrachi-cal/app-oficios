@@ -57,7 +57,7 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
                         onClick={() => onVerPerfil?.(profesional.id)}
                         className="bg-lightBlue-500 text-white text-xs px-4 py-2 rounded hover:bg-lightBlue-600"
                     >
-                        Ver perfil
+                        {t("ver_perfil")}
                     </button>
                 </div>
             </div>

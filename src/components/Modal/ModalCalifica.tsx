@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ModalCalificacionProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ const ModalCalificacion: React.FC<ModalCalificacionProps> = ({
   onSubmit,
   titulo,
 }) => {
+  const { t } = useTranslation();
   const [calificacion, setCalificacion] = useState(0);
   const [observacion, setObservacion] = useState("");
 
@@ -45,7 +47,7 @@ const ModalCalificacion: React.FC<ModalCalificacionProps> = ({
         </div>
 
         <textarea
-          placeholder="Observación (opcional)"
+          placeholder={t("observacion_opcional")}
           className="w-full border p-2 rounded mb-4"
           value={observacion}
           onChange={(e) => setObservacion(e.target.value)}
@@ -56,7 +58,7 @@ const ModalCalificacion: React.FC<ModalCalificacionProps> = ({
             onClick={onClose}
             className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
           >
-            Cancelar
+            {t("cancelar")}
           </button>
           <button
             onClick={() => {
@@ -66,7 +68,7 @@ const ModalCalificacion: React.FC<ModalCalificacionProps> = ({
             className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             disabled={calificacion === 0}
           >
-            Calificar
+            {t("calificar")}
           </button>
         </div>
       </div>

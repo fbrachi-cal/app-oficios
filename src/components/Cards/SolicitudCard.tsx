@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function CardSolicitud() {
+  const { t } = useTranslation();
   const [zona, setZona] = useState("");
   const [horarios, setHorarios] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -18,31 +20,31 @@ export default function CardSolicitud() {
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
             <h6 className="text-blueGray-700 text-xl font-bold">
-              Crear solicitud de servicio
+              {t("crear_solicitud_servicio")}
             </h6>
             <button
               className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               type="button"
             >
-              Guardar
+              {t("guardar")}
             </button>
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
           <form onSubmit={handleSubmit}>
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-              Detalles del trabajo
+              {t("detalles_trabajo")}
             </h6>
 
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                    Zona
+                    {t("zona")}
                   </label>
                   <input
                     type="text"
-                    placeholder="Ej. Palermo, CABA"
+                    placeholder={t("ej_zona")}
                     value={zona}
                     onChange={(e) => setZona(e.target.value)}
                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -53,11 +55,11 @@ export default function CardSolicitud() {
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                    Horarios disponibles
+                    {t("horarios_disponibles")}
                   </label>
                   <input
                     type="text"
-                    placeholder="Lunes a viernes de 9 a 18hs"
+                    placeholder={t("ej_horarios")}
                     value={horarios}
                     onChange={(e) => setHorarios(e.target.value)}
                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -69,18 +71,18 @@ export default function CardSolicitud() {
             <hr className="mt-6 border-b-1 border-blueGray-300" />
 
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-              Descripción del trabajo
+              {t("descripcion_trabajo")}
             </h6>
 
             <div className="flex flex-wrap">
               <div className="w-full px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                    Descripción
+                    {t("descripcion")}
                   </label>
                   <textarea
                     rows={4}
-                    placeholder="Describí el trabajo a realizar con la mayor claridad posible"
+                    placeholder={t("ej_descripcion")}
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -92,7 +94,7 @@ export default function CardSolicitud() {
             <hr className="mt-6 border-b-1 border-blueGray-300" />
 
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
-              Fotos (opcional)
+              {t("fotos_opcional")}
             </h6>
 
             <div className="flex flex-wrap">
@@ -114,7 +116,7 @@ export default function CardSolicitud() {
                 type="submit"
                 className="bg-lightBlue-500 text-white active:bg-lightBlue-600 font-bold uppercase text-xs px-6 py-2 rounded shadow hover:shadow-md ease-linear transition-all duration-150"
               >
-                Enviar solicitud
+                {t("enviar_solicitud")}
               </button>
             </div>
           </form>

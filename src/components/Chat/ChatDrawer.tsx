@@ -110,7 +110,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
               onClick={() => setActiveChatId(chat.id)}
             >
               <div className="font-medium">{getOtherParticipantName(chat)}</div>
-              <div className="text-sm text-gray-500">{chat.lastMessageSenderId === auth.currentUser?.uid ? `Vos: ${chat.lastMessage}` : chat.lastMessage || t("sin_mensajes")}</div>
+              <div className="text-sm text-gray-500">{chat.lastMessageSenderId === auth.currentUser?.uid ? `${t("vos")}: ${chat.lastMessage}` : chat.lastMessage || t("sin_mensajes")}</div>
             </div>
           ))}
 
@@ -124,10 +124,10 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
                 ))}
               </div>
             ) : (
-              <div className="text-center text-gray-400 py-4">Sin mensajes aún</div>
+              <div className="text-center text-gray-400 py-4">{t("sin_mensajes_aun")}</div>
             )
           ) : (
-            <div className="text-center text-gray-400 py-4">Cargando mensajes...</div>
+            <div className="text-center text-gray-400 py-4">{t("cargando_mensajes")}</div>
           )}
         </main>
 

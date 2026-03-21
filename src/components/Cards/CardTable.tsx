@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface Profesional {
   id: string;
@@ -14,6 +15,7 @@ type CardTableProps = {
 };
 
 const CardTable: React.FC<CardTableProps> = ({ profesionales = [], color = "light" }) => {
+  const { t } = useTranslation();
   return (
     <div
       className={
@@ -30,7 +32,7 @@ const CardTable: React.FC<CardTableProps> = ({ profesionales = [], color = "ligh
                 (color === "light" ? "text-blueGray-700" : "text-white")
               }
             >
-              Profesionales encontrados
+              {t("profesionales_encontrados")}
             </h3>
           </div>
         </div>
@@ -39,10 +41,10 @@ const CardTable: React.FC<CardTableProps> = ({ profesionales = [], color = "ligh
         <table className="items-center w-full bg-transparent border-collapse">
           <thead>
             <tr>
-              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">Nombre</th>
-              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">Oficios</th>
-              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">Zonas</th>
-              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">Tipo</th>
+              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">{t("nombre")}</th>
+              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">{t("oficios")}</th>
+              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">{t("zonas")}</th>
+              <th className="px-6 py-3 text-xs uppercase font-semibold text-left border-b">{t("tipo")}</th>
             </tr>
           </thead>
           <tbody>
@@ -57,7 +59,7 @@ const CardTable: React.FC<CardTableProps> = ({ profesionales = [], color = "ligh
             {profesionales.length === 0 && (
               <tr>
                 <td className="px-6 py-4 border-b text-sm text-center" colSpan={4}>
-                  No hay resultados para mostrar.
+                  {t("sin_resultados_mostrar")}
                 </td>
               </tr>
             )}

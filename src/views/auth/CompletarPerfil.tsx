@@ -104,12 +104,12 @@ const CompletarPerfil = (): JSX.Element => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Error al guardar en backend");
+      if (!res.ok) throw new Error(t("error_guardar_backend"));
       await refrescarUsuario();
       navigate("/");
     } catch (err: any) {
       console.error(err);
-      setError("Error al completar perfil: " + err.message);
+      setError(t("error_completar_perfil", { detalle: err.message }));
     }
   };
 
@@ -147,8 +147,8 @@ const CompletarPerfil = (): JSX.Element => {
                     />
 
                 <div className="relative w-full mb-3">
-                  <label htmlFor="foto" className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Foto de perfil</label>
-                  {preview && (<img src={preview} alt="Preview" className="mb-3 rounded-full shadow-md w-20 h-20 object-cover mx-auto" />)}
+                  <label htmlFor="foto" className="block uppercase text-blueGray-600 text-xs font-bold mb-2">{t("foto_perfil")}</label>
+                  {preview && (<img src={preview} alt={t("vista_previa")} className="mb-3 rounded-full shadow-md w-20 h-20 object-cover mx-auto" />)}
                   <input id="foto" type="file" accept="image/*" onChange={handleFotoChange} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full" />
                 </div>
 

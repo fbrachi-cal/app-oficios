@@ -30,7 +30,7 @@ const Footer: React.FC = () => {
           <div className="w-full lg:w-6/12 px-4">
             <h4 className="text-3xl font-semibold">{t("registrate_y_arregla")}</h4>
             <h5 className="text-lg mt-0 mb-2 text-blueGray-600">
-              Find us on any of these platforms, we respond 1-2 business days.
+              {t("encuentranos_plataformas")}
             </h5>
             <div className="mt-6 lg:mb-0 mb-6">
               {[
@@ -53,10 +53,10 @@ const Footer: React.FC = () => {
             <div className="flex flex-wrap items-top mb-6">
               <div className="w-full lg:w-4/12 px-4 ml-auto">
                 <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                  Useful Links
+                  {t("enlaces_utiles")}
                 </span>
                 <ul className="list-unstyled">
-                  {["About Us", "Blog", "Github", "Free Products"].map(
+                  {[t("sobre_nosotros"), t("blog"), t("github"), t("productos_gratuitos")].map(
                     (text, i) => (
                       <li key={i}>
                         <a
@@ -72,10 +72,10 @@ const Footer: React.FC = () => {
               </div>
               <div className="w-full lg:w-4/12 px-4">
                 <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                  Other Resources
+                  {t("otros_recursos")}
                 </span>
                 <ul className="list-unstyled">
-                  {["MIT License", "Terms & Conditions", "Privacy Policy", "Contact Us"].map(
+                  {[t("licencia_mit"), t("terminos_condiciones"), t("politica_privacidad"), t("contactanos")].map(
                     (text, i) => (
                       <li key={i}>
                         <a

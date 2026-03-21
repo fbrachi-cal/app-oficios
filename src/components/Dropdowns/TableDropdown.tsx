@@ -1,7 +1,9 @@
 import React, { useRef, useState } from "react";
 import { createPopper } from "@popperjs/core";
+import { useTranslation } from "react-i18next";
 
 const TableDropdown: React.FC = () => {
+  const { t } = useTranslation();
   const [dropdownPopoverShow, setDropdownPopoverShow] = useState(false);
 
   const btnDropdownRef = useRef<HTMLAnchorElement>(null);
@@ -38,7 +40,7 @@ const TableDropdown: React.FC = () => {
           "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
         }
       >
-        {["Action", "Another action", "Something else here"].map((item, idx) => (
+        {[t("accion"), t("otra_accion"), t("algo_mas_aqui")].map((item, idx) => (
           <a
             key={idx}
             href="#pablo"

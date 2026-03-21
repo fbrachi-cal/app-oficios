@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type FormSolicitudProps = {
     zonasDisponibles: string[];
@@ -16,6 +17,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
     subcategoriasDisponibles,
     onSubmit,
     onCancel, }) => {
+  const { t } = useTranslation();
   const [zona, setZona] = useState("");
   const [subcategoria, setSubcategoria] = useState("");  
   const [descripcion, setDescripcion] = useState("");
@@ -30,7 +32,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
         <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-          Zona del trabajo
+          {t("zona_trabajo")}
         </label>
         <select
           value={zona}
@@ -38,7 +40,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
           className="w-full px-3 py-2 bg-blueGray-100 rounded"
           required
         >
-          <option value="">Seleccioná una zona</option>
+          <option value="">{t("selecciona_zona")}</option>
           {zonasDisponibles.map((z) => (
             <option key={z} value={z}>
               {z}
@@ -48,7 +50,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
       </div>
       <div>
         <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-          Subcategoría
+          {t("subcategoria")}
         </label>
         <select
           value={subcategoria}
@@ -56,7 +58,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
           className="w-full px-3 py-2 bg-blueGray-100 rounded"
           required
         >
-          <option value="">Seleccioná un oficio</option>
+          <option value="">{t("selecciona_oficio")}</option>
           {subcategoriasDisponibles.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -67,11 +69,11 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
 
       <div>
         <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-          Descripción del trabajo
+          {t("descripcion_trabajo")}
         </label>
         <textarea
           rows={4}
-          placeholder="Contanos qué necesitás hacer"
+          placeholder={t("contanos_que_necesitas")}
           className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-blueGray-100 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
@@ -81,7 +83,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
 
       <div>
         <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-          Fotos (opcional)
+          {t("fotos_opcional")}
         </label>
         <input
           type="file"
@@ -98,13 +100,13 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
           onClick={onCancel}
           className="text-blueGray-600 border border-blueGray-300 px-4 py-2 rounded shadow text-sm hover:bg-blueGray-100"
         >
-          Cancelar
+          {t("cancelar")}
         </button>
         <button
           type="submit"
           className="bg-lightBlue-500 text-white px-4 py-2 rounded shadow hover:shadow-md text-sm"
         >
-          Enviar solicitud
+          {t("enviar_solicitud")}
         </button>
       </div>
     </form>

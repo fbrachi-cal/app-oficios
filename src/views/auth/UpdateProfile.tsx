@@ -116,14 +116,14 @@ const UpdateProfile = (): JSX.Element => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Error al actualizar en backend");
+      if (!res.ok) throw new Error(t("error_actualizar_backend"));
 
       await refrescarUsuario();
       setMensajeExito(t("perfil_actualizado_exito") || "Perfil actualizado con éxito");
 
     } catch (err: any) {
       console.error(err);
-      setError("Error al actualizar perfil: " + err.message);
+      setError(t("error_actualizar_perfil", { detalle: err.message }));
     }
   };
 
@@ -168,7 +168,7 @@ const UpdateProfile = (): JSX.Element => {
 
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                    Foto de perfil
+                    {t("foto_perfil")}
                   </label>
                   {preview && (
                     <img

@@ -50,11 +50,11 @@ const DetalleSolicitud: React.FC = () => {
                 observacion,
             });
             setModalCalificarAbierta(false); // cerrar la modal
-            setMensaje("✅ Estado actualizado");
+            setMensaje("✅ " + t("estado_actualizado"));
             navigate("/landing"); // redirigir
         } catch (error) {
             console.error("Error al calificar:", error);
-            setMensaje("❌ No se pudo calificar");
+            setMensaje("❌ " + t("error_calificar"));
         } finally {
             setLoading(false);
         }
@@ -74,10 +74,10 @@ const DetalleSolicitud: React.FC = () => {
             setLoading(true);
             await solicitudService.actualizarEstado(id!, nuevo_estado, motivo, observacion);
             await cargarSolicitud();
-            setMensaje("✅ Estado actualizado");
+            setMensaje("✅ " + t("estado_actualizado"));
         } catch (err) {
             console.error("Error al cambiar estado", err);
-            setMensaje("❌ No se pudo cambiar el estado");
+            setMensaje("❌ " + t("error_cambiar_estado"));
         } finally {
             setLoading(false);
             setTimeout(() => setMensaje(null), 3000);
@@ -127,7 +127,7 @@ const DetalleSolicitud: React.FC = () => {
                 fotos: urls,
             });
 
-            setMensaje("✅ Consulta enviada con éxito");
+            setMensaje("✅ " + t("consulta_enviada_exito"));
             setObservacion("");
             setArchivosAdjuntos([]);
             if (archivoInputRef.current) {
@@ -136,7 +136,7 @@ const DetalleSolicitud: React.FC = () => {
             await cargarSolicitud();
         } catch (e) {
             console.error("Error al enviar consulta", e);
-            setMensaje("❌ Error al enviar consulta");
+            setMensaje("❌ " + t("error_enviar_consulta"));
         } finally {
             setLoading(false);
             setTimeout(() => setMensaje(null), 3000);
@@ -215,12 +215,12 @@ const DetalleSolicitud: React.FC = () => {
                                 <div className="flex items-center text-blueGray-600">
                                     <div className="flex items-center mr-6">
                                         <i className="fas fa-map-marker-alt mr-2 text-blueGray-400"></i>
-                                        <span className="font-semibold mr-1">Zona:</span>
+                                        <span className="font-semibold mr-1">{t("zona")}:</span>
                                         <span>{solicitud.zona}</span>
                                     </div>
                                     <div className="flex items-center">
                                         <i className="fas fa-tools mr-2 text-blueGray-400"></i>
-                                        <span className="font-semibold mr-1">Tipo de pedido:</span>
+                                        <span className="font-semibold mr-1">{t("tipo_de_pedido")}:</span>
                                         <span>{solicitud.subcategoria}</span>
                                     </div>
                                 </div>
@@ -322,7 +322,7 @@ const DetalleSolicitud: React.FC = () => {
                                         <textarea
                                             className="w-full p-2 border rounded mb-4"
                                             rows={3}
-                                            placeholder="Escriba un mensaje..."
+                                            placeholder={t("escriba_un_mensaje")}
                                             value={observacion}
                                             onChange={(e) => setObservacion(e.target.value)}
                                         />
@@ -424,7 +424,7 @@ const DetalleSolicitud: React.FC = () => {
                                             onClick={() => setModalCalificarAbierta(true)}
                                             className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
                                         >
-                                            Calificar profesional
+                                            {t("calificar_profesional")}
                                         </button>
                                     </div>
                                 )}
@@ -457,7 +457,7 @@ const DetalleSolicitud: React.FC = () => {
                                     onClick={() => setImagenSeleccionada(null)}
                                     className="mt-2 block mx-auto bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
                                 >
-                                    Cerrar
+                                    {t("cerrar")}
                                 </button>
                             </div>
                         </div>
@@ -485,7 +485,7 @@ const DetalleSolicitud: React.FC = () => {
                         isOpen={modalCalificarAbierta}
                         onClose={() => setModalCalificarAbierta(false)}
                         onSubmit={enviarCalificacion}
-                        titulo="Calificá al profesional"
+                        titulo={t("califica_al_profesional")}
                     />
                 </section>
             </main>

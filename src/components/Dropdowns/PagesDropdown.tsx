@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPopper } from "@popperjs/core";
+import { useTranslation } from "react-i18next";
 
 const PagesDropdown: React.FC = () => {
+  const { t } = useTranslation();
   const [dropdownPopoverShow, setDropdownPopoverShow] = useState(false);
   const btnDropdownRef = useRef<HTMLAnchorElement>(null);
   const popoverDropdownRef = useRef<HTMLDivElement>(null);
@@ -31,7 +33,7 @@ const PagesDropdown: React.FC = () => {
           dropdownPopoverShow ? closeDropdownPopover() : openDropdownPopover();
         }}
       >
-        Demo Pages
+        {t("demo_pages")}
       </a>
       <div
         ref={popoverDropdownRef}
@@ -41,39 +43,39 @@ const PagesDropdown: React.FC = () => {
         }
       >
         <span className="text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400">
-          Admin Layout
+          {t("admin_layout")}
         </span>
         <Link to="/admin/dashboard" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Dashboard
+          {t("dashboard")}
         </Link>
         <Link to="/admin/settings" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Settings
+          {t("settings")}
         </Link>
         <Link to="/admin/tables" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Tables
+          {t("tables")}
         </Link>
         <Link to="/admin/maps" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Maps
+          {t("maps")}
         </Link>
         <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
         <span className="text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400">
-          Auth Layout
+          {t("auth_layout")}
         </span>
         <Link to="/auth/login" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Login
+          {t("iniciar_sesion")}
         </Link>
         <Link to="/auth/register" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Register
+          {t("registrarse")}
         </Link>
         <div className="h-0 mx-4 my-2 border border-solid border-blueGray-100" />
         <span className="text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400">
-          No Layout
+          {t("no_layout")}
         </span>
         <Link to="/landing" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Landing
+          {t("landing")}
         </Link>
         <Link to="/profile" className="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700">
-          Profile
+          {t("perfil")}
         </Link>
       </div>
     </>

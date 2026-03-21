@@ -123,19 +123,19 @@ const PerfilProfesional: React.FC = () => {
                         <span className="text-xl font-bold block text-blueGray-600">
                           {profesional.cantidadCalificaciones ?? 0}
                         </span>
-                        <span className="text-sm text-blueGray-400">Trabajos</span>
+                        <span className="text-sm text-blueGray-400">{t("trabajos")}</span>
                       </div>
                       <div className="mr-4 p-3 text-center">
                         <span className="text-xl font-bold block text-blueGray-600">
                           {profesional.promedioCalificacion ?? 0}⭐
                         </span>
-                        <span className="text-sm text-blueGray-400">Calificación</span>
+                        <span className="text-sm text-blueGray-400">{t("calificacion")}</span>
                       </div>
                       <div className="p-3 text-center">
                         <span className="text-xl font-bold block text-blueGray-600">
-                          {profesional.disponibilidad || "No especificada"}
+                          {profesional.disponibilidad || t("no_especificada")}
                         </span>
-                        <span className="text-sm text-blueGray-400">Disponibilidad</span>
+                        <span className="text-sm text-blueGray-400">{t("disponibilidad")}</span>
                       </div>
                     </div>
                   </div>
@@ -147,11 +147,11 @@ const PerfilProfesional: React.FC = () => {
                   </h3>
                   <div className="text-sm text-blueGray-400 mt-2">
                     <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                    {profesional.zonas?.join(", ") || "Sin zonas asignadas"}
+                    {profesional.zonas?.join(", ") || t("sin_zonas_asignadas")}
                   </div>
                   <div className="mb-2 text-blueGray-600 mt-4">
                     <i className="fas fa-tools mr-2 text-lg text-blueGray-400"></i>
-                    {profesional.subcategorias?.join(", ") || "Sin oficios"}
+                    {profesional.subcategorias?.join(", ") || t("sin_oficios")}
                   </div>
                 </div>
 
@@ -159,7 +159,7 @@ const PerfilProfesional: React.FC = () => {
                   <div className="flex flex-wrap justify-center">
                     <div className="w-full lg:w-9/12 px-4">
                       <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                        {profesional.descripcion || "Este profesional aún no ha agregado una descripción."}
+                        {profesional.descripcion || t("sin_descripcion_profesional")}
                       </p>
                       <a href="#" className="font-normal text-lightBlue-500">
                         {t("mostrar_mas")}
@@ -180,7 +180,7 @@ const PerfilProfesional: React.FC = () => {
       />
 
       <ModalSolicitud isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)}>
-        <h2 className="text-xl font-bold mb-4 text-blueGray-700">Nueva solicitud</h2>
+        <h2 className="text-xl font-bold mb-4 text-blueGray-700">{t("nueva_solicitud")}</h2>
         <FormSolicitud
           zonasDisponibles={profesional.zonas || []}
           subcategoriasDisponibles={profesional.subcategorias || []}
@@ -189,15 +189,15 @@ const PerfilProfesional: React.FC = () => {
           onSubmit={async (data) => {
             try {
               setLoading(true);
-              if (!id) return <div className="text-center p-10">ID inválido</div>;
+              if (!id) return <div className="text-center p-10">{t("id_invalido")}</div>;
               const respuesta = await solicitudService.crearSolicitud(id, data);
               console.log("Solicitud enviada:", respuesta);
-              setMensaje("✅ Solicitud enviada con éxito");
+              setMensaje("✅ " + t("solicitud_enviada_exito"));
               setIsSolicitudOpen(false);              
               navigate("/landing"); // o donde quieras
             } catch (error) {
               console.error("Error al enviar solicitud:", error);
-              setMensaje("❌ Error al enviar solicitud");
+              setMensaje("❌ " + t("error_enviar_solicitud"));
             } finally {
               setLoading(false);
               setTimeout(() => setMensaje(null), 4000); // ocultar mensaje después de 4s

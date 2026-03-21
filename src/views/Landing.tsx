@@ -42,9 +42,7 @@ const Landing: React.FC = () => {
                       {t('landing_titulo')}
                     </h1>
                     <p className="mt-4 text-lg text-blueGray-200">
-                      This is a simple example of a Landing Page you can build
-                      using Notus React. It features multiple CSS components based
-                      on the Tailwind CSS design system.
+                      {t('landing_descripcion')}
                     </p>
                   </div>
                 </div>
@@ -86,8 +84,7 @@ const Landing: React.FC = () => {
                       </div>
                       <h6 className="text-xl font-semibold">{t('contactas_profesional')}</h6>
                       <p className="mt-2 mb-4 text-blueGray-500">
-                        Keep your user engaged by providing meaningful information.
-                        Remember that by this time, the user is curious.
+                        {t('landing_profesional_descripcion')}
                       </p>
                     </div>
                   </div>
@@ -103,8 +100,7 @@ const Landing: React.FC = () => {
                       </div>
                       <h6 className="text-xl font-semibold">{t('calificas_servicio')}</h6>
                       <p className="mt-2 mb-4 text-blueGray-500">
-                        Write a few lines about each one. A paragraph describing a
-                        feature will be enough. Keep your user engaged!
+                        {t('landing_calificar_descripcion')}
                       </p>
                     </div>
                   </div>

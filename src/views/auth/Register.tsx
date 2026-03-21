@@ -132,14 +132,14 @@ const Register = (): JSX.Element => {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error("Error al guardar en backend");
+      if (!res.ok) throw new Error(t("error_guardar_backend"));
 
       navigate("/");
       navigate(0);
 
     } catch (err: any) {
       console.error(err);
-      setError("Error al registrar: " + err.message);
+      setError(t("error_registrar", { detalle: err.message }));
     }
   };
 
@@ -163,11 +163,11 @@ const Register = (): JSX.Element => {
       } else if (res.status === 404 || res.status === 401) {
         navigate("/auth/completar-perfil");
       } else {
-        setError("Error inesperado al verificar usuario");
+        setError(t("error_verificar_usuario"));
       }
     } catch (err) {
       console.error(err);
-      setError("Error al registrarse con red social");
+      setError(t("error_registro_red_social"));
     }
   };
 
@@ -250,7 +250,7 @@ const Register = (): JSX.Element => {
                     htmlFor="foto"
                     className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                   >
-                    Foto de perfil
+                    {t("foto_perfil")}
                   </label>
                   {/* Vista previa */}
                   {preview && (
