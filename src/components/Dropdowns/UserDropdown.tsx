@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { createPopper } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
-import i18n from "../../i18n";
 import default_avatar from "../../assets/img/default_avatar.png";
 
 interface UserDropdownProps {
@@ -99,33 +98,6 @@ const UserDropdown: React.FC<UserDropdownProps> = ({usuario}) => {
                 >
                     {t("cerrar_sesion")}
                 </button>
-                <span
-          className={
-            "text-sm pt-2 pb-0 px-4 font-bold block w-full whitespace-nowrap bg-transparent text-blueGray-400"
-          }
-        >
-          {t("idioma")}
-        </span>
-                <button
-                    onClick={() => {
-                        i18n.changeLanguage("es");
-                        localStorage.setItem("idioma", "es");
-                    }}
-                    className={`text-sm py-2 px-4 font-normal whitespace-nowrap bg-transparent text-blueGray-700 text-left ${i18n.language === "es" ? "opacity-100" : "opacity-50"}`}
-                    title={t("espanol")}
-                >
-                    🇦🇷
-                </button>/<button
-                    onClick={() => {
-                        i18n.changeLanguage("en");
-                        localStorage.setItem("idioma", "en");
-                    }}
-                    className={`text-sm py-2 px-4 font-normal  whitespace-nowrap bg-transparent text-blueGray-700 text-left ${i18n.language === "en" ? "opacity-100" : "opacity-50"}`}
-                    title={t("ingles")}
-                >
-                    🇺🇸
-                </button>
-
             </div>
         </>
     );

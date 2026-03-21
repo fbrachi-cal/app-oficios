@@ -6,6 +6,7 @@ import logo from "../../assets/img/logo_oficios.png";
 import { useAuth } from "../../context/AuthContext";
 import { ChatIcon } from "../Chat/ChatIcon";
 import { ChatDrawer } from "../Chat/ChatDrawer";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 type NavbarProps = {
   transparent?: boolean;
@@ -68,6 +69,11 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
                   </li>
                 </>
               )}
+
+              {/* Language Switcher unconditionally rendered */}
+              <li className="flex items-center justify-center my-2 lg:my-0">
+                <LanguageSwitcher />
+              </li>
 
             </ul>
           </div>
