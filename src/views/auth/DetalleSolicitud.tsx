@@ -290,7 +290,7 @@ const DetalleSolicitud: React.FC = () => {
                                                         <span className="font-semibold">
                                                             {consulta.usuario_id === otroUsuario.id
                                                                 ? otroUsuario.nombre
-                                                                : user?.nombre || "Vos"}
+                                                                : user?.nombre || t("vos")}
                                                         </span>
                                                         <span className="ml-auto text-xs text-blueGray-400">
                                                             {new Date(consulta.fecha).toLocaleString("es-AR")}

@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './views/Home';
 import Auth from "./layouts/Auth";
+import AdminLayout from "./layouts/Admin";
 import Login from './views/auth/Login';
 import UpdateProfile from './views/auth/UpdateProfile';
 import Register from './views/auth/Register';
@@ -9,6 +10,10 @@ import Landing from './views/Landing';
 import PerfilProfesional from './views/auth/PerfilProfesional';
 import DetalleSolicitud from "./views/auth/DetalleSolicitud";
 import LoadingScreen from './components/Screens/LoadingScreen';
+import RequireAdmin from './utils/RequireAdmin';
+import UsersPage from './views/admin/UsersPage';
+import ChatsPage from './views/admin/ChatsPage';
+import ReportsPage from './views/admin/ReportsPage';
 
 
 
@@ -36,6 +41,16 @@ function App() {
         <Route path="/landing" element={<Landing />} />
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<Landing />} />
+
+        {/* Admin panel — protected by role guard */}
+        <Route element={<RequireAdmin />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="usuarios" replace />} />
+            <Route path="usuarios" element={<UsersPage />} />
+            <Route path="chats" element={<ChatsPage />} />
+            <Route path="reportes" element={<ReportsPage />} />
+          </Route>
+        </Route>
       </Routes>
 
     </>

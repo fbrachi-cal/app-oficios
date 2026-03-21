@@ -24,8 +24,8 @@
     "ingresar_con_facebook": "Ingresar con Facebook",
     "bienvenido": "Bienvenido",
     "salir": "Salir",
-    "landing_titulo": "Tu arreglo en un click",
-    "landing_descripcion": "Este es un simple ejemplo de una página de destino que puedes construir usando Notus React. Presenta múltiples componentes CSS basados en el sistema de diseño Tailwind CSS.",
+    "landing_hero_title": "La red de profesionales para tu hogar",
+    "landing_hero_subtitle": "Encontrá ayuda o conseguí trabajo conectando directo, sin comisiones ni intermediarios.",
     "landing_profesional_descripcion": "Mantenga a su usuario interesado proporcionando información significativa. Recuerde que para este momento, el usuario siente curiosidad.",
     "landing_calificar_descripcion": "Escriba unas pocas líneas sobre cada uno. Un párrafo que describa una característica será suficiente. ¡Mantenga a su usuario interesado!",
     "necesitas_arreglo": "¿Necesitas un arreglo?",
@@ -88,12 +88,14 @@
     "ver": "Ver",
     "solicitudes_recibidas":"Solicitudes recibidas",
     "motivo_cancelacion": "Motivo de la cancelación",
-    "estado":{
-      "cancelada": "Cancelada",
+    "estado": {
       "creada": "Creada",
-      "rechazada": "Rechazada",
+      "consulta": "Consulta enviada",
       "aceptada": "Aceptada",
-      "confirmada": "Confirmada"
+      "confirmada": "Confirmada",
+      "rechazada": "Rechazada",
+      "cancelada": "Cancelada",
+      "finalizada": "Finalizada"
     },    
     "confirmar_solicitud": "Confirmar solicitud",
     "calificar_profesional": "Calificar profesional",
@@ -252,6 +254,105 @@
     "verificar_telefono": "Verificar teléfono",
     "codigo_verificacion": "Código de verificación",
     "confirmar_codigo": "Confirmar código",
-    "telefono_verificado": "Teléfono verificado exitosamente"
-  }
-  
+    "telefono_verificado": "Teléfono verificado exitosamente",
+    "tipo_de_pedido": "Tipo de pedido",
+    "escriba_un_mensaje": "Escriba un mensaje",
+    "estado_actualizado": "Estado actualizado",
+    "error_calificar": "Error al calificar",
+    "error_cambiar_estado": "Error al cambiar estado",
+    "consulta_enviada_exito": "Consulta enviada con éxito",
+    "error_enviar_consulta": "Error al enviar consulta",
+    "zona": "Zona",
+    "confirmar_aceptacion_titulo": "Confirmar aceptación",
+    "confirmar_aceptacion_mensaje": "¿Estás seguro de que querés aceptar esta solicitud?",
+    "califica_al_profesional": "Calificá al profesional",
+    "cerrar": "Cerrar",
+    "no_especificada": "No especificada",
+    "sin_zonas_asignadas": "Sin zonas asignadas",
+    "sin_oficios": "Sin oficios",
+    "sin_descripcion_profesional": "El profesional aún no ha añadido una descripción.",
+    "nueva_solicitud": "Nueva solicitud",
+    "id_invalido": "ID de usuario inválido",
+    "solicitud_enviada_exito": "Solicitud enviada con éxito",
+    "error_enviar_solicitud": "Error al enviar la solicitud",
+    "trabajos": "Trabajos",
+    "error_zonas_subcategorias": "Debes seleccionar al menos una zona y una especialidad",
+    "volver": "Volver",
+    "admin": {
+        "panel_label": "Panel Admin",
+        "nav": {
+            "back_to_app": "Volver a la app",
+            "users": "Usuarios",
+            "chats": "Chats",
+            "reports": "Reportes"
+        },
+        "users": {
+            "title": "Gestión de Usuarios",
+            "search": "Buscar por nombre, email o ID..."
+        },
+        "chats": {
+            "title": "Moderación de Chats",
+            "search": "Buscar por UID de participante..."
+        },
+        "reports": {
+            "title": "Gestión de Reportes",
+            "resolution_prompt": "Notas de resolución (opcional):"
+        },
+        "filters": {
+            "all_roles": "Todos los roles",
+            "all_status": "Todos los estados"
+        },
+        "pagination": {
+            "prev": "Anterior",
+            "current_page": "Página actual",
+            "next": "Siguiente"
+        },
+        "messages": {
+            "fetch_error": "Error al cargar datos",
+            "report_resolved": "Reporte resuelto",
+            "user_updated": "Usuario actualizado correctamente",
+            "confirm_delete": "¿Estás seguro de eliminar este usuario?",
+            "user_deleted": "Usuario eliminado (soft delete)",
+            "error": "Ocurrió un error"
+        },
+        "table": {
+            "user": "Usuario",
+            "role": "Rol",
+            "status": "Estado",
+            "actions": "Acciones",
+            "no_results": "No se encontraron resultados"
+        },
+        "status": {
+            "deleted": "Eliminado",
+            "disabled": "Deshabilitado",
+            "active": "Activo"
+        },
+        "actions": {
+            "resolve": "Resolver",
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "cancel": "Cancelar",
+            "save": "Guardar"
+        },
+        "modal": {
+            "user_detail": "Detalle de Usuario",
+            "role": "Rol del usuario",
+            "active_account": "Cuenta Activa",
+            "disable_warn": "Deshabilitar impide el inicio de sesión"
+        },
+        "chat": {
+            "readonly": "Vista de solo lectura (Moderación)"
+        }
+    },
+    "landing_customer_headline": "¿Necesitás ayuda en tu hogar?",
+    "landing_customer_subtitle": "Caño roto, lavarropas descompuesto, ayuda con limpieza, niñera y mucho más!",
+    "landing_pro_headline": "Conectá con clientes cerca tuyo.",
+    "landing_pro_subtitle": "Empezá a ganar hoy mismo.",
+    "landing_pro_benefits_title": "¡Conseguí más clientes!",
+    "landing_pro_benefits_desc_1": "Destacá tu servicio dentro de la red y aparecé primero cuando los hogares busquen ayuda.",
+    "landing_pro_benefits_li_1": "Aparecés primero",
+    "landing_pro_benefits_li_2": "Más visibilidad",
+    "landing_pro_benefits_li_3": "Más contactos",
+    "landing_pro_benefits_li_4": "Sin comisiones",
+    "landing_pro_benefits_price": "Desde ARS 2500"
+}

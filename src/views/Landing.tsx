@@ -10,11 +10,13 @@ import Footer from "../components/Footers/Footer";
 import { useTranslation } from 'react-i18next';
 import BuscadorProfesionales from "../components/Home/BuscadorProfesionales";
 import PanelSolicitudes from "../components/Home/PanelSolicitudes";
+import { useNavigate } from "react-router-dom";
 
 
 const Landing: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useUser(); // 👈
+  const navigate = useNavigate();
   console.log("USER TIPO: "+user?.tipo);
   return (
     <>
@@ -39,10 +41,10 @@ const Landing: React.FC = () => {
                 <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
                   <div className="pr-12">
                     <h1 className="text-white font-semibold text-5xl">
-                      {t('landing_titulo')}
+                      {t('landing_hero_title')}
                     </h1>
                     <p className="mt-4 text-lg text-blueGray-200">
-                      {t('landing_descripcion')}
+                      {t('landing_hero_subtitle')}
                     </p>
                   </div>
                 </div>
@@ -77,14 +79,21 @@ const Landing: React.FC = () => {
                 ): (
                   
                   <div className="w-full md:w-4/12 px-4 text-center">
-                  <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+                  <div 
+                    className={`relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg ${!user ? "cursor-pointer hover:shadow-xl transition-all duration-300" : ""}`}
+                    onClick={() => {
+                        if (!user) {
+                            navigate('/auth/registro');
+                        }
+                    }}
+                  >
                     <div className="px-4 py-5 flex-auto">
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
                         <FaCalculator className="text-white" />
                       </div>
-                      <h6 className="text-xl font-semibold">{t('contactas_profesional')}</h6>
-                      <p className="mt-2 mb-4 text-blueGray-500">
-                        {t('landing_profesional_descripcion')}
+                      <h6 className="text-xl font-semibold">{t('landing_pro_headline')}</h6>
+                      <p className="mt-2 mb-4 text-blueGray-500 font-bold">
+                        {t('landing_pro_subtitle')}
                       </p>
                     </div>
                   </div>
@@ -93,14 +102,30 @@ const Landing: React.FC = () => {
                 <PanelSolicitudes />
 
                 <div className="pt-6 w-full md:w-4/12 px-4 text-center">
-                  <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+                  <div 
+                    className={`relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg ${!user ? "cursor-pointer hover:shadow-xl transition-all duration-300" : ""}`}
+                    onClick={() => {
+                        if (!user) {
+                            navigate('/auth/registro');
+                        }
+                    }}
+                  >
                     <div className="px-4 py-5 flex-auto">
                       <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400">
                         <FaFingerprint className="text-white" />
                       </div>
-                      <h6 className="text-xl font-semibold">{t('calificas_servicio')}</h6>
+                      <h6 className="text-xl font-semibold">{t('landing_pro_benefits_title')}</h6>
                       <p className="mt-2 mb-4 text-blueGray-500">
-                        {t('landing_calificar_descripcion')}
+                        {t('landing_pro_benefits_desc_1')}
+                      </p>
+                      <ul className="text-left text-blueGray-500 space-y-1 mb-4 text-sm font-semibold">
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_1')}</li>
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_2')}</li>
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_3')}</li>
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_4')}</li>
+                      </ul>
+                      <p className="font-bold text-blueGray-700 text-left">
+                        {t('landing_pro_benefits_price')}
                       </p>
                     </div>
                   </div>

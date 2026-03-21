@@ -55,6 +55,8 @@ const Login = (): JSX.Element => {
           (!userData.oficios?.length || !userData.zonas?.length)
         ) {
           navigate("/auth/completar-perfil");
+        } else if (userData.tipo === "admin" || userData.tipo === "moderator") {
+          navigate("/admin");
         } else {
           navigate("/");
         }
@@ -101,6 +103,8 @@ const Login = (): JSX.Element => {
           (!userData.oficios?.length || !userData.zonas?.length)
         ) {
           navigate("/auth/completar-perfil");
+        } else if (userData.tipo === "admin" || userData.tipo === "moderator") {
+          navigate("/admin");
         } else {
           navigate("/");
         }
