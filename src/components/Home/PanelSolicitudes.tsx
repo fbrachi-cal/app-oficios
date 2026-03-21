@@ -126,9 +126,9 @@ const PanelSolicitudes: React.FC = () => {
                         </>
                     ) : (
                         <>
-                            <h6 className="text-xl font-semibold">{t("necesitas_arreglo")}</h6>
+                            <h6 className="text-xl font-semibold">{t("landing_customer_headline")}</h6>
                             <p className="mt-2 mb-4 text-blueGray-500">
-                                {t("inicia_sesion_ver_solicitudes")}
+                                {t("landing_customer_subtitle")}
                             </p>
                         </>
                     )}

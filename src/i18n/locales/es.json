@@ -338,5 +338,16 @@
         "chat": {
             "readonly": "Vista de solo lectura (Moderación)"
         }
-    }
+    },
+    "landing_customer_headline": "¿Necesitás ayuda en tu hogar?",
+    "landing_customer_subtitle": "Caño roto, lavarropas descompuesto, ayuda con limpieza, niñera y mucho más!",
+    "landing_pro_headline": "Conectá con clientes cerca tuyo.",
+    "landing_pro_subtitle": "Empezá a ganar hoy mismo.",
+    "landing_pro_benefits_title": "¡Conseguí más clientes!",
+    "landing_pro_benefits_desc_1": "Destacá tu servicio dentro de la red y aparecé primero cuando los hogares busquen ayuda.",
+    "landing_pro_benefits_li_1": "Aparecés primero",
+    "landing_pro_benefits_li_2": "Más visibilidad",
+    "landing_pro_benefits_li_3": "Más contactos",
+    "landing_pro_benefits_li_4": "Sin comisiones",
+    "landing_pro_benefits_price": "Desde ARS 2500"
 }

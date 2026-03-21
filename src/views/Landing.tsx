@@ -82,9 +82,9 @@ const Landing: React.FC = () => {
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
                         <FaCalculator className="text-white" />
                       </div>
-                      <h6 className="text-xl font-semibold">{t('contactas_profesional')}</h6>
-                      <p className="mt-2 mb-4 text-blueGray-500">
-                        {t('landing_profesional_descripcion')}
+                      <h6 className="text-xl font-semibold">{t('landing_pro_headline')}</h6>
+                      <p className="mt-2 mb-4 text-blueGray-500 font-bold">
+                        {t('landing_pro_subtitle')}
                       </p>
                     </div>
                   </div>
@@ -98,9 +98,18 @@ const Landing: React.FC = () => {
                       <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400">
                         <FaFingerprint className="text-white" />
                       </div>
-                      <h6 className="text-xl font-semibold">{t('calificas_servicio')}</h6>
+                      <h6 className="text-xl font-semibold">{t('landing_pro_benefits_title')}</h6>
                       <p className="mt-2 mb-4 text-blueGray-500">
-                        {t('landing_calificar_descripcion')}
+                        {t('landing_pro_benefits_desc_1')}
+                      </p>
+                      <ul className="text-left text-blueGray-500 space-y-1 mb-4 text-sm font-semibold">
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_1')}</li>
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_2')}</li>
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_3')}</li>
+                        <li><i className="fas fa-check text-emerald-500 mr-2"></i>{t('landing_pro_benefits_li_4')}</li>
+                      </ul>
+                      <p className="font-bold text-blueGray-700 text-left">
+                        {t('landing_pro_benefits_price')}
                       </p>
                     </div>
                   </div>

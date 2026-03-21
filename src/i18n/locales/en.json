@@ -323,5 +323,16 @@
         "chat": {
             "readonly": "Read-only view (Moderation)"
         }
-    }
+    },
+    "landing_customer_headline": "Need help at home?",
+    "landing_customer_subtitle": "Broken pipe, broken washing machine, cleaning help, babysitter and much more!",
+    "landing_pro_headline": "Connect with clients near you.",
+    "landing_pro_subtitle": "Start earning today.",
+    "landing_pro_benefits_title": "Get more clients!",
+    "landing_pro_benefits_desc_1": "Highlight your service in the network and appear first when homes look for help.",
+    "landing_pro_benefits_li_1": "Appear first",
+    "landing_pro_benefits_li_2": "More visibility",
+    "landing_pro_benefits_li_3": "More contacts",
+    "landing_pro_benefits_li_4": "No commissions",
+    "landing_pro_benefits_price": "From ARS 2500"
 }

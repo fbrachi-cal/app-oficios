@@ -91,7 +91,7 @@ const BuscadorProfesionales: React.FC = () => {
                         <FaSearch className="text-white" />
                     </div>
 
-                    <h6 className="text-xl font-semibold">{t('necesitas_arreglo')}</h6>
+                    <h6 className="text-xl font-semibold">{t('landing_customer_headline')}</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">{t("elige_zonas_y_categoria")}</p>
 
                     <select
