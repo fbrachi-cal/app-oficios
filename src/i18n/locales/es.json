@@ -252,6 +252,91 @@
     "verificar_telefono": "Verificar teléfono",
     "codigo_verificacion": "Código de verificación",
     "confirmar_codigo": "Confirmar código",
-    "telefono_verificado": "Teléfono verificado exitosamente"
-  }
-  
+    "telefono_verificado": "Teléfono verificado exitosamente",
+    "tipo_de_pedido": "Tipo de pedido",
+    "escriba_un_mensaje": "Escriba un mensaje",
+    "estado_actualizado": "Estado actualizado",
+    "error_calificar": "Error al calificar",
+    "error_cambiar_estado": "Error al cambiar estado",
+    "consulta_enviada_exito": "Consulta enviada con éxito",
+    "error_enviar_consulta": "Error al enviar consulta",
+    "zona": "Zona",
+    "confirmar_aceptacion_titulo": "Confirmar aceptación",
+    "confirmar_aceptacion_mensaje": "¿Estás seguro de que querés aceptar esta solicitud?",
+    "califica_al_profesional": "Calificá al profesional",
+    "cerrar": "Cerrar",
+    "no_especificada": "No especificada",
+    "sin_zonas_asignadas": "Sin zonas asignadas",
+    "sin_oficios": "Sin oficios",
+    "sin_descripcion_profesional": "El profesional aún no ha añadido una descripción.",
+    "nueva_solicitud": "Nueva solicitud",
+    "id_invalido": "ID de usuario inválido",
+    "solicitud_enviada_exito": "Solicitud enviada con éxito",
+    "error_enviar_solicitud": "Error al enviar la solicitud",
+    "trabajos": "Trabajos",
+    "error_zonas_subcategorias": "Debes seleccionar al menos una zona y una especialidad",
+    "volver": "Volver",
+    "admin": {
+        "panel_label": "Panel Admin",
+        "nav": {
+            "back_to_app": "Volver a la app"
+        },
+        "users": {
+            "title": "Gestión de Usuarios",
+            "search": "Buscar por nombre, email o ID..."
+        },
+        "chats": {
+            "title": "Moderación de Chats",
+            "search": "Buscar por UID de participante..."
+        },
+        "reports": {
+            "title": "Gestión de Reportes",
+            "resolution_prompt": "Notas de resolución (opcional):"
+        },
+        "filters": {
+            "all_roles": "Todos los roles",
+            "all_status": "Todos los estados"
+        },
+        "pagination": {
+            "prev": "Anterior",
+            "current_page": "Página actual",
+            "next": "Siguiente"
+        },
+        "messages": {
+            "fetch_error": "Error al cargar datos",
+            "report_resolved": "Reporte resuelto",
+            "user_updated": "Usuario actualizado correctamente",
+            "confirm_delete": "¿Estás seguro de eliminar este usuario?",
+            "user_deleted": "Usuario eliminado (soft delete)",
+            "error": "Ocurrió un error"
+        },
+        "table": {
+            "user": "Usuario",
+            "role": "Rol",
+            "status": "Estado",
+            "actions": "Acciones",
+            "no_results": "No se encontraron resultados"
+        },
+        "status": {
+            "deleted": "Eliminado",
+            "disabled": "Deshabilitado",
+            "active": "Activo"
+        },
+        "actions": {
+            "resolve": "Resolver",
+            "edit": "Editar",
+            "delete": "Eliminar",
+            "cancel": "Cancelar",
+            "save": "Guardar"
+        },
+        "modal": {
+            "user_detail": "Detalle de Usuario",
+            "role": "Rol del usuario",
+            "active_account": "Cuenta Activa",
+            "disable_warn": "Deshabilitar impide el inicio de sesión"
+        },
+        "chat": {
+            "readonly": "Vista de solo lectura (Moderación)"
+        }
+    }
+}

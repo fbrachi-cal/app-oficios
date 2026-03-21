@@ -237,5 +237,91 @@
     "verificar_telefono": "Verify phone",
     "codigo_verificacion": "Verification code",
     "confirmar_codigo": "Confirm code",
-    "telefono_verificado": "Phone successfully verified"
+    "telefono_verificado": "Phone successfully verified",
+    "tipo_de_pedido": "Request type",
+    "escriba_un_mensaje": "Write a message",
+    "estado_actualizado": "Status updated",
+    "error_calificar": "Error rating",
+    "error_cambiar_estado": "Error changing status",
+    "consulta_enviada_exito": "Query sent successfully",
+    "error_enviar_consulta": "Error sending query",
+    "zona": "Zone",
+    "confirmar_aceptacion_titulo": "Confirm acceptance",
+    "confirmar_aceptacion_mensaje": "Are you sure you want to accept this request?",
+    "califica_al_profesional": "Rate the professional",
+    "cerrar": "Close",
+    "no_especificada": "Not specified",
+    "sin_zonas_asignadas": "No zones assigned",
+    "sin_oficios": "No trades assigned",
+    "sin_descripcion_profesional": "The professional hasn't added a description yet.",
+    "nueva_solicitud": "New request",
+    "id_invalido": "Invalid user ID",
+    "solicitud_enviada_exito": "Request sent successfully",
+    "error_enviar_solicitud": "Error sending the request",
+    "trabajos": "Jobs",
+    "error_zonas_subcategorias": "You must select at least one zone and one specialty",
+    "volver": "Go back",
+    "admin": {
+        "panel_label": "Admin Panel",
+        "nav": {
+            "back_to_app": "Back to App"
+        },
+        "users": {
+            "title": "User Management",
+            "search": "Search by name, email or ID..."
+        },
+        "chats": {
+            "title": "Chat Moderation",
+            "search": "Search by participant UID..."
+        },
+        "reports": {
+            "title": "Report Management",
+            "resolution_prompt": "Resolution notes (optional):"
+        },
+        "filters": {
+            "all_roles": "All roles",
+            "all_status": "All statuses"
+        },
+        "pagination": {
+            "prev": "Previous",
+            "current_page": "Current page",
+            "next": "Next"
+        },
+        "messages": {
+            "fetch_error": "Error loading data",
+            "report_resolved": "Report resolved",
+            "user_updated": "User successfully updated",
+            "confirm_delete": "Are you sure you want to delete this user?",
+            "user_deleted": "User deleted (soft delete)",
+            "error": "An error occurred"
+        },
+        "table": {
+            "user": "User",
+            "role": "Role",
+            "status": "Status",
+            "actions": "Actions",
+            "no_results": "No results found"
+        },
+        "status": {
+            "deleted": "Deleted",
+            "disabled": "Disabled",
+            "active": "Active"
+        },
+        "actions": {
+            "resolve": "Resolve",
+            "edit": "Edit",
+            "delete": "Delete",
+            "cancel": "Cancel",
+            "save": "Save"
+        },
+        "modal": {
+            "user_detail": "User Detail",
+            "role": "User role",
+            "active_account": "Active Account",
+            "disable_warn": "Disabling prevents user login"
+        },
+        "chat": {
+            "readonly": "Read-only view (Moderation)"
+        }
+    }
 }
