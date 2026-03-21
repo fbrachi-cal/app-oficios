@@ -4,6 +4,9 @@ from app.adapters.firebase.firebase_chat_repo import FirebaseChatRepository
 from app.adapters.firebase.firebase_request_repo import FirebaseRequestRepository
 from app.adapters.firebase.firebase_rating_repo import FirebaseRatingRepository
 from app.adapters.firebase.firebase_uploader import FirebaseUploader
+from app.adapters.firebase.firebase_report_repo import FirebaseReportRepository
+from app.domain.services.admin_service import AdminService
+from app.domain.services.report_service import ReportService
 from fastapi import Header, HTTPException
 from firebase_admin import auth
 from app.shared.logger import log
@@ -23,6 +26,18 @@ def get_request_repo():
 
 def get_file_uploader():
     return FirebaseUploader()
+
+def get_report_repo():
+    return FirebaseReportRepository()
+
+def get_admin_service():
+    return AdminService(
+        user_repository=FirebaseUserRepository(),
+        chat_repository=FirebaseChatRepository(),
+    )
+
+def get_report_service():
+    return ReportService(report_repository=FirebaseReportRepository())
 
 #async def get_current_user_id(authorization: str = Header(...)) -> str:    
 async def get_current_user_id(authorization: Optional[str] = Header(None)) -> str:

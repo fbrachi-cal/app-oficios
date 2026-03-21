@@ -87,9 +87,18 @@ class FirebaseChatRepository(ChatRepository):
                 msg = msg_doc.to_dict()
                 chat["lastMessage"] = msg.get("body")
                 chat["lastMessageSenderId"] = msg.get("senderId")
-                chat["lastMessageSentAt"] = msg.get("sentAt")
+                chat["lastMessageAt"] = msg.get("sentAt")
 
             chats.append(chat)
 
         return chats
 
+    def get_all_chats(self) -> list:
+        """Returns all chats in the system, for admin use only."""
+        docs = list(self.chats.stream())
+        result = []
+        for doc in docs:
+            data = doc.to_dict()
+            data["id"] = doc.id
+            result.append(data)
+        return result
