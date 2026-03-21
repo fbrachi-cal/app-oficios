@@ -24,8 +24,8 @@
     "ingresar_con_facebook": "Ingresar con Facebook",
     "bienvenido": "Bienvenido",
     "salir": "Salir",
-    "landing_titulo": "Tu arreglo en un click",
-    "landing_descripcion": "Este es un simple ejemplo de una página de destino que puedes construir usando Notus React. Presenta múltiples componentes CSS basados en el sistema de diseño Tailwind CSS.",
+    "landing_hero_title": "La red de profesionales para tu hogar",
+    "landing_hero_subtitle": "Encontrá ayuda o conseguí trabajo conectando directo, sin comisiones ni intermediarios.",
     "landing_profesional_descripcion": "Mantenga a su usuario interesado proporcionando información significativa. Recuerde que para este momento, el usuario siente curiosidad.",
     "landing_calificar_descripcion": "Escriba unas pocas líneas sobre cada uno. Un párrafo que describa una característica será suficiente. ¡Mantenga a su usuario interesado!",
     "necesitas_arreglo": "¿Necesitas un arreglo?",
@@ -88,12 +88,14 @@
     "ver": "Ver",
     "solicitudes_recibidas":"Solicitudes recibidas",
     "motivo_cancelacion": "Motivo de la cancelación",
-    "estado":{
-      "cancelada": "Cancelada",
+    "estado": {
       "creada": "Creada",
-      "rechazada": "Rechazada",
+      "consulta": "Consulta enviada",
       "aceptada": "Aceptada",
-      "confirmada": "Confirmada"
+      "confirmada": "Confirmada",
+      "rechazada": "Rechazada",
+      "cancelada": "Cancelada",
+      "finalizada": "Finalizada"
     },    
     "confirmar_solicitud": "Confirmar solicitud",
     "calificar_profesional": "Calificar profesional",
@@ -279,7 +281,10 @@
     "admin": {
         "panel_label": "Panel Admin",
         "nav": {
-            "back_to_app": "Volver a la app"
+            "back_to_app": "Volver a la app",
+            "users": "Usuarios",
+            "chats": "Chats",
+            "reports": "Reportes"
         },
         "users": {
             "title": "Gestión de Usuarios",

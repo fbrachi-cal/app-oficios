@@ -28,8 +28,8 @@
     "elige_zonas_y_oficios": "Choose your preferred zones and trades",
     "minimizar": "Minimize",
     "maximizar": "Maximize",
-    "landing_titulo": "Your fix in a click",
-    "landing_descripcion": "This is a simple example of a Landing Page you can build using Notus React. It features multiple CSS components based on the Tailwind CSS design system.",
+    "landing_hero_title": "The network of professionals for your home",
+    "landing_hero_subtitle": "Find help or get work by connecting directly, without commissions or intermediaries.",
     "landing_profesional_descripcion": "Keep your user engaged by providing meaningful information. Remember that by this time, the user is curious.",
     "landing_calificar_descripcion": "Write a few lines about each one. A paragraph describing a feature will be enough. Keep your user engaged!",
     "necesitas_arreglo": "Need a fix?",
@@ -76,10 +76,13 @@
     "ver": "View",
     "solicitudes_recibidas": "Received requests",
     "estado": {
-        "pendiente": "Pending",
+        "creada": "Created",
+        "consulta": "Query sent",
+        "aceptada": "Accepted",
         "confirmada": "Confirmed",
+        "rechazada": "Rejected",
         "cancelada": "Cancelled",
-        "rechazada": "Rejected"
+        "finalizada": "Finished"
     },
     "confirmar_solicitud": "Confirm request",
     "aceptar_solicitud": "Accept request",
@@ -264,7 +267,10 @@
     "admin": {
         "panel_label": "Admin Panel",
         "nav": {
-            "back_to_app": "Back to App"
+            "back_to_app": "Back to App",
+            "users": "Users",
+            "chats": "Chats",
+            "reports": "Reports"
         },
         "users": {
             "title": "User Management",
