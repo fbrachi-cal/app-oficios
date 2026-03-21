@@ -39,7 +39,9 @@ class FirebaseUserRepository(UserRepository):
     def get_user_by_id(self, user_id: str) -> dict:
         doc = self.collection.document(user_id).get()
         if doc.exists:
-            return doc.to_dict()
+            data = doc.to_dict()
+            data["id"] = doc.id
+            return data
         return None
     
     def get_users_by_ids(self, user_ids: List[str]) -> List[Dict]:
@@ -105,7 +107,12 @@ class FirebaseUserRepository(UserRepository):
 
 
     def get_all_users(self):
-        return [doc.to_dict() for doc in self.collection.stream()]
+        results = []
+        for doc in self.collection.stream():
+            data = doc.to_dict()
+            data["id"] = doc.id
+            results.append(data)
+        return results
     
     def actualizar_campos_usuario(self, user_id: str, campos: dict):
         self.collection.document(user_id).update(campos)

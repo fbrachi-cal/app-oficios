@@ -40,4 +40,11 @@ class ChatRepository:
             messages.append(data)
         log.info(f"Mensajes recuperados: {messages.count}")
         return messages
+    def get_all_chats(self) -> List[Dict]:
+        """Recupera todos los chats del sistema (uso exclusivo de admin)."""
+        raise NotImplementedError
+
+    def get_chats_for_user(self, uid: str) -> List[Dict]:
+        """Recupera los chats donde participa un usuario específico."""
+        raise NotImplementedError
 
