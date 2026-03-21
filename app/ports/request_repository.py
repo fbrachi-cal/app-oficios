@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import List,Dict,Any
+from typing import List, Dict, Any, Optional
 
 class RequestRepository(ABC):
     @abstractmethod
-    def save_request(self, request_data: dict[str, Any]) -> dict:
+    def save_request(self, request_data: Dict[str, Any]) -> dict:
         pass
 
     @abstractmethod
@@ -15,7 +15,7 @@ class RequestRepository(ABC):
         pass
     
     @abstractmethod
-    def get_by_id(self, solicitud_id: str) -> dict | None:
+    def get_by_id(self, solicitud_id: str) -> Optional[dict]:
         pass
     
     @abstractmethod

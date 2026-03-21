@@ -4,7 +4,7 @@ import uuid
 import imghdr
 from firebase_admin import storage, firestore
 from fastapi import UploadFile, HTTPException
-from typing import Any, List, Dict
+from typing import Any, List, Dict, Optional
 from PIL import Image
 from io import BytesIO
 from app.shared.logger import log
@@ -37,7 +37,7 @@ class FirebaseRequestRepository:
         return doc_ref.get().to_dict()
 
 
-    async def save_request(self, request_data: dict[str, Any]) -> dict:
+    async def save_request(self, request_data: Dict[str, Any]) -> dict:
         doc_ref = self.collection.document()
         doc_ref.set(request_data)
         return {"id": doc_ref.id, **request_data}
@@ -52,7 +52,7 @@ class FirebaseRequestRepository:
         docs = query.stream()
         return [dict(doc.to_dict(), id=doc.id) for doc in docs]
     
-    def get_by_id(self, solicitud_id: str) -> dict | None:
+    def get_by_id(self, solicitud_id: str) -> Optional[dict]:
         doc_ref = self.collection.document(solicitud_id)
         doc = doc_ref.get()
         if doc.exists:

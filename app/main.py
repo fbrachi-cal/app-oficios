@@ -14,9 +14,12 @@ log.info("APP INICIADA - API")
 
 app = FastAPI(title="App de Oficios - API")
 
+allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173")
+allowed_origins = [origin.strip() for origin in allowed_origins_str.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # o ["*"] para desarrollo
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -25,6 +28,10 @@ app.add_middleware(
 if os.getenv("ENABLE_LOGGING", "true") == "true":
     app.add_middleware(LoggingMiddleware)
 
+
+@app.get("/health", tags=["Health"])
+def health_check():
+    return {"status": "ok"}
 
 app.include_router(requests.router, prefix="/solicitudes", tags=["Solicitudes"])
 app.include_router(users.router, prefix="/usuarios", tags=["Usuarios"])

@@ -1,4 +1,5 @@
 from app.api.schemas.user_schema import UsuarioRegistro, UsuarioUpdate
+from typing import List
 
 class UserService:
     def __init__(self, user_repository):
@@ -12,7 +13,7 @@ class UserService:
     def obtener_usuario(self, user_id: str) -> dict:
         return self.user_repository.get_user_by_id(user_id)
     
-    def buscar_profesionales_multifiltro(self, zonas: list[str], categoria: str, subcategorias: list[str], limit: int = 10, start_after_id: str = None):
+    def buscar_profesionales_multifiltro(self, zonas: List[str], categoria: str, subcategorias: List[str], limit: int = 10, start_after_id: str = None):
         return self.user_repository.buscar_profesionales(zonas, categoria, subcategorias, limit, start_after_id)
 
     def listar_usuarios(self):

@@ -75,7 +75,7 @@ class RequestService:
         zona: str,
         subcategoria: str,
         descripcion: str,
-        fotos_urls: list[str]
+        fotos_urls: List[str]
     ) -> dict:
         solicitud_data = {
             "solicitante_id": solicitante_id,
