@@ -239,7 +239,7 @@ const PanelSolicitudes: React.FC = () => {
                                             <p><strong>{t("zona", "Zona")}:</strong> {s.zona}</p>
                                             <p><strong>{t("subcategoria")}:</strong> {s.subcategoria}</p>
                                             <p><strong>{t("descripcion")}:</strong> {s.descripcion}</p>
-                                            <p><strong>{t("estado_fijo")}:</strong> {s.estado ? t(`estado.${s.estado.toLowerCase()}`, s.estado) : ""}</p>
+                                            <p><strong>{t("estado_fijo") as string}:</strong> {s.estado ? (t(`estado.${s.estado.toLowerCase()}`, s.estado) as string) : ""}</p>
                                             {s.fotos_urls?.length > 0 && (
                                                 <div className="mt-2 flex gap-2 flex-wrap">
                                                     {s.fotos_urls.map((url: any, j: number) => (
