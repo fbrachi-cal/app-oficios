@@ -214,10 +214,6 @@ const Login = (): JSX.Element => {
                     >
                       {t("ingresar")}
                     </button>
-                    <button onClick={() => {
-  setLoading(true);
-  setTimeout(() => setLoading(false), 9000);
-}}>{t("ver_loading")}</button>
                   </div>
                 </form>
               </div>
