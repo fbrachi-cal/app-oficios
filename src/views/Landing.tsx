@@ -10,11 +10,13 @@ import Footer from "../components/Footers/Footer";
 import { useTranslation } from 'react-i18next';
 import BuscadorProfesionales from "../components/Home/BuscadorProfesionales";
 import PanelSolicitudes from "../components/Home/PanelSolicitudes";
+import { useNavigate } from "react-router-dom";
 
 
 const Landing: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useUser(); // 👈
+  const navigate = useNavigate();
   console.log("USER TIPO: "+user?.tipo);
   return (
     <>
@@ -77,7 +79,14 @@ const Landing: React.FC = () => {
                 ): (
                   
                   <div className="w-full md:w-4/12 px-4 text-center">
-                  <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+                  <div 
+                    className={`relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg ${!user ? "cursor-pointer hover:shadow-xl transition-all duration-300" : ""}`}
+                    onClick={() => {
+                        if (!user) {
+                            navigate('/auth/registro');
+                        }
+                    }}
+                  >
                     <div className="px-4 py-5 flex-auto">
                     <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-lightBlue-400">
                         <FaCalculator className="text-white" />
@@ -93,7 +102,14 @@ const Landing: React.FC = () => {
                 <PanelSolicitudes />
 
                 <div className="pt-6 w-full md:w-4/12 px-4 text-center">
-                  <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+                  <div 
+                    className={`relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg ${!user ? "cursor-pointer hover:shadow-xl transition-all duration-300" : ""}`}
+                    onClick={() => {
+                        if (!user) {
+                            navigate('/auth/registro');
+                        }
+                    }}
+                  >
                     <div className="px-4 py-5 flex-auto">
                       <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 mb-5 shadow-lg rounded-full bg-emerald-400">
                         <FaFingerprint className="text-white" />

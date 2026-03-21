@@ -96,7 +96,14 @@ const PanelSolicitudes: React.FC = () => {
 
     return (
         <div className={`pt-6 px-4 text-center ${expandido ? "w-full" : "w-full md:w-4/12"} order-first relative`}>
-            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg">
+            <div 
+                className={`relative flex flex-col min-w-0 break-words bg-white w-full mb-8 shadow-lg rounded-lg ${!user ? "cursor-pointer hover:shadow-xl transition-all duration-300" : ""}`}
+                onClick={() => {
+                    if (!user) {
+                        navigate('/auth/registro');
+                    }
+                }}
+            >
                 <button
                     onClick={() => setExpandido(!expandido)}
                     className="absolute top-2 right-4 text-gray-500 hover:text-gray-700 z-20 flex items-center"
