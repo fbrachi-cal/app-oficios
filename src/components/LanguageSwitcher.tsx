@@ -1,6 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import i18n from "../i18n";
+import arFlag from "../assets/img/ar.svg";
+import usFlag from "../assets/img/us.svg";
 
 const LanguageSwitcher: React.FC = () => {
     const { t } = useTranslation();
@@ -16,7 +18,7 @@ const LanguageSwitcher: React.FC = () => {
                     }`}
                 title={t("espanol", "Español")}
             >
-                <img src="https://flagcdn.com/ar.svg" alt="Argentina" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
+                <img src={arFlag} alt="Argentina" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
             </button>
             <span className="text-blueGray-300">/</span>
             <button
@@ -28,7 +30,7 @@ const LanguageSwitcher: React.FC = () => {
                     }`}
                 title={t("ingles", "Inglés")}
             >
-                <img src="https://flagcdn.com/us.svg" alt="English" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
+                <img src={usFlag} alt="English" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
             </button>
         </div>
     );
