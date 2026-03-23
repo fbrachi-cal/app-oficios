@@ -24,6 +24,8 @@
     "ingresar_con_facebook": "Sign in with Facebook",
     "bienvenido": "Welcome",
     "salir": "Log out",
+    "olvido_password": "Forgot password?",
+    "crear_cuenta_nueva": "Create new",
     "elige_zonas_y_categoria": "Choose zones and service categories",
     "elige_zonas_y_oficios": "Choose your preferred zones and trades",
     "minimizar": "Minimize",
@@ -85,6 +87,8 @@
         "finalizada": "Finished"
     },
     "confirmar_solicitud": "Confirm request",
+    "calificar_profesional": "Rate professional",
+    "calificar_cliente": "Rate client",
     "aceptar_solicitud": "Accept request",
     "enviar_consulta": "Send query",
     "calificacion": "Rating",
@@ -108,7 +112,6 @@
         "Gestiones y trámites": "Errands and paperwork",
         "Cuidado de personas": "Caregiving",
         "Eventos y entretenimiento": "Events and entertainment",
-    
         "Electricidad": "Electricity",
         "Plomería": "Plumbing",
         "Gas y calefacción": "Gas and heating",
@@ -176,7 +179,7 @@
         "Fotografía": "Photography",
         "Sonido/luces/DJ": "Sound/lights/DJ",
         "Decoración de eventos": "Event decoration"
-      },
+    },
     "profesionales_encontrados": "Professionals found",
     "tipo": "Type",
     "sin_resultados_mostrar": "No results to show.",
@@ -252,6 +255,7 @@
     "confirmar_aceptacion_titulo": "Confirm acceptance",
     "confirmar_aceptacion_mensaje": "Are you sure you want to accept this request?",
     "califica_al_profesional": "Rate the professional",
+    "califica_al_cliente": "Rate the client",
     "cerrar": "Close",
     "no_especificada": "Not specified",
     "sin_zonas_asignadas": "No zones assigned",

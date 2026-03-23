@@ -6,6 +6,7 @@ import { createPopper } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import default_avatar from "../../assets/img/default_avatar.png";
+import LanguageSwitcher from "../LanguageSwitcher";
 
 interface UserDropdownProps {
     usuario: any; // Reemplazá `any` por un tipo más específico si lo tenés
@@ -98,6 +99,10 @@ const UserDropdown: React.FC<UserDropdownProps> = ({usuario}) => {
                 >
                     {t("cerrar_sesion")}
                 </button>
+                <div className="h-0 my-2 border border-solid border-blueGray-100" />
+                <div className="px-4 py-2 flex justify-start">
+                    <LanguageSwitcher />
+                </div>
             </div>
         </>
     );
