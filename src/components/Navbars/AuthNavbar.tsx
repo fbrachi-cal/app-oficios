@@ -29,7 +29,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           {/* Action Items Row */}
           <div className="w-full sm:w-auto flex flex-row items-center justify-center sm:justify-end space-x-4 sm:space-x-6">
             
-            <LanguageSwitcher />
+            {!usuario && <LanguageSwitcher />}
 
             {usuario ? (
               <UserDropdown usuario={usuario} />

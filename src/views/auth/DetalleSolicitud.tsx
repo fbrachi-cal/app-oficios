@@ -425,7 +425,7 @@ const DetalleSolicitud: React.FC = () => {
                                             onClick={() => setModalCalificarAbierta(true)}
                                             className="bg-yellow-500 text-white px-4 py-3 sm:py-2 rounded hover:bg-yellow-600 w-full sm:w-auto font-medium"
                                         >
-                                            {t("calificar_profesional")}
+                                            {t(user?.tipo === "cliente" ? "calificar_profesional" : "calificar_cliente")}
                                         </button>
                                     </div>
                                 )}
@@ -486,7 +486,7 @@ const DetalleSolicitud: React.FC = () => {
                         isOpen={modalCalificarAbierta}
                         onClose={() => setModalCalificarAbierta(false)}
                         onSubmit={enviarCalificacion}
-                        titulo={t("califica_al_profesional")}
+                        titulo={t(user?.tipo === "cliente" ? "califica_al_profesional" : "califica_al_cliente")}
                     />
                 </section>
             </main>

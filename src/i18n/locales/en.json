@@ -87,6 +87,8 @@
         "finalizada": "Finished"
     },
     "confirmar_solicitud": "Confirm request",
+    "calificar_profesional": "Rate professional",
+    "calificar_cliente": "Rate client",
     "aceptar_solicitud": "Accept request",
     "enviar_consulta": "Send query",
     "calificacion": "Rating",
@@ -253,6 +255,7 @@
     "confirmar_aceptacion_titulo": "Confirm acceptance",
     "confirmar_aceptacion_mensaje": "Are you sure you want to accept this request?",
     "califica_al_profesional": "Rate the professional",
+    "califica_al_cliente": "Rate the client",
     "cerrar": "Close",
     "no_especificada": "Not specified",
     "sin_zonas_asignadas": "No zones assigned",
