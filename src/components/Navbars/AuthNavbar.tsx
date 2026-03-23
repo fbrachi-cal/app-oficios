@@ -20,14 +20,14 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   return (
     <>
       <nav className="top-0 absolute z-40 w-full flex flex-wrap items-center justify-between px-2 py-3">
-      <div className="container px-4 mx-auto flex items-center justify-between">
+      <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
           {/* Logo + hamburguesa */}
           <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
             <Link to="/" className="flex items-center">
-              <img src={logo} alt="Logo" className="h-20 w-auto mr-4" />
+              <img src={logo} alt="Logo" className="h-14 sm:h-16 lg:h-20 w-auto mr-4 shrink-0 object-contain" />
             </Link>
             <button
-              className="cursor-pointer text-xl leading-none px-3 py-1 border border-transparent rounded bg-transparent block  outline-none"
+              className="cursor-pointer text-xl leading-none px-3 py-1 border border-transparent rounded bg-transparent block lg:hidden outline-none"
               type="button"
               onClick={() => setNavbarOpen(!navbarOpen)}
             >
@@ -36,33 +36,36 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           </div>
 
           {/* Menú desplegable */}
-          
-          <div className="w-full flex items-center transition-all duration-200 ease-in-out">
-
-            <ul className="flex flex-row list-none ml-auto items-center space-x-4">              
+          <div 
+             className={
+               "lg:flex flex-grow items-center transition-all duration-200 ease-in-out lg:w-auto lg:bg-transparent lg:shadow-none lg:p-0 lg:mt-0 " + 
+               (navbarOpen ? "w-full flex flex-col bg-white shadow-lg p-4 mt-2 rounded-lg" : "hidden")
+             }
+          >
+            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto items-center space-y-4 lg:space-y-0 lg:space-x-4 w-full lg:w-auto">              
 
               {usuario ? (
-                <li className="flex items-center">
+                <li className="flex items-center w-full lg:w-auto justify-center">
                   <ChatIcon onClick={() => setChatOpen(true)} />
                 </li>
-              ):(<li></li>)}
+              ):(<li className="hidden"></li>)}
 
               {usuario ? (
-                <li className="flex flex-col items-center">                  
+                <li className="flex flex-col items-center w-full lg:w-auto justify-center">                  
                   <UserDropdown usuario={usuario} />
                 </li>
               ) : (
                 <>
-                  <li className="flex flex-col items-center my-2 lg:my-0">
-                    <Link to="/auth/login">
-                      <button className="bg-green-600 text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md w-full lg:w-auto">
+                  <li className="flex flex-col items-center my-2 lg:my-0 w-full lg:w-auto">
+                    <Link to="/auth/login" className="w-full">
+                      <button className="bg-green-600 text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md w-full lg:w-auto transition-colors">
                         {t("ingresar")}
                       </button>
                     </Link>
                   </li>
-                  <li className="flex items-center my-2 lg:my-0">
-                    <Link to="/auth/registro">
-                      <button className="bg-white text-blueGray-700 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md w-full lg:w-auto">
+                  <li className="flex items-center my-2 lg:my-0 w-full lg:w-auto">
+                    <Link to="/auth/registro" className="w-full">
+                      <button className="bg-white text-blueGray-700 text-xs font-bold border border-blueGray-200 uppercase px-4 py-2 rounded shadow hover:shadow-md w-full lg:w-auto transition-colors">
                         {t("registrarse")}
                       </button>
                     </Link>
@@ -71,7 +74,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
               )}
 
               {/* Language Switcher unconditionally rendered */}
-              <li className="flex items-center justify-center my-2 lg:my-0">
+              <li className="flex items-center justify-center my-2 lg:my-0 w-full lg:w-auto border-t lg:border-t-0 border-blueGray-100 pt-4 lg:pt-0">
                 <LanguageSwitcher />
               </li>
 

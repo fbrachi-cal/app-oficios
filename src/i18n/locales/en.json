@@ -24,6 +24,8 @@
     "ingresar_con_facebook": "Sign in with Facebook",
     "bienvenido": "Welcome",
     "salir": "Log out",
+    "olvido_password": "Forgot password?",
+    "crear_cuenta_nueva": "Create new",
     "elige_zonas_y_categoria": "Choose zones and service categories",
     "elige_zonas_y_oficios": "Choose your preferred zones and trades",
     "minimizar": "Minimize",
@@ -108,7 +110,6 @@
         "Gestiones y trámites": "Errands and paperwork",
         "Cuidado de personas": "Caregiving",
         "Eventos y entretenimiento": "Events and entertainment",
-    
         "Electricidad": "Electricity",
         "Plomería": "Plumbing",
         "Gas y calefacción": "Gas and heating",
@@ -176,7 +177,7 @@
         "Fotografía": "Photography",
         "Sonido/luces/DJ": "Sound/lights/DJ",
         "Decoración de eventos": "Event decoration"
-      },
+    },
     "profesionales_encontrados": "Professionals found",
     "tipo": "Type",
     "sin_resultados_mostrar": "No results to show.",

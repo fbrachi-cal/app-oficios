@@ -12,11 +12,11 @@ const LanguageSwitcher: React.FC = () => {
                     i18n.changeLanguage("es");
                     localStorage.setItem("idioma", "es");
                 }}
-                className={`text-xl focus:outline-none transition-opacity duration-150 ${i18n.language === "es" ? "opacity-100 grayscale-0" : "opacity-50 grayscale"
+                className={`focus:outline-none transition-opacity duration-150 ${i18n.language === "es" ? "opacity-100 grayscale-0" : "opacity-50 grayscale"
                     }`}
                 title={t("espanol", "Español")}
             >
-                🇦🇷
+                <img src="https://flagcdn.com/ar.svg" alt="Argentina" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
             </button>
             <span className="text-blueGray-300">/</span>
             <button
@@ -24,11 +24,11 @@ const LanguageSwitcher: React.FC = () => {
                     i18n.changeLanguage("en");
                     localStorage.setItem("idioma", "en");
                 }}
-                className={`text-xl focus:outline-none transition-opacity duration-150 ${i18n.language === "en" ? "opacity-100 grayscale-0" : "opacity-50 grayscale"
+                className={`focus:outline-none transition-opacity duration-150 ${i18n.language === "en" ? "opacity-100 grayscale-0" : "opacity-50 grayscale"
                     }`}
                 title={t("ingles", "Inglés")}
             >
-                🇺🇸
+                <img src="https://flagcdn.com/us.svg" alt="English" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
             </button>
         </div>
     );
