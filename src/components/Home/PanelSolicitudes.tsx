@@ -161,100 +161,114 @@ const PanelSolicitudes: React.FC = () => {
                                     return (
                                         <div
                                             key={i}
-                                            className={`relative p-3 border border-blueGray-200 rounded shadow-sm text-left text-sm ${bgColor}`}
+                                            onClick={() => {
+                                                setLoading(true);
+                                                navigate(`/auth/solicitudes/${s.id}`);
+                                            }}
+                                            className={`relative p-4 border border-blueGray-200 rounded-lg shadow-sm text-left text-sm cursor-pointer hover:shadow-md transition-shadow flex flex-col min-w-0 break-words ${bgColor}`}
                                         >
-                                            <button
-                                                className="absolute top-2 right-2 text-blueGray-600 hover:text-blueGray-900"
-                                                onClick={() => toggleDropdown(i)}
-                                            >
-                                                <FaEllipsisV />
-                                            </button>
+                                            <div className="absolute top-2 right-2 z-10">
+                                                <button
+                                                    className="p-2 text-blueGray-600 hover:text-blueGray-900 rounded-full hover:bg-white/50 transition-colors"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        toggleDropdown(i);
+                                                    }}
+                                                >
+                                                    <FaEllipsisV />
+                                                </button>
 
-                                            {dropdowns === i && (
-                                                <div className="absolute top-8 right-2 bg-white border shadow-md rounded z-30 text-sm">
-                                                    <button
-                                                        onClick={() => {
-                                                            setLoading(true);
-                                                            navigate(`/auth/solicitudes/${s.id}`);
-                                                        }}
-                                                        className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left"
-                                                    >
-                                                        {t("ver")}
-                                                    </button>
-                                                    {user && s.estado === "confirmada" &&
-                                                        (
-                                                            (user.tipo === "cliente" && !s.calificacion_cliente) ||
-                                                            (user.tipo === "profesional" && !s.calificacion_profesional)
-                                                        ) && (
+                                                {dropdowns === i && (
+                                                    <div className="absolute top-full right-0 mt-1 bg-white border shadow-md rounded z-30 text-sm min-w-[160px]">
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                setLoading(true);
+                                                                navigate(`/auth/solicitudes/${s.id}`);
+                                                            }}
+                                                            className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left"
+                                                        >
+                                                            {t("ver")}
+                                                        </button>
+                                                        {user && s.estado === "confirmada" &&
+                                                            (
+                                                                (user.tipo === "cliente" && !s.calificacion_cliente) ||
+                                                                (user.tipo === "profesional" && !s.calificacion_profesional)
+                                                            ) && (
+                                                                <button
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        setSolicitudSeleccionada(s);
+                                                                        setModalCalificarAbierta(true);
+                                                                        setDropdowns(null);
+                                                                    }}
+                                                                    className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left"
+                                                                >
+                                                                    {user.tipo === "cliente"
+                                                                        ? t("calificar_profesional")
+                                                                        : t("calificar_cliente")}
+                                                                </button>
+                                                            )}
+
+                                                        {["aceptada"].includes(s.estado) && (
                                                             <button
-                                                                onClick={() => {
-                                                                    setSolicitudSeleccionada(s);
-                                                                    setModalCalificarAbierta(true);
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setModalAccion({
+                                                                        estado: "confirmada",
+                                                                        titulo: t("confirmar_confirmacion_titulo"),
+                                                                        mensaje: t("confirmar_confirmacion_mensaje"),
+                                                                        textoConfirmar: t("confirmar_solicitud"),
+                                                                        confirmColor: "green",
+                                                                    });
+                                                                    setDropdowns(null);
                                                                 }}
-                                                                className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left"
+                                                                className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left text-green-600 font-semibold"
                                                             >
-                                                                {user.tipo === "cliente"
-                                                                    ? t("calificar_profesional")
-                                                                    : t("calificar_cliente")}
+                                                                {t("confirmar_solicitud")}
                                                             </button>
                                                         )}
 
+                                                        {["creada", "consulta", "aceptada"].includes(s.estado) && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    setModalAccion({
+                                                                        estado: user?.tipo === "profesional" ? "rechazada" : "cancelada",
+                                                                        titulo: t("confirmar_cancelacion_titulo"),
+                                                                        mensaje: t("confirmar_cancelacion_mensaje"),
+                                                                        textoConfirmar:
+                                                                            user?.tipo === "profesional" ? t("rechazar_solicitud") : t("cancelar_solicitud"),
+                                                                        confirmColor: "red",
+                                                                        mostrarMotivos: true,
+                                                                        mostrarObservacion: true
+                                                                    });
+                                                                    setDropdowns(null);
+                                                                }}
+                                                                className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left text-red-600 font-semibold"
+                                                            >
+                                                                {user?.tipo === "profesional" ? t("rechazar_solicitud") : t("cancelar_solicitud")}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
 
-                                                    {["aceptada"].includes(s.estado) && (
-                                                        <button
-                                                            onClick={() =>
-                                                                setModalAccion({
-                                                                    estado: "confirmada",
-                                                                    titulo: t("confirmar_confirmacion_titulo"),
-                                                                    mensaje: t("confirmar_confirmacion_mensaje"),
-                                                                    textoConfirmar: t("confirmar_solicitud"),
-                                                                    confirmColor: "green",
-                                                                })
-                                                            }
-                                                            className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left text-green-500"
-                                                        >
-                                                            {t("confirmar_solicitud")}
-                                                        </button>
-
-                                                    )}
-
-
-                                                    {["creada", "consulta", "aceptada"].includes(s.estado) && (
-                                                        <button
-                                                            onClick={() =>
-                                                                setModalAccion({
-                                                                    estado: user?.tipo === "profesional" ? "rechazada" : "cancelada",
-                                                                    titulo: t("confirmar_cancelacion_titulo"),
-                                                                    mensaje: t("confirmar_cancelacion_mensaje"),
-                                                                    textoConfirmar:
-                                                                        user?.tipo === "profesional" ? t("rechazar_solicitud") : t("cancelar_solicitud"),
-                                                                    confirmColor: "red",
-                                                                    mostrarMotivos: true,
-                                                                    mostrarObservacion: true
-                                                                })
-                                                            }
-                                                            className="block px-4 py-2 hover:bg-blueGray-100 w-full text-left text-red-500"
-                                                        >
-                                                            {user?.tipo === "profesional" ? t("rechazar_solicitud") : t("cancelar_solicitud")}
-                                                        </button>
-
-                                                    )}
-                                                </div>
-                                            )}
-
-
-                                            <p><strong>{t("zona", "Zona")}:</strong> {s.zona}</p>
-                                            <p><strong>{t("subcategoria")}:</strong> {s.subcategoria}</p>
-                                            <p><strong>{t("descripcion")}:</strong> {s.descripcion}</p>
-                                            <p><strong>{t("estado_fijo") as string}:</strong> {s.estado ? (t(`estado.${s.estado.toLowerCase()}`, s.estado) as string) : ""}</p>
+                                            <div className="pr-8 space-y-1">
+                                                <p className="break-words whitespace-normal text-blueGray-700 min-w-0"><strong className="text-blueGray-800">{t("zona", "Zona")}:</strong> {s.zona}</p>
+                                                <p className="break-words whitespace-normal text-blueGray-700 min-w-0"><strong className="text-blueGray-800">{t("subcategoria")}:</strong> {s.subcategoria}</p>
+                                                <p className="break-words whitespace-normal text-blueGray-700 min-w-0"><strong className="text-blueGray-800">{t("descripcion")}:</strong> {s.descripcion}</p>
+                                                <p className="break-words whitespace-normal text-blueGray-700 min-w-0"><strong className="text-blueGray-800">{t("estado_fijo") as string}:</strong> {s.estado ? (t(`estado.${s.estado.toLowerCase()}`, s.estado) as string) : ""}</p>
+                                            </div>
+                                            
                                             {s.fotos_urls?.length > 0 && (
-                                                <div className="mt-2 flex gap-2 flex-wrap">
+                                                <div className="mt-3 flex gap-2 flex-wrap pb-1">
                                                     {s.fotos_urls.map((url: any, j: number) => (
                                                         <img
                                                             key={j}
                                                             src={url.thumbnail || url.original}
                                                             alt={`foto-${j}`}
-                                                            className="h-16 rounded border"
+                                                            className="h-16 w-16 object-cover rounded border border-blueGray-300 shadow-sm"
                                                         />
                                                     ))}
                                                 </div>

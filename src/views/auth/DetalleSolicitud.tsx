@@ -173,12 +173,12 @@ const DetalleSolicitud: React.FC = () => {
                 <section className="relative py-16 bg-blueGray-200 min-h-screen">
                     <div className="container mx-auto px-4">
                         <div className="bg-white shadow-xl rounded-lg p-6">
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-2xl font-bold text-blueGray-800">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3 min-w-0">
+                                <h2 className="text-xl sm:text-2xl font-bold text-blueGray-800 break-words">
                                     {t("solicitud_de_trabajo")}
                                 </h2>
                                 <span
-                                    className={`px-4 py-1 rounded text-sm font-semibold flex items-center gap-2 ${solicitud.estado === "cancelada"
+                                    className={`self-start sm:self-auto px-3 py-1 sm:px-4 rounded text-sm font-semibold inline-flex items-center gap-2 ${solicitud.estado === "cancelada"
                                         ? "bg-red-200 text-red-800"
                                         : solicitud.estado === "aceptada"
                                             ? "bg-green-200 text-green-800"
@@ -187,7 +187,7 @@ const DetalleSolicitud: React.FC = () => {
                                 >
                                     {t(`estado.${solicitud.estado}`)}
                                     {solicitud.fecha_cambio_estado && (
-                                        <span className="text-xs text-blueGray-600 font-normal">
+                                        <span className="text-xs text-blueGray-600 font-normal whitespace-nowrap">
                                             ({new Date(solicitud.fecha_cambio_estado).toLocaleDateString("es-AR")})
                                         </span>
                                     )}
@@ -211,39 +211,39 @@ const DetalleSolicitud: React.FC = () => {
                                 </div>
                             </div>
 
-                            <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                <div className="flex items-center text-blueGray-600">
-                                    <div className="flex items-center mr-6">
-                                        <i className="fas fa-map-marker-alt mr-2 text-blueGray-400"></i>
-                                        <span className="font-semibold mr-1">{t("zona")}:</span>
-                                        <span>{solicitud.zona}</span>
+                            <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center text-blueGray-600 gap-3 sm:gap-6 min-w-0">
+                                    <div className="flex items-start sm:items-center min-w-0">
+                                        <i className="fas fa-map-marker-alt mt-1 sm:mt-0 mr-2 text-blueGray-400 shrink-0"></i>
+                                        <span className="font-semibold mr-1 shrink-0">{t("zona")}:</span>
+                                        <span className="break-words min-w-0">{solicitud.zona}</span>
                                     </div>
-                                    <div className="flex items-center">
-                                        <i className="fas fa-tools mr-2 text-blueGray-400"></i>
-                                        <span className="font-semibold mr-1">{t("tipo_de_pedido")}:</span>
-                                        <span>{solicitud.subcategoria}</span>
+                                    <div className="flex items-start sm:items-center min-w-0">
+                                        <i className="fas fa-tools mt-1 sm:mt-0 mr-2 text-blueGray-400 shrink-0"></i>
+                                        <span className="font-semibold mr-1 shrink-0">{t("tipo_de_pedido")}:</span>
+                                        <span className="break-words min-w-0">{solicitud.subcategoria}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mb-6">
-                                <h2 className="text-xl font-semibold text-blueGray-700 mb-2">
+                            <div className="mb-6 min-w-0">
+                                <h2 className="text-xl font-semibold text-blueGray-700 mb-2 mt-4 sm:mt-0">
                                     {t("detalle_del_pedido")}
                                 </h2>
-                                <p className="text-blueGray-600 leading-relaxed">
+                                <p className="text-blueGray-600 leading-relaxed whitespace-normal break-words min-w-0">
                                     {solicitud.descripcion || t("sin_descripcion")}
                                 </p>
                             </div>
                             {["cancelada", "rechazada"].includes(solicitud.estado) && (
-                                <div className="mb-6">
+                                <div className="mb-6 min-w-0">
                                     <h4 className="text-lg font-semibold text-red-700 mb-2">
                                         {t("motivo_cancelacion")}
                                     </h4>
                                     {solicitud.motivo_cancelacion && (
-                                        <p className="text-red-600 mb-1">{t(solicitud.motivo_cancelacion)}</p>
+                                        <p className="text-red-600 mb-1 break-words">{t(solicitud.motivo_cancelacion)}</p>
                                     )}
                                     {solicitud.observacion_cancelacion && (
-                                        <p className="text-blueGray-600 italic">
+                                        <p className="text-blueGray-600 italic break-words whitespace-normal">
                                             “{solicitud.observacion_cancelacion}”
                                         </p>
                                     )}
@@ -261,7 +261,7 @@ const DetalleSolicitud: React.FC = () => {
                                                 key={index}
                                                 src={url.thumbnail || url.original || url}
                                                 alt={`foto-${index}`}
-                                                className="w-32 h-32 object-cover rounded border cursor-pointer hover:opacity-75"
+                                                className="w-full h-32 object-cover rounded border cursor-pointer hover:opacity-75"
                                                 onClick={() => setImagenSeleccionada(url.original || url)}
                                             />
                                         ))}
@@ -296,7 +296,7 @@ const DetalleSolicitud: React.FC = () => {
                                                             {new Date(consulta.fecha).toLocaleString("es-AR")}
                                                         </span>
                                                     </div>
-                                                    <p className="text-sm text-blueGray-600 whitespace-pre-wrap">{consulta.mensaje}</p>
+                                                    <p className="text-sm text-blueGray-600 whitespace-pre-wrap break-words min-w-0">{consulta.mensaje}</p>
                                                     {consulta.fotos?.length > 0 && (
                                                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
                                                             {consulta.fotos.map((fotoUrl: string, idx: number) => (
@@ -304,7 +304,7 @@ const DetalleSolicitud: React.FC = () => {
                                                                     key={idx}
                                                                     src={fotoUrl}
                                                                     onClick={() => setImagenSeleccionada(fotoUrl)}
-                                                                    className="w-24 h-24 object-cover rounded cursor-pointer border hover:opacity-75 transition"
+                                                                    className="w-full h-24 object-cover rounded cursor-pointer border hover:opacity-75 transition"
                                                                     alt={`foto-consulta-${idx}`}
                                                                 />
                                                             ))}
@@ -320,7 +320,7 @@ const DetalleSolicitud: React.FC = () => {
                                     <div className="mt-6">
                                         <h4 className="text-lg font-semibold mb-2">{t("enviar_consulta")}</h4>
                                         <textarea
-                                            className="w-full p-2 border rounded mb-4"
+                                            className="w-full max-w-full p-3 sm:p-2 border rounded mb-4 break-words"
                                             rows={3}
                                             placeholder={t("escriba_un_mensaje")}
                                             value={observacion}
@@ -332,12 +332,12 @@ const DetalleSolicitud: React.FC = () => {
                                             accept="*/*"
                                             ref={archivoInputRef}
                                             onChange={(e) => setArchivosAdjuntos(Array.from(e.target.files || []))}
-                                            className="block mb-4"
+                                            className="block mb-4 w-full max-w-full break-words whitespace-normal text-sm"
                                         />
-                                        <div className="flex flex-wrap gap-4 mt-4">
+                                        <div className="flex flex-col sm:flex-row gap-3 mt-4">
                                             <button
                                                 onClick={enviarConsulta}
-                                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                                className="bg-blue-500 text-white px-4 py-3 sm:py-2 rounded hover:bg-blue-600 w-full sm:w-auto font-medium"
                                             >
                                                 {t("enviar_consulta")}
                                             </button>
@@ -345,7 +345,7 @@ const DetalleSolicitud: React.FC = () => {
                                     </div>
                                 )}
                             {user?.tipo === "cliente" && ["creada", "consulta", "aceptada"].includes(solicitud.estado) && (
-                                <div className="flex justify-end mt-6 gap-4">
+                                <div className="flex flex-col sm:flex-row justify-end mt-6 gap-3">
                                     {solicitud.estado === "aceptada" && (
                                         <button
                                             onClick={() =>
@@ -357,7 +357,7 @@ const DetalleSolicitud: React.FC = () => {
                                                     confirmColor: "green",
                                                 })
                                             }
-                                            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                                            className="bg-green-500 text-white px-4 py-3 sm:py-2 rounded hover:bg-green-600 w-full sm:w-auto font-medium">
                                             {t("confirmar_solicitud")}
                                         </button>
                                     )}
@@ -374,14 +374,14 @@ const DetalleSolicitud: React.FC = () => {
                                                 mostrarObservacion: true,
                                             })
                                         }
-                                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                                        className="bg-red-500 text-white px-4 py-3 sm:py-2 rounded hover:bg-red-600 w-full sm:w-auto font-medium"
                                     >
                                         {t("cancelar_solicitud")}
                                     </button>
                                 </div>
                             )}
                             {user?.tipo === "profesional" && ["creada", "consulta"].includes(solicitud.estado) && (
-                                <div className="flex justify-end mt-6 gap-4">
+                                <div className="flex flex-col sm:flex-row justify-end mt-6 gap-3">
                                     <button
                                         onClick={() =>
                                             setModalAccion({
@@ -392,7 +392,7 @@ const DetalleSolicitud: React.FC = () => {
                                                 confirmColor: "green",
                                             })
                                         }
-                                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                        className="bg-green-500 text-white px-4 py-3 sm:py-2 rounded hover:bg-green-600 w-full sm:w-auto font-medium"
                                     >
                                         {t("aceptar_solicitud")}
                                     </button>
@@ -408,7 +408,7 @@ const DetalleSolicitud: React.FC = () => {
                                                 mostrarObservacion: true,
                                             })
                                         }
-                                        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                                        className="bg-red-500 text-white px-4 py-3 sm:py-2 rounded hover:bg-red-600 w-full sm:w-auto font-medium"
                                     >
                                         {t("rechazar_solicitud")}
                                     </button>
@@ -419,23 +419,23 @@ const DetalleSolicitud: React.FC = () => {
                                     (user?.tipo === "cliente" && !solicitud.calificacion_cliente) ||
                                     (user?.tipo === "profesional" && !solicitud.calificacion_profesional)
                                 ) && (
-                                    <div className="mt-6">
+                                    <div className="mt-6 flex flex-col sm:block">
                                         <button
                                             onClick={() => setModalCalificarAbierta(true)}
-                                            className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+                                            className="bg-yellow-500 text-white px-4 py-3 sm:py-2 rounded hover:bg-yellow-600 w-full sm:w-auto font-medium"
                                         >
                                             {t("calificar_profesional")}
                                         </button>
                                     </div>
                                 )}
-                            <div className="flex flex-wrap gap-4 items-center mt-6">
+                            <div className="flex flex-col sm:flex-row gap-3 items-center mt-6 w-full">
                                 {/* Bloque profesional o cliente aquí */}
                                 {/* ... */}
 
-                                <div className="ml-auto">
+                                <div className="sm:ml-auto w-full sm:w-auto">
                                     <button
                                         onClick={() => navigate(-1)}
-                                        className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400"
+                                        className="bg-gray-300 text-gray-800 px-4 py-3 sm:py-2 rounded hover:bg-gray-400 w-full sm:w-auto font-medium"
                                     >
                                         {t("volver")}
                                     </button>

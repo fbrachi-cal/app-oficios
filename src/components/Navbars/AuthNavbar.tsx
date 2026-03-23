@@ -16,32 +16,32 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   
   return (
     <>
-      <nav className="top-0 absolute z-40 w-full flex flex-wrap items-center justify-between px-2 py-3">
-      <div className="container px-4 mx-auto flex items-center justify-between">
+      <nav className="top-0 absolute z-40 w-full px-2 py-4">
+        <div className="container px-4 mx-auto flex flex-col sm:flex-row items-center justify-between gap-y-4 sm:gap-y-0">
           
-          {/* Logo */}
-          <div className="w-auto flex justify-start">
+          {/* Logo Row */}
+          <div className="w-full sm:w-auto flex justify-center sm:justify-start">
             <Link to="/" className="flex items-center shrink-0">
-              <img src={logo} alt="Logo" className="h-12 sm:h-16 lg:h-20 w-auto object-contain shrink-0" />
+              <img src={logo} alt="Logo" className="h-16 lg:h-20 w-auto object-contain shrink-0" />
             </Link>
           </div>
 
-          {/* Action Items */}
-          <div className="flex flex-row items-center justify-end space-x-3 sm:space-x-4 ml-auto">
+          {/* Action Items Row */}
+          <div className="w-full sm:w-auto flex flex-row items-center justify-center sm:justify-end space-x-4 sm:space-x-6">
             
             <LanguageSwitcher />
 
             {usuario ? (
               <UserDropdown usuario={usuario} />
             ) : (
-              <div className="flex items-center space-x-2 sm:space-x-3">
+              <div className="flex items-center space-x-3">
                 <Link to="/auth/login">
-                  <button className="bg-green-600 text-white text-[10px] sm:text-xs font-bold uppercase px-3 py-1.5 sm:px-4 sm:py-2 rounded shadow hover:shadow-md transition-colors">
+                  <button className="bg-green-600 border border-transparent text-white text-[11px] sm:text-xs font-bold uppercase px-5 py-2.5 rounded shadow hover:bg-green-700 hover:shadow-md transition-all duration-200 ease-in-out">
                     {t("ingresar")}
                   </button>
                 </Link>
                 <Link to="/auth/registro">
-                  <button className="bg-transparent border border-blueGray-400 text-white hover:border-white hover:bg-blueGray-800 text-[10px] sm:text-xs font-bold uppercase px-3 py-1.5 sm:px-4 sm:py-2 rounded shadow hover:shadow-md transition-colors">
+                  <button className="bg-transparent border border-blueGray-500 text-blueGray-200 hover:text-white hover:border-blueGray-300 hover:bg-blueGray-800 text-[11px] sm:text-xs font-bold uppercase px-5 py-2.5 rounded shadow hover:shadow-md transition-all duration-200 ease-in-out">
                     {t("registrarse")}
                   </button>
                 </Link>

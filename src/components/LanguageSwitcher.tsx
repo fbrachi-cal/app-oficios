@@ -8,7 +8,7 @@ const LanguageSwitcher: React.FC = () => {
     const { t } = useTranslation();
 
     return (
-        <div className="flex items-center space-x-2 px-3 py-2">
+        <div className="flex items-center space-x-3 px-2 py-1">
             <button
                 onClick={() => {
                     i18n.changeLanguage("es");
@@ -18,9 +18,9 @@ const LanguageSwitcher: React.FC = () => {
                     }`}
                 title={t("espanol", "Español")}
             >
-                <img src={arFlag} alt="Argentina" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
+                <img src={arFlag} alt="Argentina" className="w-7 h-5 object-cover shadow-sm rounded-sm" />
             </button>
-            <span className="text-blueGray-300">/</span>
+            <span className="text-blueGray-500 font-bold mx-1">/</span>
             <button
                 onClick={() => {
                     i18n.changeLanguage("en");
@@ -30,7 +30,7 @@ const LanguageSwitcher: React.FC = () => {
                     }`}
                 title={t("ingles", "Inglés")}
             >
-                <img src={usFlag} alt="English" className="w-6 h-4 object-cover shadow-sm rounded-sm" />
+                <img src={usFlag} alt="English" className="w-7 h-5 object-cover shadow-sm rounded-sm" />
             </button>
         </div>
     );

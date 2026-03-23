@@ -74,7 +74,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
         <textarea
           rows={4}
           placeholder={t("contanos_que_necesitas")}
-          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-blueGray-100 rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-blueGray-100 rounded text-sm shadow focus:outline-none focus:ring w-full max-w-full ease-linear transition-all duration-150 break-words"
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
           required
@@ -90,21 +90,21 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({ zonasDisponibles,
           multiple
           accept="image/*"
           onChange={(e) => setFotos(e.target.files)}
-          className="block w-full text-sm text-blueGray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-lightBlue-50 file:text-lightBlue-700 hover:file:bg-lightBlue-100"
+          className="block w-full max-w-full text-sm text-blueGray-600 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-lightBlue-50 file:text-lightBlue-700 hover:file:bg-lightBlue-100 break-words whitespace-normal"
         />
       </div>
 
-      <div className="flex justify-end gap-2 pt-4">
+      <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-4 mt-2">
         <button
           type="button"
           onClick={onCancel}
-          className="text-blueGray-600 border border-blueGray-300 px-4 py-2 rounded shadow text-sm hover:bg-blueGray-100"
+          className="text-blueGray-600 border border-blueGray-300 px-4 py-3 sm:py-2 rounded shadow text-sm hover:bg-blueGray-100 w-full sm:w-auto font-medium"
         >
           {t("cancelar")}
         </button>
         <button
           type="submit"
-          className="bg-lightBlue-500 text-white px-4 py-2 rounded shadow hover:shadow-md text-sm"
+          className="bg-lightBlue-500 text-white px-4 py-3 sm:py-2 rounded shadow hover:shadow-md text-sm w-full sm:w-auto font-medium"
         >
           {t("enviar_solicitud")}
         </button>

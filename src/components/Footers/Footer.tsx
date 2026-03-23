@@ -49,48 +49,6 @@ const Footer: React.FC = () => {
               ))}
             </div>
           </div>
-          <div className="w-full lg:w-6/12 px-4">
-            <div className="flex flex-wrap items-top mb-6">
-              <div className="w-full lg:w-4/12 px-4 ml-auto">
-                <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                  {t("enlaces_utiles")}
-                </span>
-                <ul className="list-unstyled">
-                  {[t("sobre_nosotros"), t("blog"), t("github"), t("productos_gratuitos")].map(
-                    (text, i) => (
-                      <li key={i}>
-                        <a
-                          className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                          href="#"
-                        >
-                          {text}
-                        </a>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-              <div className="w-full lg:w-4/12 px-4">
-                <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                  {t("otros_recursos")}
-                </span>
-                <ul className="list-unstyled">
-                  {[t("licencia_mit"), t("terminos_condiciones"), t("politica_privacidad"), t("contactanos")].map(
-                    (text, i) => (
-                      <li key={i}>
-                        <a
-                          className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
-                          href="#"
-                        >
-                          {text}
-                        </a>
-                      </li>
-                    )
-                  )}
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
         <hr className="my-6 border-blueGray-300" />
         <div className="flex flex-wrap items-center md:justify-between justify-center">

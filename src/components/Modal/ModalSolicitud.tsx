@@ -71,7 +71,7 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
                 <select
                   value={motivoSeleccionado}
                   onChange={(e) => setMotivoSeleccionado(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  className="w-full max-w-full p-3 sm:p-2 border rounded bg-white text-gray-800 break-words"
                 >
                   <option value="">{t("seleccione_motivo")}</option>
                   {motivos.map((m) => (
@@ -90,16 +90,16 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
                   value={observacion}
                   onChange={(e) => setObservacion(e.target.value)}
                   rows={3}
-                  className="w-full p-2 border rounded"
+                  className="w-full max-w-full p-3 sm:p-2 border rounded bg-white text-gray-800 break-words"
                   placeholder={t("escribi_observacion")}
                 />
               </div>
             )}
 
-            <div className="flex justify-end gap-4">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6">
               <button
                 onClick={onClose}
-                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+                className="px-4 py-3 sm:py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 w-full sm:w-auto font-medium"
               >
                 {textoCancelar || t("volver_atras")}
               </button>
@@ -109,7 +109,7 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
                     onConfirm(motivoSeleccionado, observacion);
                     onClose();
                   }}
-                  className={`px-4 py-2 text-white rounded hover:opacity-90 ${confirmColor === "green"
+                  className={`px-4 py-3 sm:py-2 text-white rounded hover:opacity-90 w-full sm:w-auto font-medium ${confirmColor === "green"
                     ? "bg-green-600 hover:bg-green-700"
                     : confirmColor === "blue"
                       ? "bg-blue-600 hover:bg-blue-700"
