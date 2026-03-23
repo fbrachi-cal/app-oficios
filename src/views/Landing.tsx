@@ -23,7 +23,7 @@ const Landing: React.FC = () => {
       <main>
         <Navbar transparent />
         <main>
-          <div className="relative pt-16 pb-32 flex content-center items-center justify-center min-h-screen-75">
+          <div className="relative pt-32 pb-48 sm:pt-16 sm:pb-32 flex content-center items-center justify-center min-h-[85vh] sm:min-h-screen-75">
             <div
               className="absolute top-0 w-full h-full bg-center bg-cover"
               style={{
@@ -36,11 +36,11 @@ const Landing: React.FC = () => {
                 className="w-full h-full absolute opacity-75 bg-black"
               ></span>
             </div>
-            <div className="container relative mx-auto">
+            <div className="container relative mx-auto z-10 pt-16 sm:pt-0">
               <div className="items-center flex flex-wrap">
                 <div className="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
-                  <div className="pr-12">
-                    <h1 className="text-white font-semibold text-5xl">
+                  <div className="pr-0 sm:pr-12">
+                    <h1 className="text-white font-semibold text-4xl sm:text-5xl leading-tight">
                       {t('landing_hero_title')}
                     </h1>
                     <p className="mt-4 text-lg text-blueGray-200">
@@ -71,7 +71,7 @@ const Landing: React.FC = () => {
             </div>
           </div>
 
-          <section className="pb-20 bg-blueGray-200 -mt-24">
+          <section className="pb-20 bg-blueGray-200 -mt-24 relative z-20">
             <div className="container mx-auto px-4">
               <div className="flex flex-wrap">                  
                 {user?.tipo === "cliente" ? (

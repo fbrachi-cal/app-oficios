@@ -62,6 +62,7 @@ const DetalleSolicitud: React.FC = () => {
 
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         cargarSolicitud();
     }, [id, user]);
 
