@@ -1,22 +1,23 @@
 /**
  * AdminSidebar – left-column navigation for the admin panel.
  * Uses NavLink for active-state highlighting.
- * Designed to sit inside the 3-column layout shell.
  */
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { IconType } from "react-icons";
+import { FiUsers, FiMessageSquare, FiFlag, FiStar, FiShield, FiArrowLeft } from "react-icons/fi";
 
 type NavItem = {
   label: string;
   to: string;
-  icon: string; // Font Awesome class
+  Icon: IconType;
 };
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "admin.nav.users", to: "/admin/usuarios", icon: "fas fa-users" },
-  { label: "admin.nav.chats", to: "/admin/chats", icon: "fas fa-comments" },
-  { label: "admin.nav.reports", to: "/admin/reportes", icon: "fas fa-flag" },
-  { label: "admin.nav.ratings", to: "/admin/calificaciones", icon: "fas fa-star" },
+  { label: "admin.nav.users",   to: "/admin/usuarios",      Icon: FiUsers },
+  { label: "admin.nav.chats",   to: "/admin/chats",         Icon: FiMessageSquare },
+  { label: "admin.nav.reports", to: "/admin/reportes",      Icon: FiFlag },
+  { label: "admin.nav.ratings", to: "/admin/calificaciones", Icon: FiStar },
 ];
 
 const AdminSidebar = () => {
@@ -27,17 +28,17 @@ const AdminSidebar = () => {
       {/* Header */}
       <div className="px-6 mb-8">
         <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blueGray-400">
-          <i className="fas fa-shield-alt" />
+          <FiShield size={14} />
           {t("admin.panel_label", "Panel Admin")}
         </span>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 flex flex-col gap-1 px-3">
-        {NAV_ITEMS.map((item) => (
+        {NAV_ITEMS.map(({ label, to, Icon }) => (
           <NavLink
-            key={item.to}
-            to={item.to}
+            key={to}
+            to={to}
             className={({ isActive }) =>
               [
                 "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-150",
@@ -47,8 +48,8 @@ const AdminSidebar = () => {
               ].join(" ")
             }
           >
-            <i className={`${item.icon} w-4 text-center`} />
-            {t(item.label)}
+            <Icon size={16} />
+            {t(label)}
           </NavLink>
         ))}
       </nav>
@@ -59,7 +60,7 @@ const AdminSidebar = () => {
           to="/home"
           className="flex items-center gap-2 text-xs text-blueGray-400 hover:text-white transition-colors duration-150"
         >
-          <i className="fas fa-arrow-left" />
+          <FiArrowLeft size={14} />
           {t("admin.nav.back_to_app", "Volver a la app")}
         </NavLink>
       </div>
