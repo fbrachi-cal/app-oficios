@@ -16,6 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "admin.nav.users", to: "/admin/usuarios", icon: "fas fa-users" },
   { label: "admin.nav.chats", to: "/admin/chats", icon: "fas fa-comments" },
   { label: "admin.nav.reports", to: "/admin/reportes", icon: "fas fa-flag" },
+  { label: "admin.nav.ratings", to: "/admin/calificaciones", icon: "fas fa-star" },
 ];
 
 const AdminSidebar = () => {

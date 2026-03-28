@@ -14,6 +14,7 @@ import RequireAdmin from './utils/RequireAdmin';
 import UsersPage from './views/admin/UsersPage';
 import ChatsPage from './views/admin/ChatsPage';
 import ReportsPage from './views/admin/ReportsPage';
+import RatingsPage from './views/admin/RatingsPage';
 
 
 
@@ -49,6 +50,7 @@ function App() {
             <Route path="usuarios" element={<UsersPage />} />
             <Route path="chats" element={<ChatsPage />} />
             <Route path="reportes" element={<ReportsPage />} />
+            <Route path="calificaciones" element={<RatingsPage />} />
           </Route>
         </Route>
       </Routes>

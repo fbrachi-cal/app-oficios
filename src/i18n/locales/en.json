@@ -274,7 +274,8 @@
             "back_to_app": "Back to App",
             "users": "Users",
             "chats": "Chats",
-            "reports": "Reports"
+            "reports": "Reports",
+            "ratings": "Ratings"
         },
         "users": {
             "title": "User Management",
@@ -287,6 +288,11 @@
         "reports": {
             "title": "Report Management",
             "resolution_prompt": "Resolution notes (optional):"
+        },
+        "ratings": {
+            "title": "Rating Management",
+            "confirm_delete": "Are you sure you want to soft delete this rating?",
+            "cannot_edit_deleted": "Cannot edit a deleted rating."
         },
         "filters": {
             "all_roles": "All roles",

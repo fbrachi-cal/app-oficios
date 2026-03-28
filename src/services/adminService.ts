@@ -59,6 +59,35 @@ export type Report = {
   resolution_notes?: string | null;
 };
 
+export type AdminRating = {
+  id: string;
+  solicitud_id?: string;
+  calificador_id: string;
+  calificado_id: string;
+  calificacion: number;
+  observacion?: string;
+  fecha: string;
+  created_at?: string;
+  updated_at?: string;
+  deleted_at?: string | null;
+  created_by?: string;
+  updated_by?: string;
+  deleted_by?: string | null;
+};
+
+export type AdminRatingCreate = {
+  solicitud_id?: string;
+  calificador_id: string;
+  calificado_id: string;
+  calificacion: number;
+  observacion?: string;
+};
+
+export type AdminRatingUpdate = {
+  calificacion?: number;
+  observacion?: string;
+};
+
 export type ReportCreate = {
   target_type: "user" | "message";
   target_id: string;
@@ -136,6 +165,40 @@ export const adminService = {
   // Reports (user-facing — any authenticated user)
   async createReport(data: ReportCreate): Promise<{ id: string; message: string }> {
     const res = await axios.post(`/reports`, data);
+    return res.data;
+  },
+
+  // Ratings (Admin)
+  async getRatings(params?: {
+    status?: string;
+    limit?: number;
+    start_after_id?: string;
+  }) {
+    // We omit PaginatedResponse<AdminRating> type internally to allow implicit any or matching later
+    const res = await axios.get<{ items?: AdminRating[]; total?: number; start_after_id?: string; next_cursor?: string } | AdminRating[]>(`/admin/calificaciones`, { params });
+    // Note: Python backend returns List[dict] currently, not inside `{items: ...}`. Let's adapt if needed.
+    // Wait, the python list_ratings logic returns `List[dict]`. It doesn't wrap in `items`.
+    // I will return res.data.
+    return res.data;
+  },
+
+  async getRating(ratingId: string): Promise<AdminRating> {
+    const res = await axios.get(`/admin/calificaciones/${ratingId}`);
+    return res.data;
+  },
+
+  async createRating(data: AdminRatingCreate): Promise<{ id: string; message: string }> {
+    const res = await axios.post(`/admin/calificaciones`, data);
+    return res.data;
+  },
+
+  async patchRating(ratingId: string, data: AdminRatingUpdate): Promise<{ id: string; message: string }> {
+    const res = await axios.patch(`/admin/calificaciones/${ratingId}`, data);
+    return res.data;
+  },
+
+  async deleteRating(ratingId: string): Promise<{ id: string; message: string }> {
+    const res = await axios.delete(`/admin/calificaciones/${ratingId}`);
     return res.data;
   },
 };

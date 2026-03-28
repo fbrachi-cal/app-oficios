@@ -285,7 +285,8 @@
       "back_to_app": "Volver a la app",
       "users": "Usuarios",
       "chats": "Chats",
-      "reports": "Reportes"
+      "reports": "Reportes",
+      "ratings": "Calificaciones"
     },
     "users": {
       "title": "Gestión de Usuarios",
@@ -298,6 +299,11 @@
     "reports": {
       "title": "Gestión de Reportes",
       "resolution_prompt": "Notas de resolución (opcional):"
+    },
+    "ratings": {
+      "title": "Gestión de Calificaciones",
+      "confirm_delete": "¿Seguro que querés eliminar (soft delete) esta calificación?",
+      "cannot_edit_deleted": "No se puede editar una calificación eliminada."
     },
     "filters": {
       "all_roles": "Todos los roles",
