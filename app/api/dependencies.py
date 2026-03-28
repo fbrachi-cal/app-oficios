@@ -7,6 +7,7 @@ from app.adapters.firebase.firebase_uploader import FirebaseUploader
 from app.adapters.firebase.firebase_report_repo import FirebaseReportRepository
 from app.domain.services.admin_service import AdminService
 from app.domain.services.report_service import ReportService
+from app.domain.services.admin_rating_service import AdminRatingService
 from fastapi import Header, HTTPException
 from firebase_admin import auth
 from app.shared.logger import log
@@ -38,6 +39,12 @@ def get_admin_service():
 
 def get_report_service():
     return ReportService(report_repository=FirebaseReportRepository())
+
+def get_admin_rating_service():
+    return AdminRatingService(
+        rating_repo=FirebaseRatingRepository(),
+        user_repo=FirebaseUserRepository()
+    )
 
 #async def get_current_user_id(authorization: str = Header(...)) -> str:    
 async def get_current_user_id(authorization: Optional[str] = Header(None)) -> str:

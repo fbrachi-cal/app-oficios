@@ -1,111 +1,285 @@
-# 🛠️ App de Oficios - Backend
+# 🛠️ App de Oficios — Backend
 
-Este proyecto es el backend de una aplicación que conecta personas que necesitan servicios (como plomería, electricidad, gas, etc.) con profesionales que los ofrecen. Está desarrollado con **FastAPI**, utiliza **Firebase** para autenticación y base de datos, y sigue una arquitectura hexagonal.
+API REST del marketplace de servicios **App de Oficios**. Permite conectar clientes con profesionales del hogar, gestionando solicitudes, calificaciones, chats y un panel de administración.
 
----
-
-## 🚀 Tecnologías utilizadas
-
-- Python 3.10+
-- FastAPI
-- Firebase Admin SDK
-- Firestore (base de datos)
-- Firebase Auth (autenticación)
-- Loguru (logging)
-- Pydantic
-- Uvicorn
-- Pytest
+Desarrollado con **FastAPI** y **Firebase**, siguiendo **arquitectura hexagonal (puertos y adaptadores)**.
 
 ---
 
-## 🧱 Arquitectura
+## 📋 Índice
 
-El proyecto sigue el patrón **hexagonal (puertos y adaptadores)**, separando claramente:
-
-- `api/` → controladores HTTP
-- `domain/` → lógica de negocio
-- `adapters/` → Firebase, logging
-- `shared/` → autenticación, dependencias
-- `tests/` → pruebas unitarias
+1. [Descripción](#-descripción)
+2. [Tech Stack](#-tech-stack)
+3. [Prerrequisitos](#-prerrequisitos)
+4. [Variables de entorno](#-variables-de-entorno)
+5. [Cómo correr el proyecto](#-cómo-correr-el-proyecto)
+6. [Estructura del proyecto](#-estructura-del-proyecto)
+7. [Endpoints principales](#-endpoints-principales)
+8. [Errores comunes](#-errores-comunes)
 
 ---
 
-## 📦 Instalación y configuración
+## 📌 Descripción
 
-### 1. Clonar el repositorio
+El backend es el núcleo de la plataforma. Sus responsabilidades principales son:
+
+- Verificar identidad via **Firebase Auth** (token JWT en cada request)
+- Gestionar perfiles de usuarios, solicitudes, calificaciones y chats en **Firestore**
+- Aplicar **reglas de negocio** (roles, estados de solicitudes, estadísticas de usuarios)
+- Exponer un **panel de administración** con operaciones de moderación y CRUD completo
+
+---
+
+## 🧰 Tech Stack
+
+| Tecnología | Versión | Uso |
+|---|---|---|
+| Python | 3.10+ | Runtime |
+| FastAPI | 0.115 | Framework REST |
+| Uvicorn | 0.34 | Servidor ASGI |
+| Firebase Admin SDK | 6.7 | Auth + Firestore (server-side) |
+| Firestore | — | Base de datos principal (NoSQL) |
+| Pydantic | 2 | Validación de esquemas |
+| Loguru | 0.7 | Logging estructurado |
+| Twilio | — | Verificación de teléfono (OTP) |
+| Pillow | — | Procesamiento de imágenes |
+| Pytest | 8 | Tests |
+
+---
+
+## ✅ Prerrequisitos
+
+### Python 3.10+
 
 ```bash
-git clone <url-del-repo>
-cd app_oficios
-2. Crear entorno virtual
-bash
-Mostrar siempre los detalles
+# Verificar
+python --version
+```
 
-Copiar
-python -m venv venv
-source venv/bin/activate  # o .\\venv\\Scripts\\activate en Windows
-3. Instalar dependencias
-bash
-Mostrar siempre los detalles
+Descarga: https://www.python.org/downloads/
 
-Copiar
-pip install -r requirements.txt
-4. Variables de entorno
-Crear un archivo .env en la raíz del proyecto con tus credenciales de Firebase:
+---
 
-env
-Mostrar siempre los detalles
+### Docker (para correr en contenedor)
 
-Copiar
-FIREBASE_PROJECT_ID=tu_proyecto
+#### Windows
+Instalar **Docker Desktop**: https://www.docker.com/products/docker-desktop/
+
+Asegurarse de que Docker Desktop esté corriendo antes de ejecutar cualquier comando `docker`.
+
+#### Linux (Ubuntu/Debian)
+
+```bash
+sudo apt update
+sudo apt install docker.io docker-compose -y
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+#### macOS
+
+```bash
+brew install --cask docker
+```
+
+---
+
+### Firebase
+
+Necesitás un proyecto Firebase con lo siguiente habilitado:
+
+- **Authentication** (Email/Password; Google y Teléfono opcionales)
+- **Firestore Database** (modo nativo)
+- **Storage** (para imágenes de perfil)
+
+Pasos:
+1. Ir a https://console.firebase.google.com
+2. Crear o seleccionar un proyecto
+3. En **Configuración del proyecto → Cuentas de servicio → Generar nueva clave privada**
+4. Guardar el JSON generado — sus valores van al `.env`
+
+---
+
+## 🔑 Variables de entorno
+
+Copiar el archivo de ejemplo:
+
+```bash
+cp .env.example .env
+```
+
+Referencia completa del `.env`:
+
+```env
+# Firebase Service Account (del JSON descargado)
+FIREBASE_PROJECT_ID=your-project-id
 FIREBASE_PRIVATE_KEY_ID=...
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\\n..."
-FIREBASE_CLIENT_EMAIL=...
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-...@your-project.iam.gserviceaccount.com
 FIREBASE_CLIENT_ID=...
-FIREBASE_AUTH_URI=...
-FIREBASE_TOKEN_URI=...
-FIREBASE_AUTH_PROVIDER_X509_CERT_URL=...
+FIREBASE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
+FIREBASE_TOKEN_URI=https://oauth2.googleapis.com/token
+FIREBASE_AUTH_PROVIDER_X509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
 FIREBASE_CLIENT_X509_CERT_URL=...
-▶️ Cómo levantar el servidor
-bash
-Mostrar siempre los detalles
 
-Copiar
+# Twilio (opcional — para OTP de teléfono)
+TWILIO_ACCOUNT_SID=...
+TWILIO_AUTH_TOKEN=...
+TWILIO_VERIFY_SERVICE_SID=...
+
+# CORS — orígenes permitidos (separados por coma)
+ALLOWED_ORIGINS=http://localhost:5173
+```
+
+> ⚠️ **Nunca** cometer el `.env` real al repositorio. Está en `.gitignore`.
+
+---
+
+## 🚀 Cómo correr el proyecto
+
+### Opción A — Local (recomendado para desarrollo)
+
+```bash
+# 1. Crear entorno virtual
+python -m venv venv
+
+# 2. Activar
+# Windows:
+.\venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+# 3. Instalar dependencias
+pip install -r requirements.txt
+
+# 4. Configurar .env (ver sección anterior)
+
+# 5. Levantar servidor
 uvicorn app.main:app --reload
-🔐 Autenticación
-Se utiliza Firebase Auth.
+```
 
-Los endpoints protegidos requieren Authorization: Bearer <token>.
+La API estará disponible en: `http://localhost:8000`
 
-El backend verifica el token y extrae el uid.
+Documentación interactiva (Swagger): `http://localhost:8000/docs`
 
-👥 Roles de usuario
-cliente → puede registrar solicitudes y calificar profesionales
+---
 
-profesional → recibe solicitudes y calificaciones
+### Opción B — Docker
 
-admin → puede ver todos los usuarios y moderar
+```bash
+# Construir imagen
+docker build -t oficios-web .
 
-📚 Endpoints clave
-Método	Ruta	Rol requerido	Descripción
-POST	/usuarios/registrar	(token válido)	Crear perfil con UID de Firebase
-GET	/usuarios/me	autenticado	Obtener perfil del usuario actual
-GET	/usuarios/me/rol	autenticado	Obtener rol del usuario
-POST	/solicitudes/	cliente	Crear una nueva solicitud
-GET	/solicitudes/cliente/{id}	cliente	Ver solicitudes propias
-POST	/calificaciones/	cliente	Calificar a un profesional
-GET	/calificaciones/profesional/{id}	profesional	Ver calificaciones recibidas
-POST	/usuarios/profesionales/buscar	autenticado	Buscar profesionales por zona y oficio
-GET	/usuarios/	admin	Listar todos los usuarios
-🧪 Tests
-bash
-Mostrar siempre los detalles
+# Correr contenedor con las variables de entorno
+docker run -p 8000:8000 --env-file .env oficios-web
+```
 
-Copiar
+Para correr en background:
+
+```bash
+docker run -d -p 8000:8000 --env-file .env --name oficios-api oficios-web
+```
+
+Ver logs:
+
+```bash
+docker logs -f oficios-api
+```
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+app/
+├── api/
+│   ├── routes/         ← Handlers HTTP (users, solicitudes, calificaciones, admin...)
+│   ├── schemas/        ← Modelos Pydantic de request/response
+│   └── dependencies.py ← Inyección de dependencias (repos, servicios)
+│
+├── domain/
+│   └── services/       ← Lógica de negocio pura (sin dependencias de framework)
+│
+├── ports/              ← Interfaces abstractas (RatingRepository, UserRepository...)
+│
+├── adapters/
+│   └── firebase/       ← Implementaciones concretas con Firestore
+│
+└── shared/             ← Auth, roles, logger, middleware
+```
+
+**Flujo de datos:** `Route → Service → Port (interfaz) → Firebase Adapter → Firestore`
+
+Las operaciones que requieren consistencia (ej: actualizar calificación + estadísticas del usuario) usan **transacciones de Firestore** (`@firestore.transactional`).
+
+---
+
+## 📚 Endpoints principales
+
+Todos los endpoints protegidos requieren header: `Authorization: Bearer <firebase_id_token>`
+
+| Método | Ruta | Rol | Descripción |
+|---|---|---|---|
+| `POST` | `/usuarios/registrar` | autenticado | Crear perfil |
+| `GET` | `/usuarios/me` | autenticado | Perfil propio |
+| `POST` | `/solicitudes/` | cliente | Crear solicitud |
+| `PATCH` | `/solicitudes/{id}/estado` | autenticado | Actualizar estado |
+| `POST` | `/calificaciones/` | autenticado | Calificar usuario |
+| `GET` | `/admin/calificaciones` | admin | Listar calificaciones |
+| `POST` | `/admin/calificaciones` | admin | Crear calificación |
+| `PATCH` | `/admin/calificaciones/{id}` | admin | Editar calificación |
+| `DELETE` | `/admin/calificaciones/{id}` | admin | Soft delete |
+
+Documentación completa: `http://localhost:8000/docs`
+
+---
+
+## 🧪 Tests
+
+```bash
+# Activar entorno virtual primero
 pytest
-📄 Roadmap
-Consultá el archivo roadmap_backend.md para ver mejoras futuras planificadas.
 
-📬 Contacto
-Creado por Federico.
-Colaboración con IA para acelerar el desarrollo y la estructura. 💡
+# Con output detallado
+pytest -v
+```
+
+---
+
+## ⚠️ Errores comunes
+
+### Error de CORS
+
+Verificar que `ALLOWED_ORIGINS` en el `.env` incluya el origen del frontend exacto (con puerto), ej:
+
+```env
+ALLOWED_ORIGINS=http://localhost:5173
+```
+
+### Firebase: `Could not deserialize key data`
+
+La `FIREBASE_PRIVATE_KEY` debe tener los saltos de línea como `\n` dentro de comillas dobles:
+
+```env
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMIIEv...\n-----END PRIVATE KEY-----\n"
+```
+
+### Token expirado / inválido
+
+Los tokens de Firebase expiran en 1 hora. El frontend debe renovarlos automáticamente. Si testeás con Swagger, generá un token fresco desde el cliente.
+
+### Puerto 8000 ocupado
+
+```bash
+# Windows — identificar proceso en el puerto
+netstat -ano | findstr :8000
+
+# Linux/macOS
+lsof -i :8000
+```
+
+---
+
+## 📬 Contacto
+
+Creado por **Federico**. Desarrollado con asistencia de IA. 💡
