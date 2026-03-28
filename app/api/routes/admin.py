@@ -10,11 +10,14 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from app.api.dependencies import (
     get_admin_service,
     get_report_service,
+    get_admin_rating_service,
     get_current_user_id,
 )
 from app.domain.services.admin_service import AdminService
 from app.domain.services.report_service import ReportService
+from app.domain.services.admin_rating_service import AdminRatingService
 from app.api.schemas.admin_schema import AdminUserPatch, ReportCreate, ReportPatch
+from app.api.schemas.rating_schema import AdminRatingCreate, AdminRatingUpdate
 from app.shared.roles import require_role
 from app.shared.logger import log
 
@@ -142,6 +145,57 @@ def patch_report(
     if not updated:
         raise HTTPException(status_code=404, detail="Reporte no encontrado")
     return updated
+
+
+# ============================================================
+# Ratings (Admin CRUD)
+# ============================================================
+
+@router.get("/calificaciones", summary="List ratings (admin)")
+def list_ratings(
+    limit: int = Query(20, ge=1, le=100),
+    status: Optional[str] = Query(None, description="active | deleted"),
+    start_after_id: Optional[str] = Query(None),
+    admin_data: dict = _admin,
+    service: AdminRatingService = Depends(get_admin_rating_service),
+):
+    log.info(f"admin.list_ratings by={admin_data['uid']} status={status}")
+    return service.list_ratings_admin(limit, status, start_after_id)
+
+@router.post("/calificaciones", status_code=201, summary="Admin Create Rating")
+def create_rating_admin(
+    datos: AdminRatingCreate,
+    admin_data: dict = _admin,
+    service: AdminRatingService = Depends(get_admin_rating_service),
+):
+    log.info(f"admin.create_rating by={admin_data['uid']}")
+    return service.create_rating_admin(
+        calificador_id=datos.calificador_id,
+        calificado_id=datos.calificado_id,
+        calificacion=datos.calificacion,
+        observacion=datos.observacion,
+        admin_id=admin_data["uid"],
+        solicitud_id=datos.solicitud_id
+    )
+
+@router.patch("/calificaciones/{rating_id}", summary="Admin Update Rating")
+def update_rating_admin(
+    rating_id: str,
+    datos: AdminRatingUpdate,
+    admin_data: dict = _admin,
+    service: AdminRatingService = Depends(get_admin_rating_service),
+):
+    log.info(f"admin.update_rating rating_id={rating_id} by={admin_data['uid']}")
+    return service.update_rating_admin(rating_id, datos.dict(exclude_unset=True), admin_data["uid"])
+
+@router.delete("/calificaciones/{rating_id}", summary="Admin Soft Delete Rating")
+def soft_delete_rating_admin(
+    rating_id: str,
+    admin_data: dict = _admin,
+    service: AdminRatingService = Depends(get_admin_rating_service),
+):
+    log.info(f"admin.soft_delete_rating rating_id={rating_id} by={admin_data['uid']}")
+    return service.delete_rating_admin(rating_id, admin_data["uid"])
 
 
 # ============================================================
