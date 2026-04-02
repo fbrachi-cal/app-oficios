@@ -22,24 +22,9 @@ class ChatRepository:
         """(Opcional) Recupera un chat por ID, con sus metadatos."""
         raise NotImplementedError
     
-    def get_messages(self, chat_id: str) -> List[Dict]:
-        log.info(f"Recuperando mensajes del chat {chat_id}")
-        messages_ref = (
-            self.chats
-            .document(chat_id)
-            .collection("messages")
-            .order_by("sentAt")
-            .limit_to_last(10)
-        )
-        messages = []
-        docs= messages_ref.get()
-        messages: List[Dict] = []
-        for doc in docs:
-            data = doc.to_dict()
-            data["id"] = doc.id
-            messages.append(data)
-        log.info(f"Mensajes recuperados: {messages.count}")
-        return messages
+    def get_messages(self, chat_id: str, limit: Optional[int] = None) -> List[Dict]:
+        """Recupera los mensajes del chat, opcionalmente limitando a los últimos `limit` mensajes."""
+        raise NotImplementedError
     def get_all_chats(self) -> List[Dict]:
         """Recupera todos los chats del sistema (uso exclusivo de admin)."""
         raise NotImplementedError
