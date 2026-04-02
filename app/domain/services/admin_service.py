@@ -179,7 +179,7 @@ class AdminService:
             return {"items": [], "total": 0, "limit": limit, "next_cursor": None}
             
         all_reqs = self.request_repository.get_all_requests()
-        filtered = [r for r in all_reqs if len(r.get("historial_consultas", [])) > 0]
+        filtered = [r for r in all_reqs if len(r.get("historial_consultas", [])) > 0 or r.get("descripcion")]
         
         filtered.sort(
             key=lambda r: r.get("fecha_creacion") or datetime.min,
