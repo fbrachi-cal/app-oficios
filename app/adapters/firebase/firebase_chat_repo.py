@@ -4,6 +4,7 @@ from google.cloud.firestore_v1 import Client, DocumentSnapshot
 from app.ports.chat_repository import ChatRepository
 from app.adapters.firebase.firebase_config import get_firestore
 from datetime import datetime
+from app.shared.logger import log
 
 class FirebaseChatRepository(ChatRepository):
     def __init__(self):
@@ -63,6 +64,28 @@ class FirebaseChatRepository(ChatRepository):
         })
 
         return msg_ref.id
+
+    def get_messages(self, chat_id: str, limit: Optional[int] = None) -> List[Dict]:
+        log.info(f"Recuperando mensajes del chat {chat_id}")
+        # Fetching all messages for full admin inspection (or large user history)
+        query = (
+            self.chats
+            .document(chat_id)
+            .collection("messages")
+            .order_by("sentAt")
+        )
+        if limit is not None:
+             query = query.limit_to_last(limit)
+             
+        docs = query.get()
+        messages: List[Dict] = []
+        for doc in docs:
+            data = doc.to_dict()
+            data["id"] = doc.id
+            messages.append(data)
+            
+        log.info(f"Mensajes recuperados: {len(messages)}")
+        return messages
 
    
     def get_chats_for_user(self, uid: str) -> List[Dict]:

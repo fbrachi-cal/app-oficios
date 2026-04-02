@@ -136,6 +136,30 @@ class AdminService:
         chat = self.chat_repository.get_chat(chat_id)
         if not chat:
             return None
-        messages = self.chat_repository.get_messages(chat_id)
+            
+        # Safe handling for exceptionally large conversations
+        messages = self.chat_repository.get_messages(chat_id, limit=500)
         chat["messages"] = messages
+        
+        # Enrich the response with participant metadata for the admin
+        participant_details = []
+        participants = chat.get("participants", [])
+        for pid in participants:
+            user = self.user_repository.get_user_by_id(pid)
+            if user:
+                participant_details.append({
+                    "id": pid,
+                    "nombre": user.get("nombre", "Desconocido"),
+                    "tipo": user.get("tipo", "Desconocido"),
+                    "email": user.get("email", "Sin email")
+                })
+            else:
+                 participant_details.append({
+                    "id": pid,
+                    "nombre": "Usuario Eliminado",
+                    "tipo": "Desconocido",
+                    "email": "Desconocido"
+                 })
+        chat["participantDetails"] = participant_details
+
         return chat
