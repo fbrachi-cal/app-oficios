@@ -32,6 +32,12 @@ export type AdminUserPatch = {
 export type AdminChat = {
   id: string;
   participants: string[];
+  participantDetails?: {
+    id: string;
+    nombre: string;
+    tipo: string;
+    email?: string;
+  }[];
   lastMessage?: string;
   lastMessageAt?: string;
   createdAt?: string;

@@ -42,17 +42,44 @@ const ChatViewer: React.FC<ChatViewerProps> = ({ chatId }) => {
     );
   }
 
+  const getParticipantHeader = () => {
+    if (chat?.participantDetails && chat.participantDetails.length > 0) {
+      return chat.participantDetails.map(p => `${p.nombre} (${p.tipo}) - ${p.email || 'Sin email'}`).join(" — ");
+    }
+    return chat?.participants?.join(" — ") || "Sin participantes";
+  };
+
+  const getSenderName = (uid: string) => {
+    if (!chat?.participantDetails) return uid;
+    const p = chat.participantDetails.find(p => p.id === uid);
+    if (!p) return uid;
+    const tipoLabel = p.tipo ? (p.tipo.charAt(0).toUpperCase() + p.tipo.slice(1)) : 'Desconocido';
+    return `${p.nombre || 'Desconocido'} (${tipoLabel})`;
+  };
+
   return (
     <div className="flex flex-col h-full max-h-[600px] bg-white rounded-lg shadow border border-blueGray-200 overflow-hidden">
       {/* Header */}
-      <div className="px-6 py-4 bg-blueGray-50 border-b border-blueGray-200">
-        <div className="text-xs font-bold text-blueGray-400 uppercase tracking-widest mb-1">
-          Chat ID: {chat.id}
+      <div className="px-6 py-4 bg-blueGray-50 border-b border-blueGray-200 relative">
+        <div className="flex justify-between items-start mb-2">
+          <div className="text-xs font-bold text-blueGray-400 uppercase tracking-widest flex items-center gap-2">
+            Chat ID: <span className="text-blueGray-600 bg-white px-2 py-0.5 rounded border border-blueGray-200 user-select-all">{chat.id}</span>
+          </div>
+          {chat.createdAt && (
+            <div className="text-[10px] uppercase font-bold text-blueGray-400">
+              Creado: {new Date(chat.createdAt).toLocaleDateString()}
+            </div>
+          )}
         </div>
-        <div className="text-sm text-blueGray-700 flex gap-2">
+        <div className="text-sm text-blueGray-700 flex flex-col gap-1">
           <strong>Participantes:</strong>
-          <span className="truncate">{chat.participants?.join(" — ") || "Sin participantes"}</span>
+          <span className="text-xs break-words whitespace-pre-wrap leading-relaxed">{getParticipantHeader()}</span>
         </div>
+        {chat.is_reported && (
+          <div className="absolute top-4 right-4 bg-red-100 text-red-600 border border-red-200 text-[10px] font-bold px-2 py-1 rounded uppercase">
+            <i className="fas fa-exclamation-triangle mr-1"></i> Reportado
+          </div>
+        )}
       </div>
 
       {/* Messages View */}
@@ -69,15 +96,15 @@ const ChatViewer: React.FC<ChatViewerProps> = ({ chatId }) => {
                   className={`flex flex-col max-w-[80%] ${isFirstParticipant ? "self-end" : "self-start"}`}
                 >
                   <div className={`p-3 rounded-lg shadow-sm ${isFirstParticipant ? 'bg-[#dcf8c6] rounded-tr-none' : 'bg-white rounded-tl-none'}`}>
-                    <div className="text-[10px] text-blueGray-500 font-bold mb-1 opacity-70">
-                      {msg.senderId}
+                    <div className="text-[11px] text-blueGray-600 font-bold mb-1 border-b border-black/5 pb-1">
+                      {getSenderName(msg.senderId)}
                     </div>
-                    <div className="text-sm text-blueGray-800 break-words">
+                    <div className="text-sm text-blueGray-800 break-words whitespace-pre-wrap mt-1">
                       {msg.body}
                     </div>
                     {msg.sentAt && (
                       <div className="text-[10px] text-blueGray-400 text-right mt-1">
-                        {new Date(msg.sentAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        {new Date(msg.sentAt).toLocaleDateString()} {new Date(msg.sentAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                       </div>
                     )}
                   </div>
