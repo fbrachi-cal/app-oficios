@@ -15,7 +15,7 @@ import UsersPage from './views/admin/UsersPage';
 import ChatsPage from './views/admin/ChatsPage';
 import ReportsPage from './views/admin/ReportsPage';
 import RatingsPage from './views/admin/RatingsPage';
-
+import SolicitudesInteraccionesPage from './views/admin/SolicitudesInteraccionesPage';
 
 
 function App() {
@@ -51,6 +51,7 @@ function App() {
             <Route path="chats" element={<ChatsPage />} />
             <Route path="reportes" element={<ReportsPage />} />
             <Route path="calificaciones" element={<RatingsPage />} />
+            <Route path="solicitudes-interacciones" element={<SolicitudesInteraccionesPage />} />
           </Route>
         </Route>
       </Routes>

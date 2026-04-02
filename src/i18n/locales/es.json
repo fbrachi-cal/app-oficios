@@ -282,11 +282,12 @@
   "admin": {
     "panel_label": "Panel Admin",
     "nav": {
-      "back_to_app": "Volver a la app",
-      "users": "Usuarios",
-      "chats": "Chats",
+      "users": "Gestión de Usuarios",
+      "chats": "Moderación de Chats",
       "reports": "Reportes",
-      "ratings": "Calificaciones"
+      "ratings": "Calificaciones",
+      "solicitudes_interacciones": "Interacciones (Solicitudes)",
+      "back_to_app": "Volver a la app"
     },
     "users": {
       "title": "Gestión de Usuarios",
