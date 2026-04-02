@@ -92,8 +92,13 @@ const SolicitudesInteraccionesPage = () => {
                     <div className="text-sm text-blueGray-500 truncate mb-1">
                       CLI: {s.solicitante_id.substring(0,6)}... | PRO: {s.profesional_id ? s.profesional_id.substring(0,6) + "..." : "N/A"}
                     </div>
+                    {s.subcategoria && s.zona && (
+                      <div className="text-[11px] text-blueGray-500 truncate mb-1 italic">
+                        {s.subcategoria} en {s.zona}
+                      </div>
+                    )}
                     <div className="text-xs text-blueGray-400 mt-2 font-semibold">
-                      {s.historial_consultas?.length} interacciones registradas
+                      {(s.historial_consultas?.length || 0) + (s.descripcion ? 1 : 0)} interacciones registradas
                     </div>
                   </li>
                 ))}

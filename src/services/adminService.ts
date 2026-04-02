@@ -79,6 +79,9 @@ export type AdminSolicitud = {
   profesional_id?: string;
   estado: string;
   fecha_creacion: string;
+  descripcion?: string;
+  zona?: string;
+  subcategoria?: string;
   historial_consultas?: AdminSolicitudInteraccion[];
   participantDetails?: {
     id: string;

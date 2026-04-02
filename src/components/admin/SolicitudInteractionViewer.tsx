@@ -109,18 +109,43 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
           <strong>Participantes:</strong>
           <span className="text-xs break-words whitespace-pre-wrap leading-relaxed">{getParticipantHeader()}</span>
         </div>
-        <div className="text-sm font-bold text-blueGray-600">
+        <div className="text-sm font-bold text-blueGray-600 mb-1">
           Estado actual: <span className="uppercase bg-blueGray-200 px-2 py-1 rounded text-xs">{solicitud.estado}</span>
+        </div>
+        <div className="text-sm text-blueGray-700">
+          <strong>Subcategoría:</strong> {solicitud.subcategoria || "-"} | <strong>Zona:</strong> {solicitud.zona || "-"}
         </div>
       </div>
 
       {/* Messages View */}
       <div className="flex-1 px-4 py-4 overflow-y-auto bg-[#e5ddd5]">
-        {solicitud.historial_consultas && solicitud.historial_consultas.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {[...solicitud.historial_consultas]
-              .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
-              .map((msg: AdminSolicitudInteraccion, index: number) => {
+        {(() => {
+          const allMessages: AdminSolicitudInteraccion[] = [];
+          if (solicitud.descripcion) {
+            allMessages.push({
+              mensaje: solicitud.descripcion,
+              usuario_id: solicitud.solicitante_id,
+              rol: "cliente",
+              fecha: solicitud.fecha_creacion
+            });
+          }
+          if (solicitud.historial_consultas) {
+            allMessages.push(...solicitud.historial_consultas);
+          }
+
+          if (allMessages.length === 0) {
+            return (
+              <div className="text-center text-sm text-blueGray-500 mt-10">
+                No hay interacciones en esta solicitud.
+              </div>
+            );
+          }
+
+          return (
+            <div className="flex flex-col gap-3">
+              {allMessages
+                .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+                .map((msg: AdminSolicitudInteraccion, index: number) => {
               const isAdmin = msg.rol === "admin" || String(msg.autor_id).includes("admin");
               const bubbleClasses = getMessageBubbleClasses(msg.rol, msg.autor_id || msg.usuario_id);
               
@@ -142,11 +167,8 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
               );
             })}
           </div>
-        ) : (
-          <div className="text-center text-sm text-blueGray-500 mt-10">
-            No hay interacciones en esta solicitud.
-          </div>
-        )}
+          );
+        })()}
       </div>
       
       {/* Admin Message Input Footer */}
