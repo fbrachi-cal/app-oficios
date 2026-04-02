@@ -102,3 +102,12 @@ class PaginatedResponse(BaseModel):
     total: int
     limit: int
     next_cursor: Optional[str] = None  # last document ID for cursor-based pagination
+
+
+# ---------------------------------------------------------------------------
+# Solicitudes
+# ---------------------------------------------------------------------------
+
+class AdminRequestMessageCreate(BaseModel):
+    """Payload to add a message as admin inside a request interaction thread."""
+    mensaje: str = Field(..., min_length=1, max_length=1000)

@@ -29,3 +29,7 @@ class RequestRepository(ABC):
     @abstractmethod
     def actualizar(self, solicitud_id: str, update_data: Dict[str, Any]) -> Dict:
         pass
+
+    @abstractmethod
+    def get_all_requests(self) -> List[Dict[str, Any]]:
+        pass

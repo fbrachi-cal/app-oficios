@@ -7,13 +7,15 @@ from datetime import datetime
 from typing import Optional, List, Dict
 from app.ports.user_repository import UserRepository
 from app.ports.chat_repository import ChatRepository
+from app.ports.request_repository import RequestRepository
 from app.shared.logger import log
 
 
 class AdminService:
-    def __init__(self, user_repository: UserRepository, chat_repository: ChatRepository):
+    def __init__(self, user_repository: UserRepository, chat_repository: ChatRepository, request_repository: RequestRepository = None):
         self.user_repository = user_repository
         self.chat_repository = chat_repository
+        self.request_repository = request_repository
 
     # ------------------------------------------------------------------
     # Users
@@ -163,3 +165,78 @@ class AdminService:
         chat["participantDetails"] = participant_details
 
         return chat
+        
+    # ------------------------------------------------------------------
+    # Solicitudes (Requests)
+    # ------------------------------------------------------------------
+
+    def list_requests_with_interactions(
+        self,
+        limit: int = 20,
+        start_after_id: Optional[str] = None
+    ) -> Dict:
+        if not self.request_repository:
+            return {"items": [], "total": 0, "limit": limit, "next_cursor": None}
+            
+        all_reqs = self.request_repository.get_all_requests()
+        filtered = [r for r in all_reqs if len(r.get("historial_consultas", [])) > 0]
+        
+        filtered.sort(
+            key=lambda r: r.get("fecha_creacion") or datetime.min,
+            reverse=True,
+        )
+
+        total = len(filtered)
+        start_index = 0
+        if start_after_id:
+            for i, r in enumerate(filtered):
+                if r.get("id") == start_after_id:
+                    start_index = i + 1
+                    break
+                    
+        page = filtered[start_index: start_index + limit]
+        next_cursor = page[-1]["id"] if len(page) == limit else None
+
+        return {"items": page, "total": total, "limit": limit, "next_cursor": next_cursor}
+
+    def get_request_with_messages(self, request_id: str) -> Optional[Dict]:
+        if not self.request_repository:
+            return None
+            
+        req = self.request_repository.get_by_id(request_id)
+        if not req:
+            return None
+        
+        participant_details = []
+        participants = [req.get("solicitante_id"), req.get("profesional_id")]
+        for pid in participants:
+            if not pid:
+                continue
+            user = self.user_repository.get_user_by_id(pid)
+            if user:
+                participant_details.append({
+                    "id": pid,
+                    "nombre": user.get("nombre", "Desconocido"),
+                    "tipo": user.get("tipo", "Desconocido"),
+                    "email": user.get("email", "Sin email")
+                })
+        req["participantDetails"] = participant_details
+        return req
+
+    def add_admin_message_to_request(self, request_id: str, admin_uid: str, mensaje: str) -> dict:
+        if not self.request_repository:
+            raise ValueError("Repository no configurado")
+            
+        req = self.request_repository.get_by_id(request_id)
+        if not req:
+            raise ValueError("Solicitud no encontrada")
+            
+        consulta = {
+            "mensaje": mensaje,
+            "usuario_id": "admin",
+            "rol": "admin",
+            "autor_id": admin_uid,
+            "fecha": datetime.utcnow()
+        }
+        
+        return self.request_repository.agregar_a_array(request_id, "historial_consultas", consulta)
