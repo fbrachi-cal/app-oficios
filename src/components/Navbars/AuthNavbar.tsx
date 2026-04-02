@@ -12,8 +12,12 @@ type NavbarProps = {
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const { t } = useTranslation();
-  const { usuario } = useAuth();
-  
+  const { usuario, loading } = useAuth();
+
+  // Treat the user as authenticated only once the auth state has fully resolved.
+  // While loading, we default to the guest layout to avoid flickering.
+  const isAuthenticated = !loading && !!usuario;
+
   return (
     <>
       <nav className="top-0 absolute z-40 w-full px-2 py-4">
@@ -29,9 +33,9 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           {/* Action Items Row */}
           <div className="w-full sm:w-auto flex flex-row items-center justify-center sm:justify-end space-x-4 sm:space-x-6">
             
-            {!usuario && <LanguageSwitcher />}
+            {!isAuthenticated && <LanguageSwitcher />}
 
-            {usuario ? (
+            {isAuthenticated ? (
               <UserDropdown usuario={usuario} />
             ) : (
               <div className="flex items-center space-x-3">
