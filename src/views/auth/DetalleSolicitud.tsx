@@ -276,28 +276,36 @@ const DetalleSolicitud: React.FC = () => {
                                     <div className="space-y-4">
                                         {solicitud.historial_consultas
                                             .sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
-                                            .map((consulta: any, index: number) => (
-                                                <div key={index} className="p-3 border rounded bg-blueGray-50 text-left">
-                                                    <div className="flex items-center mb-2">
-                                                        <img
-                                                            src={
-                                                                consulta.usuario_id === otroUsuario.id
-                                                                    ? otroUsuario.foto || default_avatar
-                                                                    : user?.foto || default_avatar
-                                                            }
-                                                            alt="avatar"
-                                                            className="w-8 h-8 rounded-full mr-3"
-                                                        />
-                                                        <span className="font-semibold">
-                                                            {consulta.usuario_id === otroUsuario.id
-                                                                ? otroUsuario.nombre
-                                                                : user?.nombre || t("vos")}
+                                            .map((consulta: any, index: number) => {
+                                                const isAdmin = consulta.rol === "admin" || String(consulta.autor_id).includes("admin");
+                                                const isOtro = !isAdmin && consulta.usuario_id === otroUsuario.id;
+                                                
+                                                return (
+                                                <div key={index} className={`p-3 border rounded text-left ${isAdmin ? 'bg-gray-800 text-white' : 'bg-blueGray-50'}`}>
+                                                    <div className={`flex items-center mb-2 border-b pb-1 ${isAdmin ? 'border-gray-600' : 'border-black/5'}`}>
+                                                        {isAdmin ? (
+                                                            <div className="w-8 h-8 rounded-full mr-3 bg-gray-600 flex items-center justify-center">
+                                                                <i className="fas fa-shield-alt text-white"></i>
+                                                            </div>
+                                                        ) : (
+                                                            <img
+                                                                src={
+                                                                    isOtro
+                                                                        ? otroUsuario.foto || default_avatar
+                                                                        : user?.foto || default_avatar
+                                                                }
+                                                                alt="avatar"
+                                                                className="w-8 h-8 rounded-full mr-3 border"
+                                                            />
+                                                        )}
+                                                        <span className={`font-semibold ${isAdmin ? 'text-gray-200' : ''}`}>
+                                                            {isAdmin ? "Administrador (Sistema)" : (isOtro ? otroUsuario.nombre : user?.nombre || t("vos"))}
                                                         </span>
-                                                        <span className="ml-auto text-xs text-blueGray-400">
+                                                        <span className={`ml-auto text-xs ${isAdmin ? 'text-gray-400' : 'text-blueGray-400'}`}>
                                                             {new Date(consulta.fecha).toLocaleString("es-AR")}
                                                         </span>
                                                     </div>
-                                                    <p className="text-sm text-blueGray-600 whitespace-pre-wrap break-words min-w-0">{consulta.mensaje}</p>
+                                                    <p className={`text-sm whitespace-pre-wrap break-words min-w-0 ${isAdmin ? 'text-white' : 'text-blueGray-600'}`}>{consulta.mensaje}</p>
                                                     {consulta.fotos?.length > 0 && (
                                                         <div className="mt-2 grid grid-cols-2 md:grid-cols-3 gap-2">
                                                             {consulta.fotos.map((fotoUrl: string, idx: number) => (
@@ -312,7 +320,8 @@ const DetalleSolicitud: React.FC = () => {
                                                         </div>
                                                     )}
                                                 </div>
-                                            ))}
+                                                );
+                                            })}
                                     </div>
                                 </div>
                             )}

@@ -175,8 +175,8 @@ const ReportsPage = () => {
                     ) : (
                       <button 
                         className="text-blueGray-400 hover:text-blueGray-600"
-                        title={r.resolution_notes || "Sin notas adicionales"}
-                        onClick={() => alert(r.resolution_notes || "Cerrado sin notas adicionales.")}
+                        title={r.resolved_notes || "Sin notas adicionales"}
+                        onClick={() => alert(r.resolved_notes || "Cerrado sin notas adicionales.")}
                       >
                         <i className="fas fa-info-circle text-lg"></i>
                       </button>
