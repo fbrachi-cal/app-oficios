@@ -62,7 +62,30 @@ export type Report = {
   created_at: string;
   resolved_by?: string | null;
   resolved_at?: string | null;
-  resolution_notes?: string | null;
+  resolved_notes?: string | null;
+};
+
+export type AdminSolicitudInteraccion = {
+  mensaje: string;
+  usuario_id: string;
+  rol?: string;
+  autor_id?: string;
+  fecha: string;
+};
+
+export type AdminSolicitud = {
+  id: string;
+  solicitante_id: string;
+  profesional_id?: string;
+  estado: string;
+  fecha_creacion: string;
+  historial_consultas?: AdminSolicitudInteraccion[];
+  participantDetails?: {
+    id: string;
+    nombre: string;
+    tipo: string;
+    email?: string;
+  }[];
 };
 
 export type AdminRating = {
@@ -205,6 +228,25 @@ export const adminService = {
 
   async deleteRating(ratingId: string): Promise<{ id: string; message: string }> {
     const res = await axios.delete(`/admin/calificaciones/${ratingId}`);
+    return res.data;
+  },
+
+  // Solicitudes (with interactions)
+  async getSolicitudes(params?: {
+    limit?: number;
+    start_after_id?: string;
+  }): Promise<PaginatedResponse<AdminSolicitud>> {
+    const res = await axios.get(`/admin/solicitudes`, { params });
+    return res.data;
+  },
+
+  async getSolicitud(solicitudId: string): Promise<AdminSolicitud> {
+    const res = await axios.get(`/admin/solicitudes/${solicitudId}`);
+    return res.data;
+  },
+
+  async addAdminMessageToSolicitud(solicitudId: string, mensaje: string): Promise<{ id: string; message: string }> {
+    const res = await axios.post(`/admin/solicitudes/${solicitudId}/mensajes`, { mensaje });
     return res.data;
   },
 };

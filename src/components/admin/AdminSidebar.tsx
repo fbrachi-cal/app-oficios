@@ -5,7 +5,7 @@
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { IconType } from "react-icons";
-import { FiUsers, FiMessageSquare, FiFlag, FiStar, FiShield, FiArrowLeft } from "react-icons/fi";
+import { FiUsers, FiMessageSquare, FiFlag, FiStar, FiShield, FiArrowLeft, FiMessageCircle } from "react-icons/fi";
 
 type NavItem = {
   label: string;
@@ -16,6 +16,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { label: "admin.nav.users",   to: "/admin/usuarios",      Icon: FiUsers },
   { label: "admin.nav.chats",   to: "/admin/chats",         Icon: FiMessageSquare },
+  { label: "admin.nav.solicitudes_interacciones", to: "/admin/solicitudes-interacciones", Icon: FiMessageCircle },
   { label: "admin.nav.reports", to: "/admin/reportes",      Icon: FiFlag },
   { label: "admin.nav.ratings", to: "/admin/calificaciones", Icon: FiStar },
 ];
