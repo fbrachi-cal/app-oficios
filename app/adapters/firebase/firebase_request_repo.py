@@ -52,6 +52,10 @@ class FirebaseRequestRepository:
         docs = query.stream()
         return [dict(doc.to_dict(), id=doc.id) for doc in docs]
     
+    def get_all_requests(self) -> List[Dict[str, Any]]:
+        docs = self.collection.stream()
+        return [dict(doc.to_dict(), id=doc.id) for doc in docs]
+    
     def get_by_id(self, solicitud_id: str) -> Optional[dict]:
         doc_ref = self.collection.document(solicitud_id)
         doc = doc_ref.get()

@@ -35,6 +35,7 @@ def get_admin_service():
     return AdminService(
         user_repository=FirebaseUserRepository(),
         chat_repository=FirebaseChatRepository(),
+        request_repository=FirebaseRequestRepository()
     )
 
 def get_report_service():

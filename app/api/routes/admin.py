@@ -16,7 +16,7 @@ from app.api.dependencies import (
 from app.domain.services.admin_service import AdminService
 from app.domain.services.report_service import ReportService
 from app.domain.services.admin_rating_service import AdminRatingService
-from app.api.schemas.admin_schema import AdminUserPatch, ReportCreate, ReportPatch
+from app.api.schemas.admin_schema import AdminUserPatch, ReportCreate, ReportPatch, AdminRequestMessageCreate
 from app.api.schemas.rating_schema import AdminRatingCreate, AdminRatingUpdate
 from app.shared.roles import require_role
 from app.shared.logger import log
@@ -197,6 +197,46 @@ def soft_delete_rating_admin(
     log.info(f"admin.soft_delete_rating rating_id={rating_id} by={admin_data['uid']}")
     return service.delete_rating_admin(rating_id, admin_data["uid"])
 
+
+# ============================================================
+# Solicitudes (Admin Requests)
+# ============================================================
+
+@router.get("/solicitudes", summary="List solicitudes with interactions")
+def list_requests_admin(
+    limit: int = Query(20, ge=1, le=100),
+    start_after_id: Optional[str] = Query(None),
+    admin_data: dict = _admin,
+    service: AdminService = Depends(get_admin_service),
+):
+    log.info(f"admin.list_requests by={admin_data['uid']}")
+    return service.list_requests_with_interactions(limit, start_after_id)
+
+
+@router.get("/solicitudes/{solicitud_id}", summary="Get request with messages")
+def get_request_admin(
+    solicitud_id: str,
+    admin_data: dict = _admin,
+    service: AdminService = Depends(get_admin_service),
+):
+    req = service.get_request_with_messages(solicitud_id)
+    if not req:
+        raise HTTPException(status_code=404, detail="Solicitud no encontrada")
+    return req
+
+
+@router.post("/solicitudes/{solicitud_id}/mensajes", summary="Add admin message to request")
+def add_message_to_request_admin(
+    solicitud_id: str,
+    datos: AdminRequestMessageCreate,
+    admin_data: dict = _admin,
+    service: AdminService = Depends(get_admin_service),
+):
+    log.info(f"admin.add_message to {solicitud_id} by={admin_data['uid']}")
+    try:
+        return service.add_admin_message_to_request(solicitud_id, admin_data['uid'], datos.mensaje)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 # ============================================================
 # User-facing reports router  (mounted at /reports in main.py)
