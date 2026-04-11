@@ -1,0 +1,67 @@
+
+> app-oficios-frontend@0.0.0 build /home/fbrachi/app-oficios-frontend
+> tsc -b && vite build
+
+src/components/Chat/ChatDrawer.tsx(63,36): error TS7006: Parameter 'chat' implicitly has an 'any' type.
+src/components/Chat/ChatDrawer.tsx(65,16): error TS7006: Parameter 'u' implicitly has an 'any' type.
+src/components/Chat/ChatDrawer.tsx(66,13): error TS7006: Parameter 'u' implicitly has an 'any' type.
+src/components/Navbars/AuthNavbar.tsx(62,33): error TS2322: Type '{ usuario: any; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'usuario' does not exist on type 'IntrinsicAttributes'.
+src/components/Screens/LoadingScreen.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/components/Screens/VerificacionTelefono.tsx(15,5): error TS2339: Property 'verificarCodigo' does not exist on type '{ enviarSMS: (telefonoE164: string) => Promise<boolean>; confirmarCodigo: (codigo: string) => Promise<boolean>; verificado: boolean; error: string | null; setError: Dispatch<...>; }'.
+src/components/Screens/VerificacionTelefono.tsx(18,5): error TS2339: Property 'confirmationResult' does not exist on type '{ enviarSMS: (telefonoE164: string) => Promise<boolean>; confirmarCodigo: (codigo: string) => Promise<boolean>; verificado: boolean; error: string | null; setError: Dispatch<...>; }'.
+src/components/Tables/Tables.tsx(2,23): error TS2307: Cannot find module '../components/Cards/CardTable' or its corresponding type declarations.
+src/config.ts(2,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/hooks/usePhoneVerification.ts(3,51): error TS6133: 'ConfirmationResult' is declared but its value is never read.
+src/layouts/Admin.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/layouts/Admin.tsx(5,25): error TS2307: Cannot find module 'components/Navbars/AdminNavbar' or its corresponding type declarations.
+src/layouts/Admin.tsx(6,21): error TS2307: Cannot find module 'components/Sidebar/Sidebar' or its corresponding type declarations.
+src/layouts/Admin.tsx(7,25): error TS2307: Cannot find module 'components/Headers/HeaderStats' or its corresponding type declarations.
+src/layouts/Admin.tsx(8,25): error TS2307: Cannot find module 'components/Footers/FooterAdmin' or its corresponding type declarations.
+src/layouts/Admin.tsx(11,23): error TS2307: Cannot find module 'views/admin/Dashboard' or its corresponding type declarations.
+src/layouts/Admin.tsx(12,18): error TS2307: Cannot find module 'views/admin/Maps' or its corresponding type declarations.
+src/layouts/Admin.tsx(13,22): error TS2307: Cannot find module 'views/admin/Settings' or its corresponding type declarations.
+src/layouts/Admin.tsx(14,20): error TS2307: Cannot find module 'views/admin/Tables' or its corresponding type declarations.
+src/layouts/Admin.tsx(16,19): error TS2503: Cannot find namespace 'JSX'.
+src/layouts/Auth.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/layouts/Auth.tsx(3,1): error TS6192: All imports in import declaration are unused.
+src/layouts/Auth.tsx(10,1): error TS6133: 'Login' is declared but its value is never read.
+src/layouts/Auth.tsx(11,1): error TS6133: 'Register' is declared but its value is never read.
+src/layouts/Auth.tsx(16,18): error TS2503: Cannot find namespace 'JSX'.
+src/layouts/Auth.tsx(30,24): error TS2322: Type '{ absolute: true; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'absolute' does not exist on type 'IntrinsicAttributes'.
+src/main.tsx(8,8): error TS2307: Cannot find module './index.css' or its corresponding type declarations.
+src/main.tsx(9,8): error TS2307: Cannot find module './tailwind.css' or its corresponding type declarations.
+src/router/index.tsx(2,19): error TS2307: Cannot find module '../views/Login' or its corresponding type declarations.
+src/router/index.tsx(3,22): error TS2307: Cannot find module '../views/Registro' or its corresponding type declarations.
+src/services/chatService.ts(4,29): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/utils/axiosWithAuth.ts(6,24): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/utils/axiosWithAuth.ts(15,7): error TS2322: Type '{ Authorization: string; Accept?: AxiosHeaderValue | undefined; "Content-Length"?: AxiosHeaderValue | undefined; "User-Agent"?: AxiosHeaderValue | undefined; "Content-Encoding"?: AxiosHeaderValue | undefined; 'Content-Type'?: ContentType | undefined; }' is not assignable to type 'AxiosRequestHeaders'.
+  Type '{ Authorization: string; Accept?: AxiosHeaderValue | undefined; "Content-Length"?: AxiosHeaderValue | undefined; "User-Agent"?: AxiosHeaderValue | undefined; "Content-Encoding"?: AxiosHeaderValue | undefined; 'Content-Type'?: ContentType | undefined; }' is missing the following properties from type 'AxiosHeaders': set, get, has, delete, and 24 more.
+src/views/Landing.tsx(2,1): error TS6133: 'Link' is declared but its value is never read.
+src/views/Landing.tsx(6,19): error TS6133: 'FaRetweet' is declared but its value is never read.
+src/views/Landing.tsx(6,45): error TS6133: 'FaUserFriends' is declared but its value is never read.
+src/views/Landing.tsx(6,60): error TS6133: 'FaRocket' is declared but its value is never read.
+src/views/Landing.tsx(6,70): error TS6133: 'FaHtml5' is declared but its value is never read.
+src/views/Landing.tsx(6,79): error TS6133: 'FaPaperPlane' is declared but its value is never read.
+src/views/Landing.tsx(6,93): error TS6133: 'FaMedal' is declared but its value is never read.
+src/views/Landing.tsx(6,102): error TS6133: 'FaPoll' is declared but its value is never read.
+src/views/Landing.tsx(6,110): error TS6133: 'FaLightbulb' is declared but its value is never read.
+src/views/Landing.tsx(6,123): error TS6133: 'FaTwitter' is declared but its value is never read.
+src/views/Landing.tsx(6,134): error TS6133: 'FaFacebookF' is declared but its value is never read.
+src/views/Landing.tsx(6,147): error TS6133: 'FaDribbble' is declared but its value is never read.
+src/views/Landing.tsx(6,159): error TS6133: 'FaInstagram' is declared but its value is never read.
+src/views/Landing.tsx(6,172): error TS6133: 'FaGoogle' is declared but its value is never read.
+src/views/Landing.tsx(11,1): error TS6133: 'team1' is declared but its value is never read.
+src/views/Landing.tsx(12,1): error TS6133: 'team2' is declared but its value is never read.
+src/views/Landing.tsx(13,1): error TS6133: 'team3' is declared but its value is never read.
+src/views/Landing.tsx(14,1): error TS6133: 'team4' is declared but its value is never read.
+src/views/auth/CompletarPerfil.tsx(12,29): error TS2503: Cannot find namespace 'JSX'.
+src/views/auth/Login.tsx(1,17): error TS6133: 'useEffect' is declared but its value is never read.
+src/views/auth/Login.tsx(19,19): error TS2503: Cannot find namespace 'JSX'.
+src/views/auth/Register.tsx(10,1): error TS6192: All imports in import declaration are unused.
+src/views/auth/Register.tsx(22,22): error TS2503: Cannot find namespace 'JSX'.
+src/views/auth/UpdateProfile.tsx(8,27): error TS2503: Cannot find namespace 'JSX'.
+src/views/auth/UpdateProfile.tsx(17,16): error TS6133: 'setTipo' is declared but its value is never read.
+src/views/auth/UpdateProfile.tsx(17,63): error TS2345: Argument of type 'string' is not assignable to parameter of type '"profesional" | "cliente" | (() => "profesional" | "cliente")'.
+ ELIFECYCLE  Command failed with exit code 2.
