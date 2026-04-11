@@ -19,7 +19,7 @@ const ChatViewer: React.FC<ChatViewerProps> = ({ chatId }) => {
       .then(data => {
         if (active) setChat(data);
       })
-      .catch(err => logger.error(err))
+      .catch(err => logger.error("ChatViewer load error", err))
       .finally(() => {
         if (active) setLoading(false);
       });

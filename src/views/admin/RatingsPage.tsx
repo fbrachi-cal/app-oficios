@@ -48,7 +48,7 @@ const RatingsPage = () => {
       setRatings(items);
       setNextCursor(items.length === 15 ? items[14].id : null);
     } catch (err) {
-      logger.error(err);
+      logger.error("Error loading ratings", err);
       alert(t("admin.messages.fetch_error", "Error cargando calificaciones"));
     } finally {
       setLoading(false);
@@ -94,7 +94,7 @@ const RatingsPage = () => {
       alert(t("admin.messages.success", "Operación exitosa"));
       fetchRatings(currentCursor);
     } catch (err) {
-      logger.error(err);
+      logger.error("Error handling ratings", err);
       alert(t("admin.messages.error", "Error eliminando la calificación"));
     } finally {
       setActionId(null);
@@ -152,7 +152,7 @@ const RatingsPage = () => {
       setIsModalOpen(false);
       fetchRatings(currentCursor);
     } catch (err: any) {
-      logger.error(err);
+      logger.error("Error in ratings context", err);
       alert(err.response?.data?.detail ?? t("admin.messages.error", "Ocurrió un error"));
     } finally {
       setSaving(false);

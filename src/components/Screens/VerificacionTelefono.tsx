@@ -21,8 +21,8 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
     confirmationResult,
   } = usePhoneVerification();
 
-  logger.info("CONFIRMAR CODIGO:", confirmarCodigo);
-  logger.info("SET ERROR CODIGO:", setError);
+  logger.info("CONFIRMAR CODIGO", { confirmarCodigo });
+  logger.info("SET ERROR CODIGO", { setError });
 
 
   const handleEnviarSMS = async () => {

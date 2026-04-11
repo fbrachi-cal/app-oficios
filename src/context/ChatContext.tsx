@@ -26,7 +26,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const unread = data.reduce((acc: number, chat: any) => acc + (chat.unread || 0), 0);
             setUnreadCount(unread);
         } catch (error) {
-            logger.error('Error cargando chats:', error);
+            logger.error("Error cargando chats", error);
         }
     }, []);
 

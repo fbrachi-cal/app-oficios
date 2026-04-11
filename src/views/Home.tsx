@@ -12,7 +12,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    logger.info("URL del backend:", config.apiBaseUrl);
+    logger.info("URL del backend:", { url: config.apiBaseUrl });
     const unsubscribe = onAuthStateChanged(auth, user => {
       if (user) {
         setUsuario(user);

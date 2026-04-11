@@ -123,7 +123,7 @@ const UpdateProfile = (): JSX.Element => {
       setMensajeExito(t("perfil_actualizado_exito") || "Perfil actualizado con éxito");
 
     } catch (err: any) {
-      logger.error(err);
+      logger.error("Error al actualizar perfil", err);
       setError(t("error_actualizar_perfil", { detalle: err.message }));
     }
   };

@@ -54,7 +54,7 @@ const DetalleSolicitud: React.FC = () => {
             setMensaje("✅ " + t("estado_actualizado"));
             navigate("/landing"); // redirigir
         } catch (error) {
-            logger.error("Error al calificar:", error);
+            logger.error("Error al calificar", error);
             setMensaje("❌ " + t("error_calificar"));
         } finally {
             setLoading(false);

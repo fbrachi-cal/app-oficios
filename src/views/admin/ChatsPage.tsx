@@ -28,7 +28,7 @@ const ChatsPage = () => {
       setChats(data.items);
       setNextCursor(data.next_cursor || null);
     } catch (err) {
-      logger.error(err);
+      logger.error("Error in chats page", err);
       alert(t("admin.messages.fetch_error", "Error cargando chats"));
     } finally {
       setLoading(false);

@@ -18,7 +18,7 @@ const Landing: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useUser(); // 👈
   const navigate = useNavigate();
-  logger.info("USER TIPO: "+user?.tipo);
+  logger.info("USER TIPO", { tipo: user?.tipo });
   return (
     <>
       <main>

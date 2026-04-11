@@ -109,7 +109,7 @@ const CompletarPerfil = (): JSX.Element => {
       await refrescarUsuario();
       navigate("/");
     } catch (err: any) {
-      logger.error(err);
+      logger.error("Error al completar perfil", err);
       setError(t("error_completar_perfil", { detalle: err.message }));
     }
   };

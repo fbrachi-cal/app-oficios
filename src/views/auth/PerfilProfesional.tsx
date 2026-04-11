@@ -192,12 +192,12 @@ const PerfilProfesional: React.FC = () => {
               setLoading(true);
               if (!id) return <div className="text-center p-10">{t("id_invalido")}</div>;
               const respuesta = await solicitudService.crearSolicitud(id, data);
-              logger.info("Solicitud enviada:", respuesta);
+              logger.info("Solicitud enviada", { respuesta });
               setMensaje("✅ " + t("solicitud_enviada_exito"));
               setIsSolicitudOpen(false);              
               navigate("/landing"); // o donde quieras
             } catch (error) {
-              logger.error("Error al enviar solicitud:", error);
+              logger.error("Error al enviar solicitud", error);
               setMensaje("❌ " + t("error_enviar_solicitud"));
             } finally {
               setLoading(false);

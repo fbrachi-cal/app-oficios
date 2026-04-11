@@ -20,7 +20,7 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
       const data = await adminService.getSolicitud(solicitudId);
       setSolicitud(data);
     } catch (err) {
-      logger.error(err);
+      logger.error("Interactions load error", err);
     } finally {
       setLoading(false);
     }
@@ -40,7 +40,7 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
       // Refresh interactions
       fetchSolicitud();
     } catch (err) {
-      logger.error(err);
+      logger.error("Interactions post error", err);
       alert("Error al enviar mensaje de administrador.");
     } finally {
       setSending(false);

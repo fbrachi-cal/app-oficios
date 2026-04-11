@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setRol(data.rol);
           }
         } catch (err) {
-          logger.error("Error al obtener rol:", err);
+          logger.error("Error al obtener rol", err);
         }
       } else {
         setRol(null);

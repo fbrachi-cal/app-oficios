@@ -26,7 +26,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
       setMessages(data);
       setMessagesLoaded(true);
     } catch (error) {
-      logger.error("Error cargando mensajes:", error);
+      logger.error("Error cargando mensajes", error);
     }
   };
 
@@ -39,14 +39,14 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
   }, [isOpen, reload]);
 
   useEffect(() => {
-    logger.info("useEffect con initialProfessionalId: "+initialProfessionalId+" y chats: "+chats+" y activeChatId: "+activeChatId);		
+    logger.info("useEffect dependencies", { initialProfessionalId, chats, activeChatId });		
     if (!initialProfessionalId || !chats.length || activeChatId) return;
-    logger.info("🔍 Buscando en chats:", chats);
+    logger.info("🔍 Buscando en chats", { chats });
     const existing = chats.find(c =>
       c.participants.includes(initialProfessionalId)
     );
     if (existing) {
-      logger.info("✅ Encontré el chat:", existing);
+      logger.info("✅ Encontré el chat", { existing });
       setActiveChatId(existing.id);
     } else {
       logger.info("⚠️ No encontré un chat con ese participante");
@@ -56,7 +56,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
 
   useEffect(() => {
     if (!activeChatId) return;
-    logger.info("📨 Cargando mensajes del chat", activeChatId);
+    logger.info("📨 Cargando mensajes del chat", { activeChatId });
     loadMessages(activeChatId);
   }, [activeChatId]);
 
@@ -68,7 +68,7 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
       initialProfessionalId,
       message
     );
-    logger.info("START CHAT: "+chatId);
+    logger.info("START CHAT", { chatId });
     setActiveChatId(chatId);
     setMessage("");
     await reload(); // refresca la lista de chats para que incluya este nuevo
@@ -84,8 +84,8 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
   };
 
   const getOtherParticipantName = (chat: { participants_details: { uid: string, nombre: string }[] }) => {
-    logger.info("auth.currentUser?.uid:", auth.currentUser?.uid);
-    logger.info("chat.participants_details:", chat.participants_details);
+    logger.info("auth.currentUser?.uid", { uid: auth.currentUser?.uid });
+    logger.info("chat.participants_details", { details: chat.participants_details });
     return chat.participants_details
       .filter((u) => u.uid !== auth.currentUser?.uid)
       .map((u) => u.nombre)

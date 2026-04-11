@@ -87,7 +87,7 @@ const Register = (): JSX.Element => {
       setFoto(file);
       const objectUrl = URL.createObjectURL(file);
       setPreview(objectUrl);
-      logger.info("Vista previa generada:", objectUrl);
+      logger.info("Vista previa generada", { objectUrl });
     }
   };
 
@@ -139,7 +139,7 @@ const Register = (): JSX.Element => {
       navigate(0);
 
     } catch (err: any) {
-      logger.error(err);
+      logger.error("Error al registrar", err);
       setError(t("error_registrar", { detalle: err.message }));
     }
   };
@@ -167,7 +167,7 @@ const Register = (): JSX.Element => {
         setError(t("error_verificar_usuario"));
       }
     } catch (err) {
-      logger.error(err);
+      logger.error("Error en registro", err);
       setError(t("error_registro_red_social"));
     }
   };

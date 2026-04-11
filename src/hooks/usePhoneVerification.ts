@@ -27,13 +27,13 @@ export const usePhoneVerification = () => {
 
   const setupRecaptcha = async () => {
     if (!window.recaptchaVerifier) {      
-      logger.info("⏳ Montando RecaptchaVerifier..."+JSON.stringify(auth));
+      logger.info("⏳ Montando RecaptchaVerifier", { auth });
       window.recaptchaVerifier = new RecaptchaVerifier(auth,
         "recaptcha-container",
         {
           size: "normal",
           callback: (response: any) => {
-            logger.info("✅ reCAPTCHA resuelto:", response);
+            logger.info("✅ reCAPTCHA resuelto", { response });
           },
           "expired-callback": () => {
             logger.info("⚠️ reCAPTCHA expirado");
@@ -50,7 +50,7 @@ export const usePhoneVerification = () => {
         await setupRecaptcha();
       }
   
-      logger.info("Enviando SMS a:", telefonoE164);
+      logger.info("Enviando SMS a", { telefonoE164 });
       const appVerifier = window.recaptchaVerifier;
       if (!appVerifier) throw new Error("Recaptcha no disponible");
   
@@ -58,7 +58,7 @@ export const usePhoneVerification = () => {
       setConfirmacion(result);
       return true;
     } catch (err: any) {
-      logger.error(err);
+      logger.error("Error sending SMS", err);
       setError(err.message);
       return false;
     }
@@ -72,7 +72,7 @@ export const usePhoneVerification = () => {
       setVerificado(true);
       return true;
     } catch (err: any) {
-      logger.error(err);
+      logger.error("Error verifying code", err);
       setError("Código incorrecto");
       return false;
     }

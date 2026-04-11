@@ -45,7 +45,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
       }
       onClose();
     } catch (err) {
-      logger.error(err);
+      logger.error("User details error", err);
       alert(t("admin.messages.error", "Ocurrió un error"));
     } finally {
       setLoading(false);
@@ -64,7 +64,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
       alert(t("admin.messages.user_deleted", "Usuario eliminado (soft delete)"));
       onClose();
     } catch (err) {
-      logger.error(err);
+      logger.error("User metrics error", err);
       alert(t("admin.messages.error", "Ocurrió un error"));
     } finally {
       setLoading(false);

@@ -61,7 +61,7 @@ const CalificarProfesionales: React.FC = () => {
                 setUltimoId(data[data.length - 1].id);
             }
         } catch (error) {
-            logger.error("🔍 Error buscando profesionales:", error);
+            logger.error("🔍 Error buscando profesionales", error);
         }
     };
 
@@ -126,7 +126,7 @@ const CalificarProfesionales: React.FC = () => {
                                         key={prof.id}
                                         profesional={prof}
                                         onVerPerfil={(id) => {
-                                            logger.info("Ir al perfil de:", id);
+                                            logger.info("Ir al perfil", { id });
                                             navigate(`/auth/profesionales/${id}`);
                                         }}
                                     />

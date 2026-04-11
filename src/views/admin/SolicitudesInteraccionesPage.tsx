@@ -26,7 +26,7 @@ const SolicitudesInteraccionesPage = () => {
       setSolicitudes(data.items);
       setNextCursor(data.next_cursor || null);
     } catch (err) {
-      logger.error(err);
+      logger.error("Error loading interactions", err);
       alert("Error cargando solicitudes con interacciones");
     } finally {
       setLoading(false);

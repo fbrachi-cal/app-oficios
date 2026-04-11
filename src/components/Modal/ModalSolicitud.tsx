@@ -43,7 +43,7 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
       fetchConToken(`${config.apiBaseUrl}/utils/motivos_cancelacion`)
         .then((res) => res.json())
         .then((data) => setMotivos(data))
-        .catch((err) => logger.error("Error cargando motivos:", err));
+        .catch((err) => logger.error("Error cargando motivos", err));
     }
   }, [mostrarMotivos]);
 

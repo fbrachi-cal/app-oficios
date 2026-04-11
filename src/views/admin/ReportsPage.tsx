@@ -26,7 +26,7 @@ const ReportsPage = () => {
       setReports(data.items);
       setNextCursor(data.next_cursor || null);
     } catch (err) {
-      logger.error(err);
+      logger.error("Error loading reports", err);
       alert(t("admin.messages.fetch_error", "Error cargando reportes"));
     } finally {
       setLoading(false);
@@ -71,7 +71,7 @@ const ReportsPage = () => {
       setReports(prev => prev.map(r => r.id === reportId ? updated : r));
       alert(t("admin.messages.report_resolved", "Reporte resuelto"));
     } catch (err) {
-      logger.error(err);
+      logger.error("Error processing report", err);
       alert(t("admin.messages.error", "Error al resolver reporte"));
     } finally {
       setResolvingId(null);

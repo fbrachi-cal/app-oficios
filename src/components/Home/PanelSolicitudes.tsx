@@ -52,7 +52,7 @@ const PanelSolicitudes: React.FC = () => {
             const data = await solicitudService.obtenerSolicitudes();
             setSolicitudes(data);
         } catch (error) {
-            logger.error("Error al calificar:", error);
+            logger.error("Error al calificar", error);
         } finally {
             setLoading(false);
         }
@@ -84,7 +84,7 @@ const PanelSolicitudes: React.FC = () => {
             setSolicitudes(data);
             setModalAccion(null); // cerrar modal si no lo hace el modal mismo
         } catch (err) {
-            logger.error("Error al cambiar el estado:", err);
+            logger.error("Error al cambiar el estado", err);
         } finally {
             setLoading(false);
         }

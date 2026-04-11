@@ -49,7 +49,7 @@ const Login = (): JSX.Element => {
   
       if (res.ok) {        
         const userData = await res.json();
-        logger.info("USUARIO LOGIN: "+JSON.stringify(userData));
+        logger.info("USUARIO LOGIN", { userData });
         // Podés guardar userData en un contexto global si querés
         if (
           userData.tipo === "profesional" &&
@@ -67,7 +67,7 @@ const Login = (): JSX.Element => {
         setError(t("error_verificar_usuario"));
       }
     } catch (err) {
-      logger.error(err);
+      logger.error("Error en login con Google", err);
       setError(t("error_usuario_password"));
     }finally{ 
       logger.info("HANDLE LOGIN LOADING false!");
@@ -98,7 +98,7 @@ const Login = (): JSX.Element => {
   
       if (res.ok) {
         const userData = await res.json();
-        logger.info("USUARIO LOGIN: "+JSON.stringify(userData));
+        logger.info("USUARIO LOGIN", { userData });
         if (
           userData.tipo === "profesional" &&
           (!userData.oficios?.length || !userData.zonas?.length)
@@ -115,7 +115,7 @@ const Login = (): JSX.Element => {
         setError(t("error_verificar_usuario"));
       }
     } catch (err) {
-      logger.error(err);
+      logger.error("Error en login con email", err);
       setError(t("error_inicio_sesion"));
     }finally{
       logger.info("SET LOADING A FALSE");
