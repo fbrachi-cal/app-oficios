@@ -9,9 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 
-print("APP DE OFICIOS - API")
-print("ENABLE_LOGGING:", os.getenv("ENABLE_LOGGING", "true"))
-log.info("APP INICIADA - API")
+log.info("APP INICIADA - API | ENABLE_LOGGING: {}", os.getenv("ENABLE_LOGGING", "true"))
 
 app = FastAPI(title="App de Oficios - API")
 
