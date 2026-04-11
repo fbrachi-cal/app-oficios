@@ -1,0 +1,1 @@
+2025-12-01 15:18:02.613 | INFO     | app.api.middleware.log_requests:dispatch:27 - [GET] /favicon.ico | 404 | 0.0239s | uid=-
