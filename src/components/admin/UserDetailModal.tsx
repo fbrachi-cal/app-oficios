@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminUser, AdminUserPatch, adminService } from "../../services/adminService";
@@ -44,7 +45,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
       }
       onClose();
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       alert(t("admin.messages.error", "Ocurrió un error"));
     } finally {
       setLoading(false);
@@ -63,7 +64,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
       alert(t("admin.messages.user_deleted", "Usuario eliminado (soft delete)"));
       onClose();
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       alert(t("admin.messages.error", "Ocurrió un error"));
     } finally {
       setLoading(false);

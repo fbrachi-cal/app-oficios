@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -108,7 +109,7 @@ const CompletarPerfil = (): JSX.Element => {
       await refrescarUsuario();
       navigate("/");
     } catch (err: any) {
-      console.error(err);
+      logger.error(err);
       setError(t("error_completar_perfil", { detalle: err.message }));
     }
   };

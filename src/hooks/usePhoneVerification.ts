@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 // src/hooks/usePhoneVerification.ts
 import { useState, useEffect } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber} from "firebase/auth";
@@ -26,16 +27,16 @@ export const usePhoneVerification = () => {
 
   const setupRecaptcha = async () => {
     if (!window.recaptchaVerifier) {      
-      console.log("⏳ Montando RecaptchaVerifier..."+JSON.stringify(auth));
+      logger.info("⏳ Montando RecaptchaVerifier..."+JSON.stringify(auth));
       window.recaptchaVerifier = new RecaptchaVerifier(auth,
         "recaptcha-container",
         {
           size: "normal",
           callback: (response: any) => {
-            console.log("✅ reCAPTCHA resuelto:", response);
+            logger.info("✅ reCAPTCHA resuelto:", response);
           },
           "expired-callback": () => {
-            console.log("⚠️ reCAPTCHA expirado");
+            logger.info("⚠️ reCAPTCHA expirado");
           },
         }
       );
@@ -49,7 +50,7 @@ export const usePhoneVerification = () => {
         await setupRecaptcha();
       }
   
-      console.log("Enviando SMS a:", telefonoE164);
+      logger.info("Enviando SMS a:", telefonoE164);
       const appVerifier = window.recaptchaVerifier;
       if (!appVerifier) throw new Error("Recaptcha no disponible");
   
@@ -57,7 +58,7 @@ export const usePhoneVerification = () => {
       setConfirmacion(result);
       return true;
     } catch (err: any) {
-      console.error(err);
+      logger.error(err);
       setError(err.message);
       return false;
     }
@@ -71,7 +72,7 @@ export const usePhoneVerification = () => {
       setVerificado(true);
       return true;
     } catch (err: any) {
-      console.error(err);
+      logger.error(err);
       setError("Código incorrecto");
       return false;
     }

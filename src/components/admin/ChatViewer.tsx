@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { AdminChat, AdminMessage, adminService } from "../../services/adminService";
 import { useTranslation } from "react-i18next";
@@ -18,7 +19,7 @@ const ChatViewer: React.FC<ChatViewerProps> = ({ chatId }) => {
       .then(data => {
         if (active) setChat(data);
       })
-      .catch(err => console.error(err))
+      .catch(err => logger.error(err))
       .finally(() => {
         if (active) setLoading(false);
       });

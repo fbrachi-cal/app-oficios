@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import axios from "../utils/axiosWithAuth"; // o donde lo hayas guardado
 
 
@@ -12,7 +13,7 @@ export const chatService = {
     return res.data.chatId;
   },
   async fetchChats() {
-    console.log("FETCHING CHATS");
+    logger.info("FETCHING CHATS");
     const res = await axios.get(`${baseUrl}/chats`);
     return res.data;
   },

@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminSolicitud, adminService } from "../../services/adminService";
@@ -25,7 +26,7 @@ const SolicitudesInteraccionesPage = () => {
       setSolicitudes(data.items);
       setNextCursor(data.next_cursor || null);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       alert("Error cargando solicitudes con interacciones");
     } finally {
       setLoading(false);

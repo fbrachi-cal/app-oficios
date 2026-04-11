@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -47,7 +48,7 @@ const RatingsPage = () => {
       setRatings(items);
       setNextCursor(items.length === 15 ? items[14].id : null);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       alert(t("admin.messages.fetch_error", "Error cargando calificaciones"));
     } finally {
       setLoading(false);
@@ -93,7 +94,7 @@ const RatingsPage = () => {
       alert(t("admin.messages.success", "Operación exitosa"));
       fetchRatings(currentCursor);
     } catch (err) {
-      console.error(err);
+      logger.error(err);
       alert(t("admin.messages.error", "Error eliminando la calificación"));
     } finally {
       setActionId(null);
@@ -151,7 +152,7 @@ const RatingsPage = () => {
       setIsModalOpen(false);
       fetchRatings(currentCursor);
     } catch (err: any) {
-      console.error(err);
+      logger.error(err);
       alert(err.response?.data?.detail ?? t("admin.messages.error", "Ocurrió un error"));
     } finally {
       setSaving(false);

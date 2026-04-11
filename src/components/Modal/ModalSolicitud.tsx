@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { fetchConToken } from "../../utils/fetchConToken";
 import config from "../../config";
@@ -42,7 +43,7 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
       fetchConToken(`${config.apiBaseUrl}/utils/motivos_cancelacion`)
         .then((res) => res.json())
         .then((data) => setMotivos(data))
-        .catch((err) => console.error("Error cargando motivos:", err));
+        .catch((err) => logger.error("Error cargando motivos:", err));
     }
   }, [mostrarMotivos]);
 

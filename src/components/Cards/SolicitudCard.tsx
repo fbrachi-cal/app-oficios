@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -11,7 +12,7 @@ export default function CardSolicitud() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Aquí iría la lógica para enviar los datos al backend
-    console.log({ zona, horarios, descripcion, fotos });
+    logger.info({ zona, horarios, descripcion, fotos });
   };
 
   return (

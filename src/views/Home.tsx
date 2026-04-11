@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
@@ -11,7 +12,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("URL del backend:", config.apiBaseUrl);
+    logger.info("URL del backend:", config.apiBaseUrl);
     const unsubscribe = onAuthStateChanged(auth, user => {
       if (user) {
         setUsuario(user);

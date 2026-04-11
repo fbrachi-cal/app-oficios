@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import React from "react";
 import { useUser } from "../context/UserContext";
 
@@ -17,7 +18,7 @@ const Landing: React.FC = () => {
   const { t } = useTranslation();
   const { user } = useUser(); // 👈
   const navigate = useNavigate();
-  console.log("USER TIPO: "+user?.tipo);
+  logger.info("USER TIPO: "+user?.tipo);
   return (
     <>
       <main>

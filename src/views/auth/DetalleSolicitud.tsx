@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../../components/Navbars/AuthNavbar";
@@ -53,7 +54,7 @@ const DetalleSolicitud: React.FC = () => {
             setMensaje("✅ " + t("estado_actualizado"));
             navigate("/landing"); // redirigir
         } catch (error) {
-            console.error("Error al calificar:", error);
+            logger.error("Error al calificar:", error);
             setMensaje("❌ " + t("error_calificar"));
         } finally {
             setLoading(false);
@@ -77,7 +78,7 @@ const DetalleSolicitud: React.FC = () => {
             await cargarSolicitud();
             setMensaje("✅ " + t("estado_actualizado"));
         } catch (err) {
-            console.error("Error al cambiar estado", err);
+            logger.error("Error al cambiar estado", err);
             setMensaje("❌ " + t("error_cambiar_estado"));
         } finally {
             setLoading(false);
@@ -97,7 +98,7 @@ const DetalleSolicitud: React.FC = () => {
             const userData = await userRes.json();
             setOtroUsuario(userData);
         } catch (err) {
-            console.error("Error al cargar detalles de solicitud", err);
+            logger.error("Error al cargar detalles de solicitud", err);
         } finally {
             setLoading(false); // ← este es el que apaga el loading
         }
@@ -136,7 +137,7 @@ const DetalleSolicitud: React.FC = () => {
             }
             await cargarSolicitud();
         } catch (e) {
-            console.error("Error al enviar consulta", e);
+            logger.error("Error al enviar consulta", e);
             setMensaje("❌ " + t("error_enviar_consulta"));
         } finally {
             setLoading(false);

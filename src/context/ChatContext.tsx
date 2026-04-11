@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { chatService } from '../services/chatService';
 import { getAuth, onIdTokenChanged, User } from 'firebase/auth';
@@ -25,7 +26,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const unread = data.reduce((acc: number, chat: any) => acc + (chat.unread || 0), 0);
             setUnreadCount(unread);
         } catch (error) {
-            console.error('Error cargando chats:', error);
+            logger.error('Error cargando chats:', error);
         }
     }, []);
 

@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import { fetchConToken } from "../utils/fetchConToken";
 import config from "../config";
 import axiosWithAuth from "../utils/axiosWithAuth";
@@ -28,7 +29,7 @@ export const solicitudService = {
             const response = await axiosWithAuth.get("/solicitudes/mis");
             return response.data;
         } catch (error) {
-            console.error("❌ Error al obtener solicitudes:", error);
+            logger.error("❌ Error al obtener solicitudes:", error);
             throw new Error("No se pudieron cargar las solicitudes. Verificá tu conexión o intentá más tarde.");
         }
     },
@@ -37,7 +38,7 @@ export const solicitudService = {
             const res = await axiosWithAuth.get(`/solicitudes/${id}`);
             return res.data;
         } catch (error) {
-            console.error("❌ Error al obtener solicitud:", error);
+            logger.error("❌ Error al obtener solicitud:", error);
             throw new Error("No se pudo cargar la solicitud. Verificá tu conexión o intentá más tarde.");
         }
     },
@@ -67,7 +68,7 @@ export const solicitudService = {
             const res = await axiosWithAuth.patch(`/solicitudes/${id}/consultar`, data);
             return res.data;
         } catch (err) {
-            console.error("❌ Error enviando consulta:", err);
+            logger.error("❌ Error enviando consulta:", err);
             throw err;
         }
     },
@@ -86,7 +87,7 @@ export const solicitudService = {
             });
             return res.data;
           } catch (err) {
-            console.error("❌ Error actualizando estado de solicitud:", err);
+            logger.error("❌ Error actualizando estado de solicitud:", err);
             throw err;
           }
     },
@@ -107,7 +108,7 @@ export const solicitudService = {
           });
           return res.data;
         } catch (error) {
-          console.error("❌ Error al calificar usuario:", error);
+          logger.error("❌ Error al calificar usuario:", error);
           throw error;
         }
       },

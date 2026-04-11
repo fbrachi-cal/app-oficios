@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { FaSearch, FaExpand, FaCompress } from "react-icons/fa";
 import config from "../../config";
@@ -60,7 +61,7 @@ const CalificarProfesionales: React.FC = () => {
                 setUltimoId(data[data.length - 1].id);
             }
         } catch (error) {
-            console.error("🔍 Error buscando profesionales:", error);
+            logger.error("🔍 Error buscando profesionales:", error);
         }
     };
 
@@ -125,7 +126,7 @@ const CalificarProfesionales: React.FC = () => {
                                         key={prof.id}
                                         profesional={prof}
                                         onVerPerfil={(id) => {
-                                            console.log("Ir al perfil de:", id);
+                                            logger.info("Ir al perfil de:", id);
                                             navigate(`/auth/profesionales/${id}`);
                                         }}
                                     />
