@@ -1,3 +1,4 @@
+import { logger } from "../utils/logger";
 import { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, getIdToken } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setRol(data.rol);
           }
         } catch (err) {
-          console.error("Error al obtener rol:", err);
+          logger.error("Error al obtener rol", err);
         }
       } else {
         setRol(null);

@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { AdminSolicitud, AdminSolicitudInteraccion, adminService } from "../../services/adminService";
 import { useTranslation } from "react-i18next";
@@ -19,7 +20,7 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
       const data = await adminService.getSolicitud(solicitudId);
       setSolicitud(data);
     } catch (err) {
-      console.error(err);
+      logger.error("Interactions load error", err);
     } finally {
       setLoading(false);
     }
@@ -39,7 +40,7 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
       // Refresh interactions
       fetchSolicitud();
     } catch (err) {
-      console.error(err);
+      logger.error("Interactions post error", err);
       alert("Error al enviar mensaje de administrador.");
     } finally {
       setSending(false);

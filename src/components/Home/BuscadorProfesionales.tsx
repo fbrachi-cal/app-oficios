@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { FaSearch, FaExpand, FaCompress } from "react-icons/fa";
 import config from "../../config";
@@ -39,7 +40,7 @@ const BuscadorProfesionales: React.FC = () => {
 
     const buscarProfesionales = async (reset = true) => {
         try {
-            console.log("BUSCAR PROFESIONALES CAT SELECCIONADA: "+categoriaSeleccionada);
+            logger.info("BUSCAR PROFESIONALES CAT SELECCIONADA", { categoriaSeleccionada });
             const body = {
                 zonas,
                 categoria: categoriaSeleccionada,
@@ -70,7 +71,7 @@ const BuscadorProfesionales: React.FC = () => {
                 setUltimoId(data[data.length - 1].id);
             }
         } catch (error) {
-            console.error("🔍 Error buscando profesionales:", error);
+            logger.error("🔍 Error buscando profesionales", error);
         }
     };
 
@@ -148,7 +149,7 @@ const BuscadorProfesionales: React.FC = () => {
                                         key={prof.id}
                                         profesional={prof}
                                         onVerPerfil={(id) => {
-                                            console.log("Ir al perfil de:", id);
+                                            logger.info("Ir al perfil", { id });
                                             navigate(`/auth/profesionales/${id}`);
                                         }}
                                     />

@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminChat, adminService } from "../../services/adminService";
@@ -27,7 +28,7 @@ const ChatsPage = () => {
       setChats(data.items);
       setNextCursor(data.next_cursor || null);
     } catch (err) {
-      console.error(err);
+      logger.error("Error in chats page", err);
       alert(t("admin.messages.fetch_error", "Error cargando chats"));
     } finally {
       setLoading(false);

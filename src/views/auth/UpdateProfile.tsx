@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useUser } from "../../context/UserContext";
@@ -122,7 +123,7 @@ const UpdateProfile = (): JSX.Element => {
       setMensajeExito(t("perfil_actualizado_exito") || "Perfil actualizado con éxito");
 
     } catch (err: any) {
-      console.error(err);
+      logger.error("Error al actualizar perfil", err);
       setError(t("error_actualizar_perfil", { detalle: err.message }));
     }
   };

@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminUser, adminService } from "../../services/adminService";
@@ -31,7 +32,7 @@ const UsersPage = () => {
       setUsers(data.items);
       setNextCursor(data.next_cursor || null);
     } catch (err) {
-      console.error(err);
+      logger.error("Error loading users", err);
       alert(t("admin.messages.fetch_error", "Error cargando usuarios"));
     } finally {
       setLoading(false);

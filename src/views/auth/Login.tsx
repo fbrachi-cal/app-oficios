@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, {useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -30,7 +31,7 @@ const Login = (): JSX.Element => {
 
 
   const handleLogin = async (e: React.FormEvent) => {
-    console.log("HANDLE LOGIN LOADING true!");
+    logger.info("HANDLE LOGIN LOADING true!");
     setLoading(true);
     e.preventDefault();
     setError("");
@@ -48,7 +49,7 @@ const Login = (): JSX.Element => {
   
       if (res.ok) {        
         const userData = await res.json();
-        console.log("USUARIO LOGIN: "+JSON.stringify(userData));
+        logger.info("USUARIO LOGIN", { userData });
         // Podés guardar userData en un contexto global si querés
         if (
           userData.tipo === "profesional" &&
@@ -66,10 +67,10 @@ const Login = (): JSX.Element => {
         setError(t("error_verificar_usuario"));
       }
     } catch (err) {
-      console.error(err);
+      logger.error("Error en login con Google", err);
       setError(t("error_usuario_password"));
     }finally{ 
-      console.log("HANDLE LOGIN LOADING false!");
+      logger.info("HANDLE LOGIN LOADING false!");
       setLoading(false);
     }
   };
@@ -77,11 +78,11 @@ const Login = (): JSX.Element => {
 
   const handleSocialLogin = async (providerInstance: any) => {
     try {
-      console.log("SET LOADING A TRUE");
+      logger.info("SET LOADING A TRUE");
       setLoading(true);
-      console.log("🚀 Antes del popup");
+      logger.info("🚀 Antes del popup");
       const result = await signInWithPopup(auth, providerInstance);
-      console.log("✅ Después del popup"); // <-- este no va a aparecer si el componente se desmonta
+      logger.info("✅ Después del popup"); // <-- este no va a aparecer si el componente se desmonta
 
       const user = result.user;
       const token = await user.getIdToken();
@@ -97,7 +98,7 @@ const Login = (): JSX.Element => {
   
       if (res.ok) {
         const userData = await res.json();
-        console.log("USUARIO LOGIN: "+JSON.stringify(userData));
+        logger.info("USUARIO LOGIN", { userData });
         if (
           userData.tipo === "profesional" &&
           (!userData.oficios?.length || !userData.zonas?.length)
@@ -114,10 +115,10 @@ const Login = (): JSX.Element => {
         setError(t("error_verificar_usuario"));
       }
     } catch (err) {
-      console.error(err);
+      logger.error("Error en login con email", err);
       setError(t("error_inicio_sesion"));
     }finally{
-      console.log("SET LOADING A FALSE");
+      logger.info("SET LOADING A FALSE");
       setTimeout(() => setLoading(false), 500); // 500 ms de delay      
       //setLoading(true);
     }

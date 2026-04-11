@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -41,7 +42,7 @@ const Register = (): JSX.Element => {
 
   useEffect(() => {
     auth.signOut().then(() => {
-      console.log("Sesión cerrada");
+      logger.info("Sesión cerrada");
     });
   }, []);
 
@@ -86,7 +87,7 @@ const Register = (): JSX.Element => {
       setFoto(file);
       const objectUrl = URL.createObjectURL(file);
       setPreview(objectUrl);
-      console.log("Vista previa generada:", objectUrl);
+      logger.info("Vista previa generada", { objectUrl });
     }
   };
 
@@ -138,7 +139,7 @@ const Register = (): JSX.Element => {
       navigate(0);
 
     } catch (err: any) {
-      console.error(err);
+      logger.error("Error al registrar", err);
       setError(t("error_registrar", { detalle: err.message }));
     }
   };
@@ -166,7 +167,7 @@ const Register = (): JSX.Element => {
         setError(t("error_verificar_usuario"));
       }
     } catch (err) {
-      console.error(err);
+      logger.error("Error en registro", err);
       setError(t("error_registro_red_social"));
     }
   };

@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useState } from "react";
 import { usePhoneVerification } from "../../hooks/usePhoneVerification";
 
@@ -20,8 +21,8 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
     confirmationResult,
   } = usePhoneVerification();
 
-  console.log("CONFIRMAR CODIGO:", confirmarCodigo);
-  console.log("SET ERROR CODIGO:", setError);
+  logger.info("CONFIRMAR CODIGO", { confirmarCodigo });
+  logger.info("SET ERROR CODIGO", { setError });
 
 
   const handleEnviarSMS = async () => {

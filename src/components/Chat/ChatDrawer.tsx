@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from 'react';
 import { chatService } from '../../services/chatService';
 import { useChatContext } from '../../context/ChatContext';
@@ -19,62 +20,62 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
   const { t } = useTranslation();
 
   const loadMessages = async (chatId: string) => {
-    console.log("CARGANDO MENSAJES con LOAD MESSAGES");
+    logger.info("CARGANDO MENSAJES con LOAD MESSAGES");
     try {
       const data = await chatService.getMessages(chatId);
       setMessages(data);
       setMessagesLoaded(true);
     } catch (error) {
-      console.error("Error cargando mensajes:", error);
+      logger.error("Error cargando mensajes", error);
     }
   };
 
   useEffect(() => {
     if (isOpen) {
       // refresca la lista de chats cada vez que abro el chat
-      console.log('🌀 Abriendo ChatDrawer, recargando chats');
+      logger.info('🌀 Abriendo ChatDrawer, recargando chats');
       void reload();
     }
   }, [isOpen, reload]);
 
   useEffect(() => {
-    console.log("useEffect con initialProfessionalId: "+initialProfessionalId+" y chats: "+chats+" y activeChatId: "+activeChatId);		
+    logger.info("useEffect dependencies", { initialProfessionalId, chats, activeChatId });		
     if (!initialProfessionalId || !chats.length || activeChatId) return;
-    console.log("🔍 Buscando en chats:", chats);
+    logger.info("🔍 Buscando en chats", { chats });
     const existing = chats.find(c =>
       c.participants.includes(initialProfessionalId)
     );
     if (existing) {
-      console.log("✅ Encontré el chat:", existing);
+      logger.info("✅ Encontré el chat", { existing });
       setActiveChatId(existing.id);
     } else {
-      console.log("⚠️ No encontré un chat con ese participante");
+      logger.info("⚠️ No encontré un chat con ese participante");
     }
   
   }, [initialProfessionalId, chats, activeChatId]);
 
   useEffect(() => {
     if (!activeChatId) return;
-    console.log("📨 Cargando mensajes del chat", activeChatId);
+    logger.info("📨 Cargando mensajes del chat", { activeChatId });
     loadMessages(activeChatId);
   }, [activeChatId]);
 
 
   const startChat = async () => {
-    console.log("START CHAT!");
+    logger.info("START CHAT!");
     if (!initialProfessionalId || !message) return;
     const chatId = await chatService.contactProfessional(
       initialProfessionalId,
       message
     );
-    console.log("START CHAT: "+chatId);
+    logger.info("START CHAT", { chatId });
     setActiveChatId(chatId);
     setMessage("");
     await reload(); // refresca la lista de chats para que incluya este nuevo
   };
 
   const sendMessage = async () => {
-    console.log("SEND MESSAGE!");
+    logger.info("SEND MESSAGE!");
     if (!activeChatId || !message) return;
     await chatService.sendMessage(activeChatId, message);
     await loadMessages(activeChatId);
@@ -83,8 +84,8 @@ export const ChatDrawer: React.FC<ChatDrawerProps> = ({ isOpen, onClose, initial
   };
 
   const getOtherParticipantName = (chat: { participants_details: { uid: string, nombre: string }[] }) => {
-    console.log("auth.currentUser?.uid:", auth.currentUser?.uid);
-    console.log("chat.participants_details:", chat.participants_details);
+    logger.info("auth.currentUser?.uid", { uid: auth.currentUser?.uid });
+    logger.info("chat.participants_details", { details: chat.participants_details });
     return chat.participants_details
       .filter((u) => u.uid !== auth.currentUser?.uid)
       .map((u) => u.nombre)
