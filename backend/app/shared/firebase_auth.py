@@ -37,9 +37,82 @@ def verify_token(auth_credentials: HTTPAuthorizationCredentials = Security(secur
     log.info("🔐 Verificando token...")
     try:
         id_token = auth_credentials.credentials
-        log.info(f"🔐 Verificando token... {id_token}")
-        decoded_token = auth.verify_id_token(id_token)
-        log.info(f"✅ Token válido. UID: {decoded_token.get('uid')}")
+        from app.adapters.firebase.firebase_user_repo import FirebaseUserRepository
+        repo = FirebaseUserRepository()
+        
+        try:
+            decoded_token = auth.verify_id_token(id_token, check_revoked=True)
+            uid = decoded_token.get('uid')
+        except auth.RevokedIdTokenError as e:
+            # Token was revoked. Check if it's due to an expired suspension
+            unverified_claims = auth.verify_id_token(id_token, check_revoked=False)
+            uid = unverified_claims.get('uid')
+            user = repo.get_user_by_id(uid)
+            from datetime import datetime
+            
+            if user and user.get("status") == "SUSPENDED" and user.get("status_expires_at"):
+                # Handle Firestore datetime (which is usually a datetime object in python)
+                expires_at = user.get("status_expires_at")
+                # Sometimes Firestore returns timezone aware datetimes
+                if expires_at.tzinfo:
+                    expires_at = expires_at.replace(tzinfo=None)
+                if datetime.utcnow() >= expires_at:
+                    log.info(f"♻️ Suspensión expirada. Auto-reactivando usuario {uid}")
+                    repo.actualizar_campos_usuario(uid, {"status": "ACTIVE", "status_expires_at": None})
+                    auth.update_user(uid, disabled=False)
+                    # We allow the request to proceed since the signature is valid
+                    decoded_token = unverified_claims
+                else:
+                    raise e
+            else:
+                raise e
+        except auth.UserDisabledError as e:
+            unverified_claims = auth.verify_id_token(id_token, check_revoked=False)
+            uid = unverified_claims.get('uid')
+            user = repo.get_user_by_id(uid)
+            from datetime import datetime
+            if user and user.get("status") == "SUSPENDED" and user.get("status_expires_at"):
+                expires_at = user.get("status_expires_at")
+                if expires_at.tzinfo:
+                    expires_at = expires_at.replace(tzinfo=None)
+                if datetime.utcnow() >= expires_at:
+                    log.info(f"♻️ Suspensión expirada. Auto-reactivando usuario {uid}")
+                    repo.actualizar_campos_usuario(uid, {"status": "ACTIVE", "status_expires_at": None})
+                    auth.update_user(uid, disabled=False)
+                    decoded_token = unverified_claims
+                else:
+                    raise e
+            else:
+                raise e
+        
+        # Consultamos Firestore para validar el estado del usuario (en caso de que haya superado check_revoked)
+        user = repo.get_user_by_id(uid)
+        
+        if user:
+            status = user.get("status", "ACTIVE")
+            if status == "SUSPENDED" and user.get("status_expires_at"):
+                from datetime import datetime
+                expires_at = user.get("status_expires_at")
+                if expires_at.tzinfo:
+                    expires_at = expires_at.replace(tzinfo=None)
+                if datetime.utcnow() >= expires_at:
+                    log.info(f"♻️ Suspensión expirada en chequeo DB. Auto-reactivando usuario {uid}")
+                    repo.actualizar_campos_usuario(uid, {"status": "ACTIVE", "status_expires_at": None})
+                    auth.update_user(uid, disabled=False)
+                    status = "ACTIVE"
+                    
+            if status != "ACTIVE":
+                reason = user.get("status_reason", "Sin motivo especificado")
+                expires_at = user.get("status_expires_at")
+                log.warning(f"Intento de acceso denegado. UID: {uid}, Estado: {status}")
+                # Inject a structured error so frontend can parse it
+                raise HTTPException(status_code=403, detail={"status": status, "reason": reason, "expires_at": expires_at.isoformat() if expires_at else None})
+        
+        log.info(f"✅ Token válido y usuario activo. UID: {uid}")
         return decoded_token
-    except Exception:
+    except HTTPException:
+        # Re-lanzamos excepciones HTTP (como nuestro 403)
+        raise
+    except Exception as e:
+        log.error(f"Error parseando token: {e}")
         raise HTTPException(status_code=401, detail="Token inválido o expirado")

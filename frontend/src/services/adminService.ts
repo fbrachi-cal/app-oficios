@@ -9,6 +9,16 @@ import axios from "../utils/axiosWithAuth";
 // Types
 // ---------------------------------------------------------------------------
 
+export type UserStatusHistoryEntry = {
+  previous_status: string;
+  new_status: string;
+  reason?: string | null;
+  admin_notes?: string | null;
+  changed_at: string;
+  changed_by: string;
+  expires_at?: string | null;
+};
+
 export type AdminUser = {
   id: string;
   nombre: string;
@@ -21,12 +31,23 @@ export type AdminUser = {
   categorias?: string[];
   updated_by?: string;
   updated_at?: string;
+  status?: string;
+  status_reason?: string;
+  admin_notes?: string;
+  status_changed_at?: string;
+  status_changed_by?: string;
+  status_expires_at?: string | null;
+  status_history?: UserStatusHistoryEntry[];
 };
 
 export type AdminUserPatch = {
   tipo?: string;
   is_active?: boolean;
   deleted_at?: string | null;
+  status?: string;
+  status_reason?: string;
+  admin_notes?: string;
+  status_expires_at?: string | null;
 };
 
 export type AdminChat = {
