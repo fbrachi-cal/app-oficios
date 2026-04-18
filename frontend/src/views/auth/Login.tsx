@@ -61,8 +61,17 @@ const Login = (): JSX.Element => {
         } else {
           navigate("/");
         }
-      } else if (res.status === 404 || res.status === 401) {
+      } else if (res.status === 404) {
         navigate("/auth/completar-perfil");
+      } else if (res.status === 403) {
+        const errorData = await res.json();
+        const searchParams = new URLSearchParams();
+        if (errorData.detail?.status) searchParams.set("status", errorData.detail.status);
+        if (errorData.detail?.reason) searchParams.set("reason", errorData.detail.reason);
+        if (errorData.detail?.expires_at) searchParams.set("expires_at", errorData.detail.expires_at);
+        navigate(`/bloqueado?${searchParams.toString()}`);
+      } else if (res.status === 401) {
+        setError("La sesión ha expirado o el token es inválido. Por favor intenta iniciar sesión de nuevo.");
       } else {
         setError(t("error_verificar_usuario"));
       }
@@ -109,8 +118,17 @@ const Login = (): JSX.Element => {
         } else {
           navigate("/");
         }
-      } else if (res.status === 404 || res.status === 401) {
+      } else if (res.status === 404) {
         navigate("/auth/completar-perfil");
+      } else if (res.status === 403) {
+        const errorData = await res.json();
+        const searchParams = new URLSearchParams();
+        if (errorData.detail?.status) searchParams.set("status", errorData.detail.status);
+        if (errorData.detail?.reason) searchParams.set("reason", errorData.detail.reason);
+        if (errorData.detail?.expires_at) searchParams.set("expires_at", errorData.detail.expires_at);
+        navigate(`/bloqueado?${searchParams.toString()}`);
+      } else if (res.status === 401) {
+        setError("La sesión ha expirado o el token es inválido. Por favor intenta iniciar sesión de nuevo.");
       } else {
         setError(t("error_verificar_usuario"));
       }
