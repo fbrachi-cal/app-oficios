@@ -16,6 +16,7 @@ import ChatsPage from './views/admin/ChatsPage';
 import ReportsPage from './views/admin/ReportsPage';
 import RatingsPage from './views/admin/RatingsPage';
 import SolicitudesInteraccionesPage from './views/admin/SolicitudesInteraccionesPage';
+import BlockedPage from './views/BlockedPage';
 
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         <Route path="/landing" element={<Landing />} />
         <Route path="/home" element={<Home />} />
         <Route path="/" element={<Landing />} />
+        <Route path="/bloqueado" element={<BlockedPage />} />
 
         {/* Admin panel — protected by role guard */}
         <Route element={<RequireAdmin />}>

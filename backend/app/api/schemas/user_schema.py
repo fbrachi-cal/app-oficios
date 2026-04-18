@@ -11,6 +11,7 @@ class UsuarioRegistro(BaseModel):
     foto: Optional[str] = None
     descripcion: Optional[str] = ""
     disponibilidad: Optional[str] = ""
+    status: str = "ACTIVE"
     
 class UsuarioUpdate(BaseModel):
     id: Optional[str]

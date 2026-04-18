@@ -30,4 +30,25 @@ axiosWithAuth.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// Interceptor para atrapar 403 (suspensiones/bloqueos) y redirigir
+axiosWithAuth.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 403 && error.response?.data?.detail?.status) {
+      const { status, reason, expires_at } = error.response.data.detail;
+      const auth = getAuth();
+      if (auth.currentUser) {
+        await auth.signOut();
+      }
+      const searchParams = new URLSearchParams();
+      searchParams.set("status", status);
+      if (reason) searchParams.set("reason", reason);
+      if (expires_at) searchParams.set("expires_at", expires_at);
+      
+      window.location.href = `/bloqueado?${searchParams.toString()}`;
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosWithAuth;

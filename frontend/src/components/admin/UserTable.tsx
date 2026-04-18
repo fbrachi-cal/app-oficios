@@ -53,19 +53,35 @@ const UserTable: React.FC<UserTableProps> = ({ users, onRowClick }) => {
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                {u.deleted_at ? (
-                  <span className="px-2 py-1 bg-red-100 text-red-700 font-bold text-xs rounded-full">
-                    {t("admin.status.deleted", "Eliminado")}
-                  </span>
-                ) : u.is_active === false ? (
-                  <span className="px-2 py-1 bg-yellow-100 text-yellow-700 font-bold text-xs rounded-full">
-                    {t("admin.status.disabled", "Deshabilitado")}
-                  </span>
-                ) : (
-                  <span className="px-2 py-1 bg-emerald-100 text-emerald-700 font-bold text-xs rounded-full">
-                    {t("admin.status.active", "Activo")}
-                  </span>
-                )}
+                {(() => {
+                  const status = u.status || (u.is_active === false ? "SUSPENDED" : "ACTIVE");
+                  if (u.deleted_at || status === "DEACTIVATED") {
+                    return (
+                      <span className="px-2 py-1 bg-red-100 text-red-700 font-bold text-xs rounded-full">
+                        {t("admin.status.deactivated", "Desactivado")}
+                      </span>
+                    );
+                  }
+                  if (status === "EXPELLED") {
+                    return (
+                      <span className="px-2 py-1 bg-red-600 text-white font-bold text-xs rounded-full">
+                        {t("admin.status.expelled", "Expulsado")}
+                      </span>
+                    );
+                  }
+                  if (status === "SUSPENDED") {
+                    return (
+                      <span className="px-2 py-1 bg-yellow-100 text-yellow-700 font-bold text-xs rounded-full">
+                        {t("admin.status.suspended", "Suspendido")}
+                      </span>
+                    );
+                  }
+                  return (
+                    <span className="px-2 py-1 bg-emerald-100 text-emerald-700 font-bold text-xs rounded-full">
+                      {t("admin.status.active", "Activo")}
+                    </span>
+                  );
+                })()}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right">
                 <button 

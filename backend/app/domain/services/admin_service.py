@@ -88,6 +88,48 @@ class AdminService:
         campos["updated_by"] = admin_uid
         campos["updated_at"] = datetime.utcnow()
 
+        if "status" in campos and campos["status"] != user.get("status"):
+            campos["status_changed_at"] = datetime.utcnow()
+            campos["status_changed_by"] = admin_uid
+            
+            previous_status = user.get("status", "ACTIVE")
+            new_status = campos["status"]
+            
+            # Auto-clear expiration for non-SUSPENDED statuses
+            if new_status != "SUSPENDED":
+                campos["status_expires_at"] = None
+                
+            # History tracking
+            history_entry = {
+                "previous_status": previous_status,
+                "new_status": new_status,
+                "reason": campos.get("status_reason", user.get("status_reason")),
+                "admin_notes": campos.get("admin_notes", user.get("admin_notes")),
+                "changed_at": datetime.utcnow(),
+                "changed_by": admin_uid
+            }
+            # Add expires_at to history if it's a suspended state
+            if new_status == "SUSPENDED" and campos.get("status_expires_at"):
+                history_entry["expires_at"] = campos.get("status_expires_at")
+                
+            status_history = user.get("status_history", [])
+            status_history.append(history_entry)
+            campos["status_history"] = status_history
+            
+            # Sync with Firebase Authentication to harden security
+            try:
+                from firebase_admin import auth
+                if new_status in ["SUSPENDED", "EXPELLED", "DEACTIVATED"]:
+                    auth.update_user(uid, disabled=True)
+                    auth.revoke_refresh_tokens(uid)
+                    log.info(f"Firebase auth disabled and tokens revoked for uid={uid}")
+                elif new_status == "ACTIVE":
+                    auth.update_user(uid, disabled=False)
+                    log.info(f"Firebase auth enabled for uid={uid}")
+            except Exception as e:
+                log.error(f"Failed to sync status={new_status} with Firebase Auth for uid={uid}: {e}")
+                # We continue the patch so Firestore is still technically accurate
+
         log.info(f"admin.patch_user uid={uid} by={admin_uid} campos={campos}")
         self.user_repository.actualizar_campos_usuario(uid, campos)
 

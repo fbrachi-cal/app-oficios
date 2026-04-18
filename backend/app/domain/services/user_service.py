@@ -8,6 +8,11 @@ class UserService:
     def registrar_usuario(self, user_data: UsuarioRegistro):
         if not user_data.id or not user_data.nombre:
             raise ValueError("Faltan campos obligatorios")
+            
+        existing = self.user_repository.get_user_by_id(user_data.id)
+        if existing:
+            raise ValueError("El usuario ya se encuentra registrado. No se puede sobrescribir el perfil existente.")
+            
         self.user_repository.save_user(user_data.dict())
 
     def obtener_usuario(self, user_id: str) -> dict:

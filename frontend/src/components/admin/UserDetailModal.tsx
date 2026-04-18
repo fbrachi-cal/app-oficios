@@ -11,6 +11,7 @@ interface UserDetailModalProps {
 }
 
 const ROLES = ["cliente", "profesional", "admin", "moderator"];
+const STATUSES = ["ACTIVE", "SUSPENDED", "EXPELLED", "DEACTIVATED"];
 
 const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose, onUserChange }) => {
   const { t } = useTranslation();
@@ -18,12 +19,18 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
   
   // Local form state
   const [role, setRole] = useState<string>("");
-  const [isActive, setIsActive] = useState<boolean>(true);
+  const [status, setStatus] = useState<string>("ACTIVE");
+  const [statusReason, setStatusReason] = useState<string>("");
+  const [adminNotes, setAdminNotes] = useState<string>("");
+  const [expiresAt, setExpiresAt] = useState<string>("");
 
   useEffect(() => {
     if (user) {
       setRole(user.tipo || "cliente");
-      setIsActive(user.is_active !== false);
+      setStatus(user.status || (user.is_active === false ? "SUSPENDED" : "ACTIVE"));
+      setStatusReason(user.status_reason || "");
+      setAdminNotes(user.admin_notes || "");
+      setExpiresAt(user.status_expires_at ? new Date(user.status_expires_at).toISOString().slice(0, 16) : "");
     }
   }, [user]);
 
@@ -36,7 +43,24 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
     try {
       const patch: AdminUserPatch = {};
       if (role !== user.tipo) patch.tipo = role;
-      if (isActive !== (user.is_active !== false)) patch.is_active = isActive;
+      
+      const currentStatus = user.status || (user.is_active === false ? "SUSPENDED" : "ACTIVE");
+      if (status !== currentStatus) patch.status = status;
+      if (statusReason !== (user.status_reason || "")) patch.status_reason = statusReason;
+      if (adminNotes !== (user.admin_notes || "")) patch.admin_notes = adminNotes;
+      
+      if (status === "SUSPENDED" && expiresAt) {
+        patch.status_expires_at = new Date(expiresAt).toISOString();
+      } else if (status === "SUSPENDED" && !expiresAt) {
+        patch.status_expires_at = null; // Clear if emptied
+      }
+      
+      if (patch.status && ["SUSPENDED", "EXPELLED", "DEACTIVATED"].includes(patch.status)) {
+        if (!window.confirm(t("admin.messages.confirm_block", `¿Estás seguro de cambiar el estado a ${patch.status}? Esto impedirá que el usuario inicie sesión.`))) {
+          setLoading(false);
+          return;
+        }
+      }
 
       if (Object.keys(patch).length > 0) {
         const updated = await adminService.patchUser(user.id, patch);
@@ -119,32 +143,99 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
               </select>
             </div>
 
-            {/* Activo / Inactivo */}
-            <div className="flex items-center justify-between bg-blueGray-50 p-3 rounded-md">
-              <div>
-                <span className="block text-sm font-semibold text-blueGray-700 border-none">
-                  {t("admin.modal.active_account", "Cuenta Activa")}
-                </span>
-                <span className="text-xs text-blueGray-500">
-                  {t("admin.modal.disable_warn", "Deshabilitar impide el inicio de sesión")}
-                </span>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input 
-                  type="checkbox" 
-                  className="sr-only peer" 
-                  checked={isActive}
-                  onChange={(e) => setIsActive(e.target.checked)}
-                  disabled={isDeleted || loading}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+            {/* Status */}
+            <div>
+              <label className="block text-sm font-semibold text-blueGray-700 mb-2">
+                {t("admin.modal.status", "Estado de acceso")}
               </label>
+              <select 
+                value={status} 
+                onChange={e => setStatus(e.target.value)}
+                disabled={isDeleted || loading}
+                className="w-full border-blueGray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+              >
+                <option value="ACTIVE">{t("admin.status.active", "Activo")}</option>
+                <option value="SUSPENDED">{t("admin.status.suspended", "Suspendido (Temporal)")}</option>
+                <option value="EXPELLED">{t("admin.status.expelled", "Expulsado (Permanente)")}</option>
+                <option value="DEACTIVATED">{t("admin.status.deactivated", "Desactivado (Lógico)")}</option>
+              </select>
             </div>
-            
+
+            {/* Status Reason */}
+            {status !== "ACTIVE" && (
+              <div>
+                <label className="block text-sm font-semibold text-blueGray-700 mb-2">
+                  {t("admin.modal.status_reason", "Motivo (Visible para el usuario)")}
+                </label>
+                <textarea
+                  value={statusReason}
+                  onChange={e => setStatusReason(e.target.value)}
+                  disabled={isDeleted || loading}
+                  className="w-full border-blueGray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                  placeholder="Ej. Violación de términos de uso."
+                  rows={2}
+                ></textarea>
+              </div>
+            )}
+
+            {/* Temporality (Only SUSPENDED) */}
+            {status === "SUSPENDED" && (
+              <div>
+                <label className="block text-sm font-semibold text-blueGray-700 mb-2">
+                  Expira el (Opcional, suspensión temporal)
+                </label>
+                <input
+                  type="datetime-local"
+                  value={expiresAt}
+                  onChange={e => setExpiresAt(e.target.value)}
+                  disabled={isDeleted || loading}
+                  className="w-full border-blueGray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                />
+              </div>
+            )}
+
+            {/* Admin Notes */}
+            <div>
+              <label className="block text-sm font-semibold text-blueGray-700 mb-2">
+                {t("admin.modal.admin_notes", "Notas Internas (Solo Admins)")}
+              </label>
+              <textarea
+                value={adminNotes}
+                onChange={e => setAdminNotes(e.target.value)}
+                disabled={isDeleted || loading}
+                className="w-full border-blueGray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm bg-yellow-50"
+                placeholder="Notas administrativas privadas..."
+                rows={2}
+              ></textarea>
+            </div>
             {/* Audit info */}
             {user.updated_by && (
-              <div className="text-xs text-blueGray-400 bg-blueGray-50 p-2 rounded">
-                Última modif. por: {user.updated_by} el {new Date(user.updated_at!).toLocaleString()}
+              <div className="text-xs text-blueGray-400 bg-blueGray-50 p-2 rounded flex flex-col gap-1">
+                <span>Última modif. por: {user.updated_by} el {new Date(user.updated_at!).toLocaleString()}</span>
+                {user.status_changed_by && (
+                  <span>Estado modif. por: {user.status_changed_by} el {new Date(user.status_changed_at!).toLocaleString()}</span>
+                )}
+              </div>
+            )}
+
+            {/* Status History */}
+            {user.status_history && user.status_history.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-blueGray-200">
+                <h4 className="text-sm font-semibold text-blueGray-700 mb-3">Historial de Estados</h4>
+                <div className="space-y-3 max-h-40 overflow-y-auto pr-2">
+                  {[...user.status_history].reverse().map((entry, idx) => (
+                    <div key={idx} className="bg-blueGray-50 p-3 rounded border border-blueGray-200 text-xs text-blueGray-600">
+                      <div className="flex justify-between font-bold mb-1">
+                        <span>{entry.previous_status} ➔ {entry.new_status}</span>
+                        <span>{new Date(entry.changed_at).toLocaleString()}</span>
+                      </div>
+                      <p><strong>Por:</strong> {entry.changed_by}</p>
+                      {entry.reason && <p><strong>Motivo:</strong> {entry.reason}</p>}
+                      {entry.admin_notes && <p className="text-yellow-700"><strong>Notas (Interno):</strong> {entry.admin_notes}</p>}
+                      {entry.expires_at && <p><strong>Expira:</strong> {new Date(entry.expires_at).toLocaleString()}</p>}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
             

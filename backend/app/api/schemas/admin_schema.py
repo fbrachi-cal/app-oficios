@@ -11,6 +11,14 @@ from datetime import datetime
 # Users
 # ---------------------------------------------------------------------------
 
+class UserStatusHistoryEntry(BaseModel):
+    previous_status: str
+    new_status: str
+    reason: Optional[str] = None
+    admin_notes: Optional[str] = None
+    changed_at: datetime
+    changed_by: str
+
 class AdminUserOut(BaseModel):
     """Read-only view of a user exposed to admins."""
     id: str
@@ -25,6 +33,14 @@ class AdminUserOut(BaseModel):
     # Audit fields
     updated_by: Optional[str] = None
     updated_at: Optional[datetime] = None
+    # Status fields
+    status: str = "ACTIVE"
+    status_reason: Optional[str] = None
+    admin_notes: Optional[str] = None
+    status_changed_at: Optional[datetime] = None
+    status_changed_by: Optional[str] = None
+    status_expires_at: Optional[datetime] = None
+    status_history: Optional[List[UserStatusHistoryEntry]] = []
 
 
 class AdminUserPatch(BaseModel):
@@ -32,6 +48,10 @@ class AdminUserPatch(BaseModel):
     tipo: Optional[str] = None          # role change
     is_active: Optional[bool] = None    # soft disable / re-enable
     deleted_at: Optional[datetime] = None  # soft delete (set to now) or restore (None)
+    status: Optional[str] = None
+    status_reason: Optional[str] = None
+    admin_notes: Optional[str] = None
+    status_expires_at: Optional[datetime] = None
 
 
 # ---------------------------------------------------------------------------

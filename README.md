@@ -39,6 +39,7 @@ A full-stack services marketplace that connects **clients** who need home and pr
 - 💬 **Real-Time Chat** — Firestore-backed messaging per request
 - ⭐ **Ratings System** — clients and professionals rate each other after a job
 - 🛡️ **Admin Panel** — user management, chat moderation, report resolution, full ratings CRUD
+- 🚥 **User Status Management** — statuses including `ACTIVE`, `SUSPENDED`, `EXPELLED`, and `DEACTIVATED` to strictly control platform access
 
 ---
 
@@ -381,11 +382,28 @@ All protected endpoints require an `Authorization: Bearer <firebase_id_token>` h
 The admin panel is accessible at `/admin` when logged in with an account that has `tipo: "admin"` set in its Firestore user document.
 
 ```
-/admin/usuarios       → User management
+/admin/usuarios       → User management (Roles, Status, Soft Deletion)
 /admin/chats          → Chat moderation
 /admin/reportes       → Report resolution
 /admin/calificaciones → Ratings CRUD
 ```
+
+### User Lifecycle & Status Management
+Users default to an `ACTIVE` status. When moderating users, admins can enforce the following statuses:
+- `ACTIVE` — Normal access.
+- `SUSPENDED` — Temporary/reversible block.
+- `EXPELLED` — Permanent block for serious violations.
+- `DEACTIVATED` — Logical deactivation (user cannot access anymore).
+
+**Security & Firebase Auth Integration:**
+When an admin sets a user to `SUSPENDED`, `EXPELLED`, or `DEACTIVATED`, the system executes the following session revocation flow:
+1. **Firebase Sync**: The underlying Firebase Auth account is disabled (blocking any new sign-ins) and its refresh tokens are explicitly revoked (blocking refresh token reuse).
+2. **Immediate Enforcement**: To prevent previously-issued ID tokens from remaining valid during their standard 1-hour expiration window, the backend API uses `auth.verify_id_token(id_token, check_revoked=True)` to confirm token validity securely on every request.
+3. **Database Fallback**: A manual `status` check is also evaluated in Firestore during the request pipeline as a fallback layer.
+4. **Auto-Reactivation**: If a user is `SUSPENDED` with a `status_expires_at` date, the `verify_token` middleware will auto-reactivate the user securely upon their first authenticated request after the expiration passes.
+5. **Frontend UX**: Blocked clients intercept 403 API errors systematically, securely clearing their local Firebase session and redirecting the user to a dedicated visual view (`/bloqueado`) explaining their sanction, duration, and reasons.
+
+Changes to a user's status are transparently appended to a `status_history` list containing precisely who made the modification, the assigned timestamp, the chosen reason (visible to the user), the `expires_at` date, and private `admin_notes`.
 
 ### Granting Admin Access (Firestore)
 
