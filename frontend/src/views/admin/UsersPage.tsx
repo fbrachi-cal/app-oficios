@@ -12,7 +12,7 @@ const UsersPage = () => {
   
   // Pagination & Search state
   const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
+  const [tipoFilter, setTipoFilter] = useState("");
   const [cursorQueue, setCursorQueue] = useState<string[]>([]);
   const [currentCursor, setCurrentCursor] = useState<string | undefined>(undefined);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
@@ -27,7 +27,7 @@ const UsersPage = () => {
         limit: 15,
         start_after_id: cursor,
         search: search || undefined,
-        role: roleFilter || undefined,
+        role: tipoFilter || undefined,
       });
       setUsers(data.items);
       setNextCursor(data.next_cursor || null);
@@ -44,7 +44,7 @@ const UsersPage = () => {
     setCursorQueue([]);
     setCurrentCursor(undefined);
     fetchUsers(undefined);
-  }, [search, roleFilter]);
+  }, [search, tipoFilter]);
 
   // Handle Paginate Next
   const handleNext = () => {
@@ -94,8 +94,8 @@ const UsersPage = () => {
           </div>
           <select
             className="border border-blueGray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm py-2 px-3"
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
+            value={tipoFilter}
+            onChange={(e) => setTipoFilter(e.target.value)}
           >
             <option value="">{t("admin.filters.all_roles", "Todos los roles")}</option>
             <option value="cliente">Cliente</option>

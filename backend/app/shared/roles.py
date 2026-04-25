@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException
 from app.shared.firebase_auth import verify_token
-from app.shared.auth_utils import obtener_rol
+from app.shared.auth_utils import obtener_tipo
 from typing import Union, List
 
 def require_role(required_roles: Union[str, List[str]]):
@@ -15,8 +15,8 @@ def require_role(required_roles: Union[str, List[str]]):
         required_roles = [required_roles]
 
     def role_checker(user_data: dict = Depends(verify_token)):
-        rol = obtener_rol(user_data["uid"])
-        if rol not in required_roles:
+        tipo = obtener_tipo(user_data["uid"])
+        if tipo not in required_roles:
             roles_str = ", ".join(required_roles)
             raise HTTPException(
                 status_code=403,

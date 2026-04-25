@@ -5,13 +5,13 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const RequireRecruiter = () => {
-  const { usuario, rol, loading } = useAuth();
+  const { usuario, tipo, loading } = useAuth();
 
   if (loading) {
     return null;
   }
 
-  if (!usuario || (rol !== "admin" && rol !== "recruiter")) {
+  if (!usuario || (tipo !== "admin" && tipo !== "recruiter")) {
     return <Navigate to="/home" replace />;
   }
 

@@ -18,7 +18,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
   const [loading, setLoading] = useState(false);
   
   // Local form state
-  const [role, setRole] = useState<string>("");
+  const [tipo, setTipo] = useState<string>("");
   const [status, setStatus] = useState<string>("ACTIVE");
   const [statusReason, setStatusReason] = useState<string>("");
   const [adminNotes, setAdminNotes] = useState<string>("");
@@ -26,7 +26,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
 
   useEffect(() => {
     if (user) {
-      setRole(user.tipo || "cliente");
+      setTipo(user.tipo || "cliente");
       setStatus(user.status || (user.is_active === false ? "SUSPENDED" : "ACTIVE"));
       setStatusReason(user.status_reason || "");
       setAdminNotes(user.admin_notes || "");
@@ -42,7 +42,7 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
     setLoading(true);
     try {
       const patch: AdminUserPatch = {};
-      if (role !== user.tipo) patch.tipo = role;
+      if (tipo !== user.tipo) patch.tipo = tipo;
       
       const currentStatus = user.status || (user.is_active === false ? "SUSPENDED" : "ACTIVE");
       if (status !== currentStatus) patch.status = status;
@@ -132,8 +132,8 @@ const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, isOpen, onClose
                 {t("admin.modal.role", "Rol del usuario")}
               </label>
               <select 
-                value={role} 
-                onChange={e => setRole(e.target.value)}
+                value={tipo} 
+                onChange={e => setTipo(e.target.value)}
                 disabled={isDeleted || loading}
                 className="w-full border-blueGray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
               >

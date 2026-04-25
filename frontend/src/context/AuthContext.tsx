@@ -6,21 +6,21 @@ import config from '../config';
 
 interface AuthContextType {
   usuario: any;
-  rol: string | null;
+  tipo: string | null;
   loading: boolean;
   setUsuario: (usuario: any) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   usuario: null,
-  rol: null,
+  tipo: null,
   loading: true,
   setUsuario: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [usuario, setUsuario] = useState<any>(null);
-  const [rol, setRol] = useState<string | null>(null);
+  const [tipo, setTipo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (user) {
         try {
           const token = await getIdToken(user);
-          const res = await fetch(`${config.apiBaseUrl}/usuarios/me/rol`, {
+          const res = await fetch(`${config.apiBaseUrl}/usuarios/me/tipo`, {
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
@@ -39,13 +39,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           if (res.ok) {
             const data = await res.json();
-            setRol(data.rol);
+            setTipo(data.tipo);
           }
         } catch (err) {
-          logger.error("Error al obtener rol", err);
+          logger.error("Error al obtener tipo de usuario", err);
         }
       } else {
-        setRol(null);
+        setTipo(null);
       }
 
       setLoading(false);
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ usuario, rol, loading, setUsuario }}>
+    <AuthContext.Provider value={{ usuario, tipo, loading, setUsuario }}>
       {children}
     </AuthContext.Provider>
   );

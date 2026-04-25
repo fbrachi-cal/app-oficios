@@ -278,7 +278,7 @@ const DetalleSolicitud: React.FC = () => {
                                         {solicitud.historial_consultas
                                             .sort((a: any, b: any) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
                                             .map((consulta: any, index: number) => {
-                                                const isAdmin = consulta.rol === "admin" || String(consulta.autor_id).includes("admin");
+                                                const isAdmin = consulta.tipo === "admin" || String(consulta.autor_id).includes("admin");
                                                 const isOtro = !isAdmin && consulta.usuario_id === otroUsuario.id;
                                                 
                                                 return (
