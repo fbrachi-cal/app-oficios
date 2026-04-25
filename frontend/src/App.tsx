@@ -17,6 +17,9 @@ import ReportsPage from './views/admin/ReportsPage';
 import RatingsPage from './views/admin/RatingsPage';
 import SolicitudesInteraccionesPage from './views/admin/SolicitudesInteraccionesPage';
 import BlockedPage from './views/BlockedPage';
+import RequireRecruiter from './utils/RequireRecruiter';
+import RecruiterLayout from './layouts/Recruiter';
+import CvDashboard from './views/recruiter/CvDashboard';
 
 
 function App() {
@@ -54,6 +57,14 @@ function App() {
             <Route path="reportes" element={<ReportsPage />} />
             <Route path="calificaciones" element={<RatingsPage />} />
             <Route path="solicitudes-interacciones" element={<SolicitudesInteraccionesPage />} />
+          </Route>
+        </Route>
+
+        {/* Recruiter panel — protected by recruiter + admin role guard */}
+        <Route element={<RequireRecruiter />}>
+          <Route path="/recruiter" element={<RecruiterLayout />}>
+            <Route index element={<Navigate to="cvs" replace />} />
+            <Route path="cvs" element={<CvDashboard />} />
           </Route>
         </Route>
       </Routes>
