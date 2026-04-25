@@ -16,6 +16,11 @@ const CvUploadModal = ({ isOpen, onClose, onSuccess }: Props) => {
   const [tags, setTags] = useState("");
   const [skills, setSkills] = useState("");
   const [seniority, setSeniority] = useState("Junior");
+  const [residenceZone, setResidenceZone] = useState("");
+  const [age, setAge] = useState("");
+  const [salaryExpectation, setSalaryExpectation] = useState("");
+  const [interviewResult, setInterviewResult] = useState("");
+  const [clientNotes, setClientNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,6 +44,11 @@ const CvUploadModal = ({ isOpen, onClose, onSuccess }: Props) => {
       formData.append("tags", tags);
       formData.append("skills", skills);
       formData.append("seniority", seniority);
+      if (residenceZone) formData.append("residence_zone", residenceZone);
+      if (age) formData.append("age", age);
+      if (salaryExpectation) formData.append("salary_expectation", salaryExpectation);
+      if (interviewResult) formData.append("casa_rayuela_interview_result", interviewResult);
+      if (clientNotes) formData.append("client_interview_notes", clientNotes);
       formData.append("file", file);
 
       await cvService.uploadCv(formData);
@@ -100,6 +110,36 @@ const CvUploadModal = ({ isOpen, onClose, onSuccess }: Props) => {
               <div className="md:col-span-2">
                 <label className="block text-xs font-bold text-blueGray-600 uppercase mb-1">Skills (separados por coma)</label>
                 <input type="text" value={skills} onChange={e => setSkills(e.target.value)} placeholder="Ej: React, Python, AWS" className={activeInputClass} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-blueGray-600 uppercase mb-1">Zona de residencia</label>
+                <input type="text" value={residenceZone} onChange={e => setResidenceZone(e.target.value)} placeholder="Opcional" className={activeInputClass} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-blueGray-600 uppercase mb-1">Edad</label>
+                <input type="number" min="16" max="99" value={age} onChange={e => setAge(e.target.value)} placeholder="Opcional" className={activeInputClass} />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-blueGray-600 uppercase mb-1">Expectativa salarial</label>
+                <select value={salaryExpectation} onChange={e => setSalaryExpectation(e.target.value)} className={activeInputClass}>
+                  <option value="">(No asginada)</option>
+                  <option value="high">Alta</option>
+                  <option value="medium">Media</option>
+                  <option value="low">Baja</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-blueGray-600 uppercase mb-1">Resultado Entrevista CR</label>
+                <select value={interviewResult} onChange={e => setInterviewResult(e.target.value)} className={activeInputClass}>
+                  <option value="">(Sin entrevista)</option>
+                  <option value="excellent">Excelente</option>
+                  <option value="intermediate">Intermedio</option>
+                  <option value="bad">Malo</option>
+                </select>
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-xs font-bold text-blueGray-600 uppercase mb-1">Entrevista cliente (Notas)</label>
+                <textarea value={clientNotes} onChange={e => setClientNotes(e.target.value)} className={activeInputClass} rows={3} placeholder="Notas de la entrevista con el cliente..."></textarea>
               </div>
             </div>
 

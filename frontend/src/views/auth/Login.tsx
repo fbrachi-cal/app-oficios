@@ -58,6 +58,8 @@ const Login = (): JSX.Element => {
           navigate("/auth/completar-perfil");
         } else if (userData.tipo === "admin" || userData.tipo === "moderator") {
           navigate("/admin");
+        } else if (userData.tipo === "recruiter") {
+          navigate("/recruiter/cvs");
         } else {
           navigate("/");
         }
@@ -115,6 +117,8 @@ const Login = (): JSX.Element => {
           navigate("/auth/completar-perfil");
         } else if (userData.tipo === "admin" || userData.tipo === "moderator") {
           navigate("/admin");
+        } else if (userData.tipo === "recruiter") {
+          navigate("/recruiter/cvs");
         } else {
           navigate("/");
         }

@@ -42,6 +42,12 @@ class FirebaseCvRepository(CvRepositoryPort):
                 query = query.where("status", "==", filters["status"])
             if filters.get("seniority"):
                 query = query.where("seniority", "==", filters["seniority"])
+            if filters.get("salary_expectation"):
+                query = query.where("salary_expectation", "==", filters["salary_expectation"])
+            if filters.get("casa_rayuela_interview_result"):
+                query = query.where("casa_rayuela_interview_result", "==", filters["casa_rayuela_interview_result"])
+            if filters.get("residence_zone"):
+                query = query.where("residence_zone", "==", filters["residence_zone"])
             if filters.get("tags"):
                 # Firestore only supports one array_contains per query
                 # For multiple tags, we'd need array_contains_any if supported

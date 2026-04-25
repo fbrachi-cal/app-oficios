@@ -24,6 +24,11 @@ export type CV = {
   status_history: StatusHistoryEntry[];
   notes: string;
   source: string;
+  residence_zone?: string | null;
+  age?: number | null;
+  salary_expectation?: string | null;
+  casa_rayuela_interview_result?: string | null;
+  client_interview_notes?: string | null;
 };
 
 export type CVUpdateData = {
@@ -36,10 +41,15 @@ export type CVUpdateData = {
   status?: string;
   notes?: string;
   source?: string;
+  residence_zone?: string | null;
+  age?: number | null;
+  salary_expectation?: string | null;
+  casa_rayuela_interview_result?: string | null;
+  client_interview_notes?: string | null;
 };
 
 export const cvService = {
-  async getCvs(params?: { status?: string; seniority?: string; search_text?: string }): Promise<CV[]> {
+  async getCvs(params?: { status?: string; seniority?: string; search_text?: string; salary_expectation?: string; casa_rayuela_interview_result?: string; residence_zone?: string }): Promise<CV[]> {
     const res = await axios.get("/cvs/", { params });
     return res.data;
   },

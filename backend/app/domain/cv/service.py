@@ -33,6 +33,10 @@ class CvService:
             " ".join(data.tags),
             " ".join(data.skills),
             data.seniority,
+            data.residence_zone or "",
+            data.salary_expectation or "",
+            data.casa_rayuela_interview_result or "",
+            data.client_interview_notes or "",
             cv_text
         ]
         # Clean up whitespace and lower
@@ -81,6 +85,11 @@ class CvService:
             }],
             notes=upload_data.notes or "",
             source=upload_data.source,
+            residence_zone=upload_data.residence_zone,
+            age=upload_data.age,
+            salary_expectation=upload_data.salary_expectation,
+            casa_rayuela_interview_result=upload_data.casa_rayuela_interview_result,
+            client_interview_notes=upload_data.client_interview_notes,
             search_text=search_text,
             cv_text=cv_text
         )

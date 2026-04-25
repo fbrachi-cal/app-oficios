@@ -1,5 +1,5 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Literal
 from datetime import datetime
 
 class StatusHistoryEntry(BaseModel):
@@ -15,6 +15,11 @@ class CVUploadData(BaseModel):
     seniority: str = "Junior"
     notes: Optional[str] = None
     source: str = "Direct"
+    residence_zone: Optional[str] = None
+    age: Optional[int] = None
+    salary_expectation: Optional[Literal["high", "medium", "low"]] = None
+    casa_rayuela_interview_result: Optional[Literal["excellent", "intermediate", "bad"]] = None
+    client_interview_notes: Optional[str] = None
 
 class CVUpdateData(BaseModel):
     candidate_name: Optional[str] = None
@@ -26,6 +31,11 @@ class CVUpdateData(BaseModel):
     status: Optional[str] = None
     notes: Optional[str] = None
     source: Optional[str] = None
+    residence_zone: Optional[str] = None
+    age: Optional[int] = None
+    salary_expectation: Optional[Literal["high", "medium", "low"]] = None
+    casa_rayuela_interview_result: Optional[Literal["excellent", "intermediate", "bad"]] = None
+    client_interview_notes: Optional[str] = None
 
 class CV(BaseModel):
     id: str  # ID generated before save
@@ -47,6 +57,11 @@ class CV(BaseModel):
     status_history: List[StatusHistoryEntry] = []
     notes: str = ""
     source: str = "Direct"
+    residence_zone: Optional[str] = None
+    age: Optional[int] = None
+    salary_expectation: Optional[Literal["high", "medium", "low"]] = None
+    casa_rayuela_interview_result: Optional[Literal["excellent", "intermediate", "bad"]] = None
+    client_interview_notes: Optional[str] = None
     search_text: str = ""
     cv_text: str = ""
 

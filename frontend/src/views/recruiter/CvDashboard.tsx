@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { cvService, CV } from "../../services/cvService";
 import CvUploadModal from "../../components/recruiter/CvUploadModal";
-import { FiDownload, FiSearch, FiFilter } from "react-icons/fi";
+import CvDetailModal from "../../components/recruiter/CvDetailModal";
+import { FiDownload, FiSearch, FiFilter, FiEye } from "react-icons/fi";
 
 const CvDashboard = () => {
   const [cvs, setCvs] = useState<CV[]>([]);
@@ -9,6 +10,12 @@ const CvDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+  const [filterSalary, setFilterSalary] = useState("");
+  const [filterResult, setFilterResult] = useState("");
+  const [filterZone, setFilterZone] = useState("");
+  
+  const [selectedCv, setSelectedCv] = useState<CV | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const loadCvs = async () => {
     try {
@@ -16,6 +23,9 @@ const CvDashboard = () => {
       const params: any = {};
       if (searchText) params.search_text = searchText;
       if (filterStatus) params.status = filterStatus;
+      if (filterSalary) params.salary_expectation = filterSalary;
+      if (filterResult) params.casa_rayuela_interview_result = filterResult;
+      if (filterZone) params.residence_zone = filterZone;
       
       const data = await cvService.getCvs(params);
       setCvs(data);
@@ -82,6 +92,39 @@ const CvDashboard = () => {
               <option value="Discarded">Descartado</option>
             </select>
           </div>
+          <div className="w-full md:w-32 relative">
+            <select 
+              value={filterSalary}
+              onChange={e => setFilterSalary(e.target.value)}
+              className="w-full px-3 py-2 border border-blueGray-300 rounded focus:ring-1 focus:ring-indigo-500 bg-white"
+            >
+              <option value="">Salario (Todos)</option>
+              <option value="high">Alto</option>
+              <option value="medium">Medio</option>
+              <option value="low">Bajo</option>
+            </select>
+          </div>
+          <div className="w-full md:w-32 relative">
+            <select 
+              value={filterResult}
+              onChange={e => setFilterResult(e.target.value)}
+              className="w-full px-3 py-2 border border-blueGray-300 rounded focus:ring-1 focus:ring-indigo-500 bg-white"
+            >
+              <option value="">CR (Todos)</option>
+              <option value="excellent">Excelente</option>
+              <option value="intermediate">Intermedio</option>
+              <option value="bad">Malo</option>
+            </select>
+          </div>
+          <div className="w-full md:w-48 relative">
+            <input 
+              type="text" 
+              placeholder="Zona..." 
+              value={filterZone}
+              onChange={e => setFilterZone(e.target.value)}
+              className="w-full px-3 py-2 border border-blueGray-300 rounded focus:ring-1 focus:ring-indigo-500 bg-white"
+            />
+          </div>
           <button type="submit" className="bg-blueGray-800 text-white px-4 py-2 rounded hover:bg-blueGray-900 font-semibold">
             Buscar
           </button>
@@ -130,7 +173,17 @@ const CvDashboard = () => {
                     <td className="px-4 py-4 text-xs text-blueGray-500">
                       {new Date(cv.created_at).toLocaleDateString()}
                     </td>
-                    <td className="px-4 py-4 text-right">
+                    <td className="px-4 py-4 text-right flex justify-end gap-2">
+                      <button 
+                        onClick={() => {
+                          setSelectedCv(cv);
+                          setIsDetailOpen(true);
+                        }}
+                        className="inline-flex items-center justify-center p-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors tooltip"
+                        title="Ver Detalles"
+                      >
+                        <FiEye />
+                      </button>
                       <a 
                         href={cv.file_url} 
                         target="_blank" 
@@ -155,6 +208,21 @@ const CvDashboard = () => {
         onSuccess={() => {
           setSearchText("");
           setFilterStatus("");
+          setFilterSalary("");
+          setFilterResult("");
+          setFilterZone("");
+          loadCvs();
+        }}
+      />
+
+      <CvDetailModal
+        isOpen={isDetailOpen}
+        cv={selectedCv}
+        onClose={() => {
+          setIsDetailOpen(false);
+          setSelectedCv(null);
+        }}
+        onUpdate={() => {
           loadCvs();
         }}
       />

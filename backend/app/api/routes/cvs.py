@@ -24,6 +24,11 @@ def upload_cv(
     seniority: str = Form("Junior"),
     notes: Optional[str] = Form(None),
     source: str = Form("Direct"),
+    residence_zone: Optional[str] = Form(None),
+    age: Optional[int] = Form(None),
+    salary_expectation: Optional[str] = Form(None),
+    casa_rayuela_interview_result: Optional[str] = Form(None),
+    client_interview_notes: Optional[str] = Form(None),
     file: UploadFile = File(...),
     user_data: dict = Depends(require_role(["admin", "recruiter"])),
     service: CvService = Depends(get_cv_service)
@@ -36,7 +41,12 @@ def upload_cv(
         skills=[s.strip() for s in skills.split(",") if s.strip()],
         seniority=seniority,
         notes=notes,
-        source=source
+        source=source,
+        residence_zone=residence_zone,
+        age=age,
+        salary_expectation=salary_expectation,
+        casa_rayuela_interview_result=casa_rayuela_interview_result,
+        client_interview_notes=client_interview_notes
     )
     
     content = file.file.read()
@@ -62,6 +72,9 @@ def list_cvs(
     status: Optional[str] = None,
     seniority: Optional[str] = None,
     search_text: Optional[str] = None,
+    salary_expectation: Optional[str] = None,
+    casa_rayuela_interview_result: Optional[str] = None,
+    residence_zone: Optional[str] = None,
     user_data: dict = Depends(require_role(["admin", "recruiter"])),
     service: CvService = Depends(get_cv_service)
 ):
@@ -72,6 +85,12 @@ def list_cvs(
         filters["seniority"] = seniority
     if search_text is not None:
         filters["search_text"] = search_text
+    if salary_expectation is not None:
+        filters["salary_expectation"] = salary_expectation
+    if casa_rayuela_interview_result is not None:
+        filters["casa_rayuela_interview_result"] = casa_rayuela_interview_result
+    if residence_zone is not None:
+        filters["residence_zone"] = residence_zone
 
     return service.repo.list_cvs(filters)
 
