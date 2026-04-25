@@ -276,7 +276,9 @@
             "reports": "Reports",
             "ratings": "Ratings",
             "solicitudes_interacciones": "Request Interactions",
-            "back_to_app": "Back to App"
+            "cvs": "CV Management",
+            "back_to_app": "Back to App",
+            "back_to_user_management": "Back to user management"
         },
         "users": {
             "title": "User Management",

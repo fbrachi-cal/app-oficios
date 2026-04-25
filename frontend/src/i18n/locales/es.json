@@ -287,7 +287,9 @@
       "reports": "Reportes",
       "ratings": "Calificaciones",
       "solicitudes_interacciones": "Interacciones (Solicitudes)",
-      "back_to_app": "Volver a la app"
+      "cvs": "Gestión de CVs",
+      "back_to_app": "Volver a la app",
+      "back_to_user_management": "Volver a gestión de usuarios"
     },
     "users": {
       "title": "Gestión de Usuarios",

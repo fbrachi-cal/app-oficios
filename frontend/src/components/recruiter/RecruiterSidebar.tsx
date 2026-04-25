@@ -3,10 +3,12 @@
  */
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FiFileText, FiShield, FiArrowLeft } from "react-icons/fi";
+import { FiFileText, FiShield, FiArrowLeft, FiUsers } from "react-icons/fi";
+import { useAuth } from "../../context/AuthContext";
 
 const RecruiterSidebar = () => {
   const { t } = useTranslation();
+  const { tipo } = useAuth();
 
   return (
     <aside className="w-64 min-h-screen bg-blueGray-800 text-white flex flex-col py-6 shadow-xl">
@@ -37,7 +39,16 @@ const RecruiterSidebar = () => {
       </nav>
 
       {/* Footer */}
-      <div className="px-6 pt-6 border-t border-blueGray-700">
+      <div className="px-6 pt-6 border-t border-blueGray-700 flex flex-col gap-4">
+        {tipo === "admin" && (
+          <NavLink
+            to="/admin/usuarios"
+            className="flex items-center gap-2 text-xs text-blueGray-400 hover:text-white transition-colors duration-150"
+          >
+            <FiUsers size={14} />
+            {t("admin.nav.back_to_user_management", "Volver a gestión de usuarios")}
+          </NavLink>
+        )}
         <NavLink
           to="/home"
           className="flex items-center gap-2 text-xs text-blueGray-400 hover:text-white transition-colors duration-150"
