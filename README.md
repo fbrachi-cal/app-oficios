@@ -29,16 +29,18 @@ A full-stack services marketplace that connects **clients** who need home and pr
 |---|---|
 | **Cliente** | Search professionals, send service requests, chat, rate professionals |
 | **Profesional** | Receive requests, reply to queries, confirm/reject jobs, view ratings |
-| **Admin** | Moderate users, chats, reports; full CRUD for ratings |
+| **Recruiter** | Upload, search, filter, and manage candidate CVs via a dedicated panel |
+| **Admin** | All of the above + moderate users, chats, reports; full CRUD for ratings |
 
 ### Core Features
 
 - 🔐 **Firebase Auth** — email/password, Google, phone verification
-- 👤 **Role-Based Access** — `cliente`, `profesional`, `admin`
+- 👤 **Role-Based Access** — `cliente`, `profesional`, `recruiter`, `admin`
 - 📋 **Service Requests** — full lifecycle: created → accepted → confirmed → finished
 - 💬 **Real-Time Chat** — Firestore-backed messaging per request
 - ⭐ **Ratings System** — clients and professionals rate each other after a job
 - 🛡️ **Admin Panel** — user management, chat moderation, report resolution, full ratings CRUD
+- 📄 **Recruiter Panel** — CV management: upload, search, filter, and evaluate candidates
 - 🚥 **User Status Management** — statuses including `ACTIVE`, `SUSPENDED`, `EXPELLED`, and `DEACTIVATED` to strictly control platform access
 
 ---
@@ -361,6 +363,15 @@ All protected endpoints require an `Authorization: Bearer <firebase_id_token>` h
 | `POST` | `/calificaciones/` | authenticated | Rate a user |
 | `GET` | `/calificaciones/profesional/{id}` | authenticated | Get user ratings |
 
+### CVs (Recruiter Module)
+
+| Method | Route | Role | Description |
+|---|---|---|---|
+| `POST` | `/cvs/upload` | admin, recruiter | Upload a CV (multipart form: file + metadata) |
+| `GET` | `/cvs/` | admin, recruiter | List/search CVs (filters: status, seniority, salary, zone, text) |
+| `GET` | `/cvs/{id}` | admin, recruiter | Get single CV details |
+| `PUT` | `/cvs/{id}` | admin, recruiter | Update CV metadata (status, notes, evaluation fields) |
+
 ### Admin
 
 | Method | Route | Role | Description |
@@ -419,6 +430,63 @@ Or use a script/backend endpoint if available.
 
 ---
 
+## 📄 Recruiter Panel
+
+The recruiter panel is accessible at `/recruiter` for users with `tipo: "recruiter"` or `tipo: "admin"` in Firestore.
+
+```
+/recruiter/cvs  → CV management dashboard
+```
+
+### Functionality
+
+The CV management module allows recruiters to:
+
+- **Upload CVs** — attach PDF/DOC/DOCX files along with candidate metadata (name, phone, email, seniority, tags, skills, residence zone, age, salary expectation)
+- **Search & filter** — full-text search plus filters by status, seniority, salary expectation, interview result, and residence zone
+- **View details** — inspect full candidate profiles including extracted CV text, skills, tags, and evaluation notes
+- **Edit evaluations** — update status (`New` → `Contacted` → `Interviewed` → `Discarded`), salary expectation, interview results (Casa Rayuela), client interview notes, and internal notes
+- **Download originals** — direct link to the stored CV file in Firebase Storage
+
+### CV Data Model
+
+Each CV record stores:
+
+| Field | Type | Description |
+|---|---|---|
+| `candidate_name` | string | Full name |
+| `email` | string (optional) | Contact email |
+| `phone` | string | Contact phone |
+| `seniority` | enum | `Trainee`, `Junior`, `Semi-Senior`, `Senior` |
+| `tags` | string[] | Free-form labels (e.g. `remoto`, `part-time`) |
+| `skills` | string[] | Technical skills (e.g. `React`, `Python`) |
+| `status` | enum | `New`, `Contacted`, `Interviewed`, `Discarded` |
+| `residence_zone` | string (optional) | Candidate's location |
+| `age` | int (optional) | Candidate's age |
+| `salary_expectation` | enum (optional) | `high`, `medium`, `low` |
+| `casa_rayuela_interview_result` | enum (optional) | `excellent`, `intermediate`, `bad` |
+| `client_interview_notes` | string (optional) | Notes from client interviews |
+| `notes` | string | Internal recruiter notes |
+| `source` | string | Where the CV came from (default: `Direct`) |
+
+### Access Control
+
+- **Frontend**: The route `/recruiter/*` is protected by a `RequireRecruiter` guard that allows only `admin` and `recruiter` roles.
+- **Backend**: All `/cvs/*` endpoints use `require_role(["admin", "recruiter"])` to enforce authorization.
+- Admin users see a "Back to user management" link in the recruiter sidebar for quick navigation.
+
+### Granting Recruiter Access (Firestore)
+
+In the Firebase Console → Firestore → `usuarios` collection, find the user document and set:
+
+```json
+{
+  "tipo": "recruiter"
+}
+```
+
+---
+
 ## 🐳 Running with Docker
 
 A `Dockerfile` is provided for the backend.
@@ -454,10 +522,10 @@ oficios-app/
 │
 └── oficios-front/            ← Frontend (React + Vite)
     ├── src/
-    │   ├── views/            ← Pages (auth, admin, landing)
-    │   ├── components/       ← Shared UI components
-    │   ├── services/         ← Axios API service layer
-    │   ├── context/          ← Auth context
+    │   ├── views/            ← Pages (auth, admin, recruiter, landing)
+    │   ├── components/       ← Shared UI components (admin/, recruiter/)
+    │   ├── services/         ← Axios API service layer (cvService, adminService...)
+    │   ├── context/          ← Auth + User context
     │   └── i18n/             ← Translation files (es/en)
     ├── package.json
     └── .env.example
