@@ -1,6 +1,6 @@
 # 🖥️ App de Oficios — Frontend
 
-SPA (Single Page Application) del marketplace de servicios **App de Oficios**. Permite a clientes buscar y contratar profesionales, gestionar solicitudes, chatear y calificar. Incluye un **panel de administración** completo.
+SPA (Single Page Application) del marketplace de servicios **App de Oficios**. Permite a clientes buscar y contratar profesionales, gestionar solicitudes, chatear y calificar. Incluye un **panel de administración** completo y un **panel de recruiter** para gestión de CVs.
 
 Desarrollado con **React + TypeScript + Vite** sobre **Tailwind CSS**.
 
@@ -16,7 +16,8 @@ Desarrollado con **React + TypeScript + Vite** sobre **Tailwind CSS**.
 6. [Cómo correr el proyecto](#-cómo-correr-el-proyecto)
 7. [Conexión con el backend](#-conexión-con-el-backend)
 8. [Módulo de administración](#-módulo-de-administración)
-9. [Estructura del proyecto](#-estructura-del-proyecto)
+9. [Módulo de recruiter](#-módulo-de-recruiter)
+10. [Estructura del proyecto](#-estructura-del-proyecto)
 
 ---
 
@@ -30,6 +31,7 @@ El frontend es una SPA que maneja toda la experiencia de usuario:
 - **Chat en tiempo real** via Firestore
 - Sistema de **calificaciones**
 - **Panel de administración** con gestión de usuarios, chats, reportes y calificaciones
+- **Panel de recruiter** con gestión de CVs de candidatos
 - Soporte completo de **internacionalización** (español / inglés)
 
 ---
@@ -56,9 +58,10 @@ El frontend es una SPA que maneja toda la experiencia de usuario:
 |---|---|
 | **cliente** | Buscar profesionales, crear solicitudes, calificar, chatear |
 | **profesional** | Recibir solicitudes, aceptar/rechazar, calificar clientes, chatear |
+| **recruiter** | Subir, buscar, filtrar y gestionar CVs de candidatos |
 | **admin** | Todo lo anterior + panel de administración completo |
 
-El rol se define en el documento del usuario en Firestore (`tipo: "cliente"` / `"profesional"` / `"admin"`).
+El rol se define en el documento del usuario en Firestore (`tipo: "cliente"` / `"profesional"` / `"recruiter"` / `"admin"`).
 
 ---
 
@@ -220,6 +223,39 @@ La ruta `/admin/*` está protegida por un guard `RequireAdmin` que verifica el r
 
 ---
 
+## 📄 Módulo de recruiter
+
+El panel de recruiter está disponible en `/recruiter` para usuarios con `tipo: "recruiter"` o `tipo: "admin"`.
+
+### Acceso
+
+1. Loguearse con una cuenta que tenga `tipo: "recruiter"` (o `"admin"`) en Firestore
+2. Navegar a `http://localhost:5173/recruiter`
+
+Para otorgar rol recruiter, editá el documento del usuario en Firestore y seteá `tipo: "recruiter"`.
+
+### Secciones disponibles
+
+| Ruta | Descripción |
+|---|---|
+| `/recruiter/cvs` | Dashboard de gestión de CVs |
+
+### Funcionalidades del dashboard de CVs
+
+- **Subir CVs** — formulario modal con campos de candidato (nombre, teléfono, email, seniority, tags, skills, zona, edad, expectativa salarial) y archivo adjunto (PDF, DOC, DOCX)
+- **Buscar y filtrar** — búsqueda full-text + filtros por estado, expectativa salarial, resultado de entrevista CR y zona de residencia
+- **Ver detalle** — modal con información completa del candidato, skills, tags y evaluación
+- **Editar evaluación** — actualizar estado (`New` → `Contacted` → `Interviewed` → `Discarded`), expectativa salarial, resultado de entrevista, notas internas y notas de entrevista con cliente
+- **Descargar CV** — enlace directo al archivo almacenado en Firebase Storage
+
+### Restricción de acceso
+
+La ruta `/recruiter/*` está protegida por un guard `RequireRecruiter` que permite únicamente los roles `admin` y `recruiter`. Cualquier usuario sin alguno de estos roles es redirigido automáticamente a `/home`.
+
+Los usuarios admin ven un enlace "Volver a gestión de usuarios" en el sidebar del recruiter para navegar rápidamente al panel de administración.
+
+---
+
 ## 📁 Estructura del proyecto
 
 ```
@@ -227,16 +263,19 @@ src/
 ├── views/
 │   ├── auth/           ← Vistas de usuarios autenticados (solicitudes, perfil, chat)
 │   ├── admin/          ← Panel de administración (UsersPage, ChatsPage, RatingsPage...)
+│   ├── recruiter/      ← Panel de recruiter (CvDashboard)
 │   └── landing/        ← Página pública
 │
 ├── components/
 │   ├── admin/          ← AdminSidebar, layout del panel admin
+│   ├── recruiter/      ← RecruiterSidebar, CvUploadModal, CvDetailModal
 │   ├── Navbars/        ← Navbar principal
 │   ├── Modal/          ← Modales reutilizables
 │   └── ...
 │
 ├── services/
 │   ├── adminService.ts ← Llamadas a /admin/* del backend
+│   ├── cvService.ts    ← Llamadas a /cvs/* del backend (upload, list, update)
 │   ├── userService.ts  ← Llamadas a /usuarios/*
 │   └── ...
 │

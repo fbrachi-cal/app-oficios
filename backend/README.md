@@ -1,6 +1,6 @@
 # 🛠️ App de Oficios — Backend
 
-API REST del marketplace de servicios **App de Oficios**. Permite conectar clientes con profesionales del hogar, gestionando solicitudes, calificaciones, chats y un panel de administración.
+API REST del marketplace de servicios **App de Oficios**. Permite conectar clientes con profesionales del hogar, gestionando solicitudes, calificaciones, chats, un panel de administración y un módulo de recruiter para gestión de CVs.
 
 Desarrollado con **FastAPI** y **Firebase**, siguiendo **arquitectura hexagonal (puertos y adaptadores)**.
 
@@ -27,6 +27,7 @@ El backend es el núcleo de la plataforma. Sus responsabilidades principales son
 - Gestionar perfiles de usuarios, solicitudes, calificaciones y chats en **Firestore**
 - Aplicar **reglas de negocio** (roles, estados de solicitudes, estadísticas de usuarios)
 - Exponer un **panel de administración** con operaciones de moderación y CRUD completo
+- Proveer un **módulo de recruiter** para subir, buscar y gestionar CVs de candidatos
 
 ---
 
@@ -208,6 +209,8 @@ app/
 └── shared/             ← Auth, roles, logger, middleware
 ```
 
+**Nota:** El módulo de CV tiene su propia estructura dentro de `domain/cv/` con models, ports y service dedicados.
+
 **Flujo de datos:** `Route → Service → Port (interfaz) → Firebase Adapter → Firestore`
 
 Las operaciones que requieren consistencia (ej: actualizar calificación + estadísticas del usuario) usan **transacciones de Firestore** (`@firestore.transactional`).
@@ -229,6 +232,13 @@ Todos los endpoints protegidos requieren header: `Authorization: Bearer <firebas
 | `POST` | `/admin/calificaciones` | admin | Crear calificación |
 | `PATCH` | `/admin/calificaciones/{id}` | admin | Editar calificación |
 | `DELETE` | `/admin/calificaciones/{id}` | admin | Soft delete |
+
+| Método | Ruta | Rol | Descripción |
+|---|---|---|---|
+| `POST` | `/cvs/upload` | admin, recruiter | Subir CV (multipart: archivo + metadatos del candidato) |
+| `GET` | `/cvs/` | admin, recruiter | Listar/buscar CVs (filtros: status, seniority, salario, zona, texto) |
+| `GET` | `/cvs/{id}` | admin, recruiter | Obtener detalle de un CV |
+| `PUT` | `/cvs/{id}` | admin, recruiter | Actualizar metadatos de un CV (estado, notas, evaluación) |
 
 Documentación completa: `http://localhost:8000/docs`
 
