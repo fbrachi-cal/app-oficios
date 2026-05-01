@@ -10,6 +10,7 @@ from app.shared.auth_utils import obtener_tipo
 from app.shared.roles import require_role
 from app.shared.logger import log
 from app.shared.firebase_auth import verify_token
+from app.domain.services.tyc_service import TycService
 
 
 router = APIRouter()
@@ -37,8 +38,20 @@ def obtener_usuario_autenticado(user_data: dict = Depends(verify_token),user_rep
     log.info("Usuario desde Firestore: {}", usuario)
 
     if usuario:
+        usuario["requires_tyc_acceptance"] = TycService.requires_acceptance(usuario)
         return usuario
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+@router.post("/me/tyc/accept")
+def accept_tyc(user_data: dict = Depends(verify_token), user_repo: UserRepository = Depends(get_user_repo)):
+    uid = user_data["uid"]
+    usuario = user_repo.get_user_by_id(uid)
+    if not usuario:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        
+    usuario["tyc"] = TycService.accept_terms()
+    user_repo.save_user(usuario)
+    return {"mensaje": "Términos aceptados correctamente", "tyc": usuario["tyc"]}
 
 @router.put("/me")
 def actualizar_usuario_autenticado(

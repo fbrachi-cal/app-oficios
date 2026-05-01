@@ -11,6 +11,7 @@ type UserData = {
     foto?: string;
     descripcion: string;
     disponibilidad: string;    
+    requires_tyc_acceptance?: boolean;
 };
 
 const UserContext = createContext<{

@@ -20,6 +20,8 @@ import BlockedPage from './views/BlockedPage';
 import RequireRecruiter from './utils/RequireRecruiter';
 import RecruiterLayout from './layouts/Recruiter';
 import CvDashboard from './views/recruiter/CvDashboard';
+import RequireAcceptedTerms from './utils/RequireAcceptedTerms';
+import TermsAndConditionsPage from './views/auth/TermsAndConditionsPage';
 
 
 function App() {
@@ -31,10 +33,14 @@ function App() {
         <Route path="/auth" element={<Auth />}>
           <Route path="login" element={<Login />} />
           <Route path="registro" element={<Register />} />
-          <Route path="completar-perfil" element={<CompletarPerfil />} />
-          <Route path="actualizar-perfil" element={<UpdateProfile />} />
-          <Route path="profesionales/:id" element={<PerfilProfesional />} />
-          <Route path="solicitudes/:id" element={<DetalleSolicitud />} />
+          
+          <Route element={<RequireAcceptedTerms />}>
+            <Route path="completar-perfil" element={<CompletarPerfil />} />
+            <Route path="actualizar-perfil" element={<UpdateProfile />} />
+            <Route path="profesionales/:id" element={<PerfilProfesional />} />
+            <Route path="solicitudes/:id" element={<DetalleSolicitud />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Route>
 
@@ -44,9 +50,13 @@ function App() {
         </Route>
 
         <Route path="/landing" element={<Landing />} />
-        <Route path="/home" element={<Home />} />
         <Route path="/" element={<Landing />} />
         <Route path="/bloqueado" element={<BlockedPage />} />
+        <Route path="/terminos-y-condiciones" element={<TermsAndConditionsPage />} />
+
+        {/* Rutas protegidas por T&C */}
+        <Route element={<RequireAcceptedTerms />}>
+          <Route path="/home" element={<Home />} />
 
         {/* Admin panel — protected by role guard */}
         <Route element={<RequireAdmin />}>
@@ -66,6 +76,7 @@ function App() {
             <Route index element={<Navigate to="cvs" replace />} />
             <Route path="cvs" element={<CvDashboard />} />
           </Route>
+        </Route>
         </Route>
       </Routes>
 
