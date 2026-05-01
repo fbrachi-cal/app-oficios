@@ -6,7 +6,7 @@ from app.domain.services.user_service import UserService
 from app.shared.firebase_auth import verify_token
 from app.api.schemas.user_schema import UsuarioRegistro, UsuarioUpdate
 from app.api.schemas.buscar_schema import FiltroBusquedaProfesionales
-from app.shared.auth_utils import obtener_rol
+from app.shared.auth_utils import obtener_tipo
 from app.shared.roles import require_role
 from app.shared.logger import log
 from app.shared.firebase_auth import verify_token
@@ -52,12 +52,20 @@ def actualizar_usuario_autenticado(
         return {"mensaje": "Usuario actualizado con éxito", "usuario": usuario_actualizado}
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
-@router.get("/me/rol")
-def obtener_rol_usuario(user_data: dict = Depends(verify_token)):
+@router.get("/me/tipo")
+def obtener_tipo_usuario(user_data: dict = Depends(verify_token)):
     uid = user_data["uid"]
-    rol = obtener_rol(uid)
-    if rol:
-        return {"rol": rol}
+    tipo = obtener_tipo(uid)
+    if tipo:
+        return {"tipo": tipo}
+    raise HTTPException(status_code=404, detail="Tipo no encontrado")
+
+@router.get("/me/rol")
+def obtener_rol_usuario_legacy(user_data: dict = Depends(verify_token)):
+    uid = user_data["uid"]
+    tipo = obtener_tipo(uid)
+    if tipo:
+        return {"rol": tipo}
     raise HTTPException(status_code=404, detail="Rol no encontrado")
 
 

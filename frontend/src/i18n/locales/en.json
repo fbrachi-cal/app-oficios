@@ -276,7 +276,9 @@
             "reports": "Reports",
             "ratings": "Ratings",
             "solicitudes_interacciones": "Request Interactions",
-            "back_to_app": "Back to App"
+            "cvs": "CV Management",
+            "back_to_app": "Back to App",
+            "back_to_user_management": "Back to user management"
         },
         "users": {
             "title": "User Management",
@@ -351,5 +353,19 @@
     "landing_pro_benefits_li_2": "More visibility",
     "landing_pro_benefits_li_3": "More contacts",
     "landing_pro_benefits_li_4": "No commissions",
-    "landing_pro_benefits_price": "From ARS 2500"
+    "landing_pro_benefits_price": "From ARS 2500",
+    "cv": {
+        "resup": "Upload CV",
+        "residence_zone": "Residence zone",
+        "age": "Age",
+        "salary_expectation": "Salary expectation",
+        "casa_rayuela_interview_result": "Casa Rayuela interview result",
+        "client_interview_notes": "Client interview notes",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low",
+        "excellent": "Excellent",
+        "intermediate": "Intermediate",
+        "bad": "Bad"
+    }
 }

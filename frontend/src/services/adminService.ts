@@ -89,7 +89,7 @@ export type Report = {
 export type AdminSolicitudInteraccion = {
   mensaje: string;
   usuario_id: string;
-  rol?: string;
+  tipo?: string;
   autor_id?: string;
   fecha: string;
 };

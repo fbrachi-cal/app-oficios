@@ -70,8 +70,8 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
     return [solicitud.solicitante_id, solicitud.profesional_id].filter(Boolean).join(" — ") || "Sin participantes";
   };
 
-  const getSenderName = (authorId: string, rol?: string) => {
-    if (rol === "admin" || authorId.includes("admin")) return "Administrador (Sistema)";
+  const getSenderName = (authorId: string, tipo?: string) => {
+    if (tipo === "admin" || authorId.includes("admin")) return "Administrador (Sistema)";
     
     if (!solicitud?.participantDetails) return authorId;
     const p = solicitud.participantDetails.find(p => p.id === authorId);
@@ -81,8 +81,8 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
     return `${p.nombre || 'Desconocido'} (${tipoLabel})`;
   };
 
-  const getMessageBubbleClasses = (rol?: string, authorId?: string) => {
-    if (rol === "admin" || authorId?.includes("admin")) {
+  const getMessageBubbleClasses = (tipo?: string, authorId?: string) => {
+    if (tipo === "admin" || authorId?.includes("admin")) {
       return "bg-gray-800 text-white self-center text-center max-w-[90%] border-2 border-gray-600";
     }
     const isClient = authorId === solicitud.solicitante_id;
@@ -126,7 +126,7 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
             allMessages.push({
               mensaje: solicitud.descripcion,
               usuario_id: solicitud.solicitante_id,
-              rol: "cliente",
+              tipo: "cliente",
               fecha: solicitud.fecha_creacion
             });
           }
@@ -147,14 +147,14 @@ const SolicitudInteractionViewer: React.FC<SolicitudInteractionViewerProps> = ({
               {allMessages
                 .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
                 .map((msg: AdminSolicitudInteraccion, index: number) => {
-              const isAdmin = msg.rol === "admin" || String(msg.autor_id).includes("admin");
-              const bubbleClasses = getMessageBubbleClasses(msg.rol, msg.autor_id || msg.usuario_id);
+              const isAdmin = msg.tipo === "admin" || String(msg.autor_id).includes("admin");
+              const bubbleClasses = getMessageBubbleClasses(msg.tipo, msg.autor_id || msg.usuario_id);
               
               return (
                 <div key={index} className={`flex flex-col ${bubbleClasses} p-3 rounded-lg shadow-sm`}>
                   <div className={`text-[11px] font-bold mb-1 border-b pb-1 ${isAdmin ? "text-gray-300 border-gray-600" : "text-blueGray-600 border-black/5"}`}>
                     {isAdmin && <i className="fas fa-shield-alt mr-1"></i>}
-                    {getSenderName(msg.autor_id || msg.usuario_id, msg.rol)}
+                    {getSenderName(msg.autor_id || msg.usuario_id, msg.tipo)}
                   </div>
                   <div className={`text-sm break-words whitespace-pre-wrap mt-1 ${isAdmin ? "text-white" : "text-blueGray-800"}`}>
                     {msg.mensaje}

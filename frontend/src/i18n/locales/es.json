@@ -287,7 +287,9 @@
       "reports": "Reportes",
       "ratings": "Calificaciones",
       "solicitudes_interacciones": "Interacciones (Solicitudes)",
-      "back_to_app": "Volver a la app"
+      "cvs": "Gestión de CVs",
+      "back_to_app": "Volver a la app",
+      "back_to_user_management": "Volver a gestión de usuarios"
     },
     "users": {
       "title": "Gestión de Usuarios",
@@ -362,5 +364,19 @@
   "landing_pro_benefits_li_2": "Más visibilidad",
   "landing_pro_benefits_li_3": "Más contactos",
   "landing_pro_benefits_li_4": "Sin comisiones",
-  "landing_pro_benefits_price": "Desde ARS 2500"
+  "landing_pro_benefits_price": "Desde ARS 2500",
+  "cv": {
+    "resup": "Subir CV",
+    "residence_zone": "Zona de residencia",
+    "age": "Edad",
+    "salary_expectation": "Expectativa salarial",
+    "casa_rayuela_interview_result": "Resultado entrevista Casa Rayuela",
+    "client_interview_notes": "Entrevista cliente",
+    "high": "Alta",
+    "medium": "Media",
+    "low": "Baja",
+    "excellent": "Excelente",
+    "intermediate": "Intermedio",
+    "bad": "Malo"
+  }
 }
