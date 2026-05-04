@@ -162,7 +162,7 @@ const DetalleSolicitud: React.FC = () => {
         </div>
 
         {/* Counterpart Card */}
-        <div className="card p-5 flex items-center gap-4 cursor-pointer hover:border-blue-300 transition-colors" onClick={() => navigate(`/auth/profesionales/${otroUsuario.id}`)}>
+        <div className="card p-5 flex items-center gap-4 cursor-pointer hover:border-blue-300 transition-colors" onClick={() => navigate(`/profesional/${otroUsuario.id}`)}>
           <img
             src={otroUsuario.foto || default_avatar}
             alt={otroUsuario.nombre}

@@ -127,7 +127,7 @@ const CalificarProfesionales: React.FC = () => {
                                         profesional={prof}
                                         onVerPerfil={(id) => {
                                             logger.info("Ir al perfil", { id });
-                                            navigate(`/auth/profesionales/${id}`);
+                                            navigate(`/profesional/${id}`);
                                         }}
                                     />
                                 ))}

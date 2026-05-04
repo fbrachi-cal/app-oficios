@@ -31,7 +31,7 @@ const BottomTabBar: React.FC = () => {
       id: "tab-actividad",
     },
     {
-      to: "/auth/actualizar-perfil",
+      to: "/perfil",
       icon: FiUser,
       label: t("perfil"),
       id: "tab-perfil",
@@ -49,7 +49,7 @@ const BottomTabBar: React.FC = () => {
         {tabs.map(({ to, icon: Icon, label, id }) => {
           const isActive = location.pathname.startsWith(to) ||
             // Special case: profile tab is active for actualizar-perfil route
-            (to === "/auth/actualizar-perfil" && location.pathname.startsWith("/auth/actualizar-perfil"));
+            (to === "/perfil" && location.pathname.startsWith("/perfil"));
 
           return (
             <NavLink

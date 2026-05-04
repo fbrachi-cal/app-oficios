@@ -30,31 +30,28 @@ function App() {
     <>
       <LoadingScreen />
       <Routes>
-        {/* Ruta principal con layout Auth */}
-        <Route path="/auth" element={<Auth />}>
+        {/* Public Routes */}
+        <Route path="/auth">
           <Route path="login" element={<Login />} />
           <Route path="registro" element={<Register />} />
-          <Route path="completar-perfil" element={<CompletarPerfil />} />
-          <Route path="actualizar-perfil" element={<UpdateProfile />} />
-          <Route path="profesionales/:id" element={<PerfilProfesional />} />
-          <Route path="solicitudes/:id" element={<DetalleSolicitud />} />
-          <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Route>
 
-        {/* Ruta alternativa directa */}
-        <Route path="/login" element={<Auth />}>
-          <Route index element={<Login />} />
-        </Route>
+        <Route path="/login" element={<Navigate to="/auth/login" replace />} />
+        <Route path="/registro" element={<Navigate to="/auth/registro" replace />} />
 
         <Route path="/landing" element={<Landing />} />
         <Route path="/home" element={<Navigate to="/buscar" replace />} />
         <Route path="/" element={<Landing />} />
         <Route path="/bloqueado" element={<BlockedPage />} />
 
-        {/* Consumer authenticated routes with TopNav/BottomTabBar */}
+        {/* Consumer authenticated routes with AppShell (TopNav/BottomTabBar) */}
         <Route element={<AppShell />}>
           <Route path="/buscar" element={<BuscarView />} />
           <Route path="/actividad" element={<ActividadView />} />
+          <Route path="/perfil" element={<UpdateProfile />} />
+          <Route path="/completar-perfil" element={<CompletarPerfil />} />
+          <Route path="/profesional/:id" element={<PerfilProfesional />} />
+          <Route path="/solicitud/:id" element={<DetalleSolicitud />} />
         </Route>
 
         {/* Admin panel — protected by role guard */}

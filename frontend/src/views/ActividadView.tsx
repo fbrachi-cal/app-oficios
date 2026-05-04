@@ -163,7 +163,7 @@ const ActividadView: React.FC = () => {
               key={i}
               onClick={() => {
                 setLoading(true);
-                navigate(`/auth/solicitudes/${s.id}`);
+                navigate(`/solicitud/${s.id}`);
               }}
               className="card p-5 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 group hover:border-blue-300"
             >

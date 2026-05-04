@@ -25,7 +25,6 @@ const TopNav: React.FC = () => {
   const desktopTabs = [
     { to: "/buscar", icon: FiSearch, label: t("buscar"), id: "nav-buscar" },
     { to: "/actividad", icon: FiList, label: t("actividad"), id: "nav-actividad" },
-    { to: "/auth/actualizar-perfil", icon: FiUser, label: t("perfil"), id: "nav-perfil" },
   ];
 
   return (

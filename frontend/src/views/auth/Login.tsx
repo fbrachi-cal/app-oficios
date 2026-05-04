@@ -39,7 +39,7 @@ const Login: React.FC = () => {
         userData.tipo === "profesional" &&
         (!userData.oficios?.length || !userData.zonas?.length)
       ) {
-        navigate("/auth/completar-perfil");
+        navigate("/completar-perfil");
       } else if (userData.tipo === "admin" || userData.tipo === "moderator") {
         navigate("/admin");
       } else if (userData.tipo === "recruiter") {
@@ -48,7 +48,7 @@ const Login: React.FC = () => {
         navigate("/");
       }
     } else if (res.status === 404) {
-      navigate("/auth/completar-perfil");
+      navigate("/completar-perfil");
     } else if (res.status === 403) {
       const errorData = await res.json();
       const searchParams = new URLSearchParams();

@@ -159,10 +159,10 @@ const Register = (): JSX.Element => {
         if (userData && userData.id) {
           navigate("/");
         } else {
-          navigate("/auth/completar-perfil");
+          navigate("/completar-perfil");
         }
       } else if (res.status === 404 || res.status === 401) {
-        navigate("/auth/completar-perfil");
+        navigate("/completar-perfil");
       } else {
         setError(t("error_verificar_usuario"));
       }

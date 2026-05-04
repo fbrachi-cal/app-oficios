@@ -25,7 +25,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({usuario}) => {
 
     const irAlPerfil = () => {
         setOpen(false);
-        navigate("/auth/actualizar-perfil");
+        navigate("/perfil");
     };
 
     const openDropdown = () => {
