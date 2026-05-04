@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import config from "../../config";
-import { fetchConToken } from "../../utils/fetchConToken";
-import { logger } from "../../utils/logger";
+import config from "../config";
+import { fetchConToken } from "../utils/fetchConToken";
+import { logger } from "../utils/logger";
 
 interface Categoria {
   id: string;
