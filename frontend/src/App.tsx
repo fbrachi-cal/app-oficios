@@ -7,11 +7,14 @@ import UpdateProfile from './views/auth/UpdateProfile';
 import Register from './views/auth/Register';
 import CompletarPerfil from './views/auth/CompletarPerfil';
 import Landing from './views/Landing';
+import AppShell from './layouts/AppShell';
+import BuscarView from './views/BuscarView';
+import ActividadView from './views/ActividadView';
 import PerfilProfesional from './views/auth/PerfilProfesional';
 import DetalleSolicitud from "./views/auth/DetalleSolicitud";
 import LoadingScreen from './components/Screens/LoadingScreen';
-import RequireAdmin from './utils/RequireAdmin';
 import UsersPage from './views/admin/UsersPage';
+import RequireAdmin from './utils/RequireAdmin';
 import ChatsPage from './views/admin/ChatsPage';
 import ReportsPage from './views/admin/ReportsPage';
 import RatingsPage from './views/admin/RatingsPage';
@@ -44,9 +47,15 @@ function App() {
         </Route>
 
         <Route path="/landing" element={<Landing />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Navigate to="/buscar" replace />} />
         <Route path="/" element={<Landing />} />
         <Route path="/bloqueado" element={<BlockedPage />} />
+
+        {/* Consumer authenticated routes with TopNav/BottomTabBar */}
+        <Route element={<AppShell />}>
+          <Route path="/buscar" element={<BuscarView />} />
+          <Route path="/actividad" element={<ActividadView />} />
+        </Route>
 
         {/* Admin panel — protected by role guard */}
         <Route element={<RequireAdmin />}>

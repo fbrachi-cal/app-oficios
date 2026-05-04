@@ -21,6 +21,9 @@ module.exports = {
       ...colors,
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
       minHeight: {
         "screen-75": "75vh",
       },

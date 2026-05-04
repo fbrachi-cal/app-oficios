@@ -1,3 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Design system — tokens, component classes, and base overrides */
+@import './styles/design-tokens.css';
