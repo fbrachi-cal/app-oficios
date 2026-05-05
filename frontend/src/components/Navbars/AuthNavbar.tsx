@@ -5,8 +5,8 @@ type NavbarProps = {
   transparent?: boolean;
 };
 
-const AuthNavbar: React.FC<NavbarProps> = (props) => {
-  return <TopNav {...props} />;
+const AuthNavbar: React.FC<NavbarProps> = () => {
+  return <TopNav />;
 };
 
 export default AuthNavbar;
