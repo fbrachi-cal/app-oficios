@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FiChevronLeft, FiMapPin, FiBriefcase, FiPaperclip, FiSend, FiStar, FiAlertCircle } from "react-icons/fi";
+import { FiChevronLeft, FiMapPin, FiBriefcase, FiPaperclip, FiSend, FiStar, FiAlertCircle, FiX } from "react-icons/fi";
 import config from "../../config";
 import { fetchConToken } from "../../utils/fetchConToken";
 import { useLoading } from "../../context/LoadingContext";
@@ -291,6 +291,25 @@ const DetalleSolicitud: React.FC = () => {
           (user?.tipo === "cliente" && solicitud.estado === "consulta")) && (
           <div className="card p-3 flex items-end gap-2 bg-white sticky bottom-24 shadow-lg ring-1 ring-slate-200">
             <div className="flex-1 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all p-2 flex flex-col">
+              {archivosAdjuntos.length > 0 && (
+                <div className="flex gap-2 mb-2 overflow-x-auto pb-1">
+                  {archivosAdjuntos.map((file, idx) => (
+                    <div key={idx} className="relative shrink-0 mt-2 mr-2">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="preview"
+                        className="w-14 h-14 object-cover rounded-lg border border-slate-200"
+                      />
+                      <button
+                        onClick={() => setArchivosAdjuntos(prev => prev.filter((_, i) => i !== idx))}
+                        className="absolute -top-2 -right-2 bg-slate-800 text-white rounded-full p-0.5 hover:bg-slate-900 shadow-sm"
+                      >
+                        <FiX size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <textarea
                 className="w-full bg-transparent border-none text-sm resize-none focus:outline-none p-1 max-h-32 min-h-[40px]"
                 rows={1}
@@ -305,9 +324,8 @@ const DetalleSolicitud: React.FC = () => {
               <div className="flex justify-between items-center mt-2 px-1">
                 <label className="text-slate-400 hover:text-blue-600 cursor-pointer transition-colors p-1">
                   <FiPaperclip size={18} />
-                  <input type="file" multiple accept="image/*" ref={archivoInputRef} onChange={(e) => setArchivosAdjuntos(Array.from(e.target.files || []))} className="hidden" />
+                  <input type="file" multiple accept="image/*" ref={archivoInputRef} onChange={(e) => setArchivosAdjuntos((prev) => [...prev, ...Array.from(e.target.files || [])])} className="hidden" />
                 </label>
-                {archivosAdjuntos.length > 0 && <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded">{archivosAdjuntos.length} archivo(s)</span>}
               </div>
             </div>
             <button onClick={enviarConsulta} disabled={!observacion.trim() && archivosAdjuntos.length === 0} className="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center shrink-0 hover:bg-blue-700 disabled:opacity-50 disabled:bg-slate-300 disabled:text-slate-500 transition-colors">

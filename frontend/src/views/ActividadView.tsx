@@ -177,9 +177,42 @@ const ActividadView: React.FC = () => {
                 <h4 className="text-base font-bold text-slate-900 truncate mb-1">
                   {s.subcategoria} en {s.zona}
                 </h4>
-                <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed">
+                <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed mb-2">
                   {s.descripcion}
                 </p>
+                
+                {/* Rating Visibility */}
+                {s.estado === "confirmada" && (
+                  <div className="flex flex-col gap-1 mt-2 border-t border-slate-100 pt-2">
+                    {/* User's own rating */}
+                    {user?.tipo === "cliente" && s.calificacion_cliente && (
+                      <div className="text-xs font-semibold text-amber-600 flex items-center gap-1">
+                        <FiStar className="fill-amber-500 text-amber-500" />
+                        {typeof s.calificacion_cliente === "number" ? `Calificaste con ${s.calificacion_cliente}` : "Ya calificaste este trabajo"}
+                      </div>
+                    )}
+                    {user?.tipo === "profesional" && s.calificacion_profesional && (
+                      <div className="text-xs font-semibold text-amber-600 flex items-center gap-1">
+                        <FiStar className="fill-amber-500 text-amber-500" />
+                        {typeof s.calificacion_profesional === "number" ? `Calificaste al cliente con ${s.calificacion_profesional}` : "Ya calificaste al cliente"}
+                      </div>
+                    )}
+                    
+                    {/* Counterpart's rating */}
+                    {user?.tipo === "cliente" && s.calificacion_profesional && (
+                      <div className="text-xs font-medium text-slate-500 flex items-center gap-1">
+                        <FiStar className="fill-slate-400 text-slate-400" />
+                        {typeof s.calificacion_profesional === "number" ? `El profesional te calificó con ${s.calificacion_profesional}` : "El profesional ya te calificó"}
+                      </div>
+                    )}
+                    {user?.tipo === "profesional" && s.calificacion_cliente && (
+                      <div className="text-xs font-medium text-slate-500 flex items-center gap-1">
+                        <FiStar className="fill-slate-400 text-slate-400" />
+                        {typeof s.calificacion_cliente === "number" ? `El cliente te calificó con ${s.calificacion_cliente}` : "El cliente ya te calificó"}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {s.fotos_urls?.length > 0 && (

@@ -9,7 +9,7 @@ type FormSolicitudProps = {
     zona: string;
     subcategoria: string;
     descripcion: string;
-    fotos: FileList | null;
+    fotos: File[] | null;
   }) => void;
   onCancel: () => void;
 };
@@ -24,7 +24,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({
   const [zona, setZona] = useState("");
   const [subcategoria, setSubcategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
-  const [fotos, setFotos] = useState<FileList | null>(null);
+  const [fotos, setFotos] = useState<File[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +92,7 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({
             type="file"
             multiple
             accept="image/*"
-            onChange={(e) => setFotos(e.target.files)}
+            onChange={(e) => setFotos((prev) => [...prev, ...Array.from(e.target.files || [])])}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
           <div className="flex flex-col items-center gap-1">
@@ -101,12 +101,26 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({
             <span className="text-xs text-slate-400">Podés seleccionar varias</span>
           </div>
         </div>
-        {fotos && fotos.length > 0 && (
-          <div className="mt-3 text-sm font-medium text-blue-600 bg-blue-50 px-3 py-2 rounded-lg flex items-center justify-between">
-            {fotos.length} archivo(s) seleccionado(s)
-            <button type="button" onClick={() => setFotos(null)} className="text-slate-400 hover:text-slate-600">
-              <FiX size={16} />
-            </button>
+        {fotos.length > 0 && (
+          <div className="mt-3">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {fotos.map((file, idx) => (
+                <div key={idx} className="relative shrink-0 mt-2 mr-2">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt="preview"
+                    className="w-16 h-16 object-cover rounded-lg border border-slate-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFotos(prev => prev.filter((_, i) => i !== idx))}
+                    className="absolute -top-2 -right-2 bg-slate-800 text-white rounded-full p-0.5 hover:bg-slate-900 shadow-sm"
+                  >
+                    <FiX size={12} />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
