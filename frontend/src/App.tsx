@@ -7,11 +7,14 @@ import UpdateProfile from './views/auth/UpdateProfile';
 import Register from './views/auth/Register';
 import CompletarPerfil from './views/auth/CompletarPerfil';
 import Landing from './views/Landing';
+import AppShell from './layouts/AppShell';
+import BuscarView from './views/BuscarView';
+import ActividadView from './views/ActividadView';
 import PerfilProfesional from './views/auth/PerfilProfesional';
 import DetalleSolicitud from "./views/auth/DetalleSolicitud";
 import LoadingScreen from './components/Screens/LoadingScreen';
-import RequireAdmin from './utils/RequireAdmin';
 import UsersPage from './views/admin/UsersPage';
+import RequireAdmin from './utils/RequireAdmin';
 import ChatsPage from './views/admin/ChatsPage';
 import ReportsPage from './views/admin/ReportsPage';
 import RatingsPage from './views/admin/RatingsPage';
@@ -29,8 +32,8 @@ function App() {
     <>
       <LoadingScreen />
       <Routes>
-        {/* Ruta principal con layout Auth */}
-        <Route path="/auth" element={<Auth />}>
+        {/* Public Routes */}
+        <Route path="/auth">
           <Route path="login" element={<Login />} />
           <Route path="registro" element={<Register />} />
           
@@ -44,12 +47,11 @@ function App() {
           <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Route>
 
-        {/* Ruta alternativa directa */}
-        <Route path="/login" element={<Auth />}>
-          <Route index element={<Login />} />
-        </Route>
+        <Route path="/login" element={<Navigate to="/auth/login" replace />} />
+        <Route path="/registro" element={<Navigate to="/auth/registro" replace />} />
 
         <Route path="/landing" element={<Landing />} />
+        <Route path="/home" element={<Navigate to="/buscar" replace />} />
         <Route path="/" element={<Landing />} />
         <Route path="/bloqueado" element={<BlockedPage />} />
         <Route path="/terminos-y-condiciones" element={<TermsAndConditionsPage />} />
@@ -57,6 +59,16 @@ function App() {
         {/* Rutas protegidas por T&C */}
         <Route element={<RequireAcceptedTerms />}>
           <Route path="/home" element={<Home />} />
+
+        {/* Consumer authenticated routes with AppShell (TopNav/BottomTabBar) */}
+        <Route element={<AppShell />}>
+          <Route path="/buscar" element={<BuscarView />} />
+          <Route path="/actividad" element={<ActividadView />} />
+          <Route path="/perfil" element={<UpdateProfile />} />
+          <Route path="/completar-perfil" element={<CompletarPerfil />} />
+          <Route path="/profesional/:id" element={<PerfilProfesional />} />
+          <Route path="/solicitud/:id" element={<DetalleSolicitud />} />
+        </Route>
 
         {/* Admin panel — protected by role guard */}
         <Route element={<RequireAdmin />}>

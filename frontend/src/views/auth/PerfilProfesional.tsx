@@ -1,212 +1,175 @@
-import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Navbar from "../../components/Navbars/AuthNavbar";
-import Footer from "../../components/Footers/Footer";
+import { useParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { FiChevronLeft, FiStar, FiMapPin, FiBriefcase, FiClock } from "react-icons/fi";
 import config from "../../config";
 import { fetchConToken } from "../../utils/fetchConToken";
-import { useTranslation } from "react-i18next";
-import { ChatDrawer } from "../../components/Chat/ChatDrawer";
+import { useLoading } from "../../context/LoadingContext";
+import { solicitudService } from "../../services/solicitudService";
+import { logger } from "../../utils/logger";
+import default_avatar from "../../assets/img/default_avatar.png";
 import ModalSolicitud from "../../components/Modal/ModalSolicitud";
 import FormSolicitud from "../../components/Forms/FormSolicitud";
-import default_avatar from "../../assets/img/default_avatar.png";
-import { solicitudService } from "../../services/solicitudService";
-import { useLoading } from "../../context/LoadingContext";
-import { useNavigate } from "react-router-dom";
+import { ChatDrawer } from "../../components/Chat/ChatDrawer";
 
 const PerfilProfesional: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const [profesional, setProfesional] = useState<any>(null);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isSolicitudOpen, setIsSolicitudOpen] = useState(false);
   const { setLoading } = useLoading();
+
+  const [profesional, setProfesional] = useState<any>(null);
+  const [isSolicitudOpen, setIsSolicitudOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [mensaje, setMensaje] = useState<string | null>(null);
-
-
 
   useEffect(() => {
     const obtenerProfesional = async () => {
-      const res = await fetchConToken(`${config.apiBaseUrl}/usuarios/${id}`);
-      const data = await res.json();
-      setProfesional(data);
+      try {
+        setLoading(true);
+        const res = await fetchConToken(`${config.apiBaseUrl}/usuarios/${id}`);
+        const data = await res.json();
+        setProfesional(data);
+      } catch (err) {
+        logger.error("Error cargando perfil", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     obtenerProfesional();
-  }, [id]);
+  }, [id, setLoading]);
 
-  if (!profesional) return <div className="text-center p-10">{t("cargando")}</div>;
+  if (!profesional) return null; // Loading state is handled globally by useLoading
 
   return (
-    <>
-      <Navbar transparent />
-      <button
-                onClick={() => navigate(-1)}
-                className="fixed top-4 left-4 z-50 bg-white p-2 rounded-full shadow hover:bg-blue-100 transition"
-                title="Volver">
-                <svg
-                    className="w-5 h-5 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-24">
+      {/* Toast message */}
       {mensaje && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow z-[9999]">
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-white px-6 py-3 rounded-full shadow-lg z-50 text-sm font-semibold flex items-center gap-2">
           {mensaje}
         </div>
       )}
-      <main className="profile-page">
-        <section className="relative block h-500-px">
-          <div
-            className="absolute top-0 w-full h-full bg-center bg-cover"
-            style={{
-              backgroundImage:
-                "url('https://images.unsplash.com/photo-1499336315816-097655dcfbda?auto=format&fit=crop&w=2710&q=80')",
-            }}
+
+      {/* Header compact */}
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 h-16 flex items-center justify-between">
+        <button
+          onClick={() => navigate(-1)}
+          className="w-10 h-10 rounded-full hover:bg-slate-100 flex items-center justify-center transition-colors text-slate-700"
+          title={t("volver")}
+        >
+          <FiChevronLeft size={24} />
+        </button>
+        <h1 className="text-base font-bold text-slate-900 truncate px-4">
+          {profesional.nombre}
+        </h1>
+        <div className="w-10" /> {/* Spacer for centering */}
+      </header>
+
+      <main className="container mx-auto px-4 max-w-2xl py-8">
+        {/* Profile Info */}
+        <div className="text-center mb-10">
+          <img
+            src={profesional.foto || default_avatar}
+            alt={profesional.nombre}
+            className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-2 border-white shadow-sm"
+          />
+          <h2 className="text-2xl font-bold text-slate-900 mb-1">{profesional.nombre}</h2>
+          <p className="text-slate-500 font-medium">
+            {profesional.subcategorias?.join(", ") || t("sin_oficios")}
+          </p>
+        </div>
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-3 gap-4 mb-10">
+          <div className="card p-4 text-center">
+            <FiBriefcase className="mx-auto text-blue-500 mb-2" size={20} />
+            <div className="text-xl font-bold text-slate-900">{profesional.cantidadCalificaciones ?? 0}</div>
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">{t("trabajos")}</div>
+          </div>
+          <div className="card p-4 text-center">
+            <FiStar className="mx-auto text-amber-400 mb-2" size={20} />
+            <div className="text-xl font-bold text-slate-900">{profesional.promedioCalificacion ?? 0}</div>
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">{t("calificacion")}</div>
+          </div>
+          <div className="card p-4 text-center">
+            <FiClock className="mx-auto text-emerald-500 mb-2" size={20} />
+            <div className="text-xl font-bold text-slate-900">{profesional.disponibilidad || "N/A"}</div>
+            <div className="text-xs font-semibold text-slate-500 uppercase tracking-wide mt-1">{t("disponibilidad")}</div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <div className="mb-10">
+          <h3 className="text-lg font-bold text-slate-900 mb-3">Acerca de</h3>
+          <p className="text-slate-600 leading-relaxed bg-white p-5 rounded-2xl border border-slate-200">
+            {profesional.descripcion || t("sin_descripcion_profesional")}
+          </p>
+        </div>
+
+        {/* Zonas */}
+        <div className="mb-10">
+          <h3 className="text-lg font-bold text-slate-900 mb-3 flex items-center gap-2">
+            <FiMapPin className="text-slate-400" /> {t("zonas")}
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {profesional.zonas?.map((z: string, i: number) => (
+              <span key={i} className="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium border border-slate-200/60">
+                {z}
+              </span>
+            )) || <span className="text-slate-500 italic">{t("sin_zonas_asignadas")}</span>}
+          </div>
+        </div>
+      </main>
+
+      {/* Sticky Bottom CTA */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 z-40" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.05)" }}>
+        <div className="container mx-auto max-w-2xl">
+          <button
+            onClick={() => setIsSolicitudOpen(true)}
+            className="w-full btn-primary py-4 text-base shadow-md"
           >
-            <span
-              id="blackOverlay"
-              className="w-full h-full absolute opacity-50 bg-black"
-            ></span>
-          </div>
-          <div
-            className="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px"
-            style={{ transform: "translateZ(0)" }}
-          >
-            <svg
-              className="absolute bottom-0 overflow-hidden"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 2560 100"
-            >
-              <polygon
-                className="text-blueGray-200 fill-current"
-                points="2560 0 2560 100 0 100"
-              ></polygon>
-            </svg>
-          </div>
-        </section>
+            {t("contactar")}
+          </button>
+        </div>
+      </div>
 
-        <section className="relative py-16 bg-blueGray-200">
-          <div className="container mx-auto px-4">
-            <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg -mt-64">
-              <div className="px-6">
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-3/12 px-4 lg:order-2 flex justify-center">
-                    <div className="relative">
-                      <img
-                        alt="..."
-                        src={profesional.foto || default_avatar}
-                        className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-                    <div className="py-6 px-3 mt-32 sm:mt-0">
-                      <button
-                        className="bg-lightBlue-500 text-white text-xs px-4 py-2 rounded"
-                        type="button"
-                        onClick={() => setIsSolicitudOpen(true)
-                          //setIsChatOpen(true)
-                        }
-                      >
-                        {t("contactar")}
-                      </button>
-                    </div>
-                  </div>
-                  <div className="w-full lg:w-4/12 px-4 lg:order-1">
-                    <div className="flex justify-center py-4 lg:pt-4 pt-8">
-                      <div className="mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block text-blueGray-600">
-                          {profesional.cantidadCalificaciones ?? 0}
-                        </span>
-                        <span className="text-sm text-blueGray-400">{t("trabajos")}</span>
-                      </div>
-                      <div className="mr-4 p-3 text-center">
-                        <span className="text-xl font-bold block text-blueGray-600">
-                          {profesional.promedioCalificacion ?? 0}⭐
-                        </span>
-                        <span className="text-sm text-blueGray-400">{t("calificacion")}</span>
-                      </div>
-                      <div className="p-3 text-center">
-                        <span className="text-xl font-bold block text-blueGray-600">
-                          {profesional.disponibilidad || t("no_especificada")}
-                        </span>
-                        <span className="text-sm text-blueGray-400">{t("disponibilidad")}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+      {/* Modals */}
+      <ModalSolicitud isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)}>
+        <h2 className="text-xl font-bold mb-4 text-slate-900">{t("nueva_solicitud")}</h2>
+        <FormSolicitud
+          zonasDisponibles={profesional.zonas || []}
+          subcategoriasDisponibles={profesional.subcategorias || []}
+          onCancel={() => setIsSolicitudOpen(false)}
+          onSubmit={async (data) => {
+            try {
+              setLoading(true);
+              if (!id) return;
+              await solicitudService.crearSolicitud(id, data);
+              setMensaje("✅ " + t("solicitud_enviada_exito"));
+              setIsSolicitudOpen(false);
+              setTimeout(() => {
+                setMensaje(null);
+                navigate("/actividad"); // Redirigir a actividad después del éxito
+              }, 2000);
+            } catch (error) {
+              logger.error("Error al enviar solicitud", error);
+              setMensaje("❌ " + t("error_enviar_solicitud"));
+              setTimeout(() => setMensaje(null), 4000);
+            } finally {
+              setLoading(false);
+            }
+          }}
+        />
+      </ModalSolicitud>
 
-                <div className="text-center mt-12">
-                  <h3 className="text-4xl font-semibold text-blueGray-700">
-                    {profesional.nombre}
-                  </h3>
-                  <div className="text-sm text-blueGray-400 mt-2">
-                    <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                    {profesional.zonas?.join(", ") || t("sin_zonas_asignadas")}
-                  </div>
-                  <div className="mb-2 text-blueGray-600 mt-4">
-                    <i className="fas fa-tools mr-2 text-lg text-blueGray-400"></i>
-                    {profesional.subcategorias?.join(", ") || t("sin_oficios")}
-                  </div>
-                </div>
-
-                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-                  <div className="flex flex-wrap justify-center">
-                    <div className="w-full lg:w-9/12 px-4">
-                      <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                        {profesional.descripcion || t("sin_descripcion_profesional")}
-                      </p>
-                      <a href="#" className="font-normal text-lightBlue-500">
-                        {t("mostrar_mas")}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>      
-      <Footer />
+      {/* Chat is preserved conceptually, though trigger is Contactar */}
       <ChatDrawer
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
         initialProfessionalId={id}
       />
-
-      <ModalSolicitud isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)}>
-        <h2 className="text-xl font-bold mb-4 text-blueGray-700">{t("nueva_solicitud")}</h2>
-        <FormSolicitud
-          zonasDisponibles={profesional.zonas || []}
-          subcategoriasDisponibles={profesional.subcategorias || []}
-          onCancel={() => setIsSolicitudOpen(false)}
-          
-          onSubmit={async (data) => {
-            try {
-              setLoading(true);
-              if (!id) return <div className="text-center p-10">{t("id_invalido")}</div>;
-              const respuesta = await solicitudService.crearSolicitud(id, data);
-              logger.info("Solicitud enviada", { respuesta });
-              setMensaje("✅ " + t("solicitud_enviada_exito"));
-              setIsSolicitudOpen(false);              
-              navigate("/landing"); // o donde quieras
-            } catch (error) {
-              logger.error("Error al enviar solicitud", error);
-              setMensaje("❌ " + t("error_enviar_solicitud"));
-            } finally {
-              setLoading(false);
-              setTimeout(() => setMensaje(null), 4000); // ocultar mensaje después de 4s
-            }
-          }}
-        />
-      </ModalSolicitud>
-    </>
+    </div>
   );
 };
 

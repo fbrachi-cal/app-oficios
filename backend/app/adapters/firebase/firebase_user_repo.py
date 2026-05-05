@@ -58,40 +58,55 @@ class FirebaseUserRepository(UserRepository):
         return results
 
     def buscar_profesionales(self, zonas: list, categoria: str, subcategorias: list, limit: int = 10, start_after_id: str = None):
-        log.info("BUSCAR PROFESIONALES!");
+        log.info("BUSCAR PROFESIONALES!")
         # 1) Base: sólo profesionales
         query = self.collection.where("tipo", "==", "profesional")
 
-        # 2) Aplico uno de los array_contains_any — por ejemplo, zonas
+        # 2) Firestore only allows ONE array_contains or array_contains_any per query.
+        # We pick the most selective one available for the database query.
         if zonas:
             query = query.where("zonas", "array_contains_any", zonas)
-        
-        if categoria: 
-            log.info("CATEGORIA: "+categoria);
-            query = query.where("categorias", "array_contains", categoria)
-            
-        if subcategorias: 
+        elif subcategorias:
             query = query.where("subcategorias", "array_contains_any", subcategorias)
+        elif categoria:
+            query = query.where("categorias", "array_contains", categoria)
 
-        # 3) Orden y paginación (igual que antes)
+        # Order by name in DB
         query = query.order_by("nombre")
+
+        # 3) Fetch all matching the primary filter (needed for accurate in-memory filtering + pagination)
+        all_docs = list(query.stream())
+
+        # 4) Filter remaining conditions in memory
+        filtered_docs = []
+        for doc in all_docs:
+            data = doc.to_dict()
+            
+            if zonas and not any(z in data.get("zonas", []) for z in zonas):
+                continue
+            if categoria and categoria not in data.get("categorias", []):
+                continue
+            if subcategorias and not any(sc in data.get("subcategorias", []) for sc in subcategorias):
+                continue
+                
+            filtered_docs.append((doc.id, data))
+
+        # 5) Apply pagination manually
+        start_idx = 0
         if start_after_id:
-            last_doc = self.collection.document(start_after_id).get()
-            if last_doc.exists:
-                query = query.start_after(last_doc)
-        query = query.limit(limit)
+            for i, (doc_id, _) in enumerate(filtered_docs):
+                if doc_id == start_after_id:
+                    start_idx = i + 1
+                    break
+                    
+        paginated_docs = filtered_docs[start_idx : start_idx + limit]
 
-        # 4) Ejecuto la consulta
-        profesionales = list(query.stream())
-
-        
         # 6) Mapeo al formato de salida
         resultados = []
-        for doc in profesionales:            
-            data = doc.to_dict()
-            log.info("calificacion: "+str(data.get("promedioCalificacion", 0)))
+        for doc_id, data in paginated_docs:
+            log.info("calificacion: " + str(data.get("promedioCalificacion", 0)))
             resultados.append({
-                "id": doc.id,
+                "id": doc_id,
                 "nombre": data.get("nombre", "Sin nombre"),
                 "foto": data.get("foto", ""),
                 "categoria": data.get("categoria", []),

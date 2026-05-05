@@ -9,7 +9,7 @@ export const solicitudService = {
         zona: string;
         subcategoria: string;
         descripcion: string;
-        fotos: FileList | null;
+        fotos: File[] | null;
     }) {
         const formData = new FormData();
         formData.append("zona", data.zona);
