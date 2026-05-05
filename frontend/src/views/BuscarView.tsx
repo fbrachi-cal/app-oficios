@@ -11,13 +11,6 @@ const BuscarView: React.FC = () => {
   const navigate = useNavigate();
   const buscador = useBuscador();
 
-  // Buscar por primera vez al montar si ya hay una categoría (o para mostrar todos si se permite)
-  // Como regla actual, requiere categoría o zona.
-  useEffect(() => {
-    // Para simplificar, traemos los primeros al cargar, si el backend lo permite
-    buscador.buscar(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div className="container mx-auto px-4 py-8">
