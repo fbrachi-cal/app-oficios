@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FiChevronLeft, FiStar, FiMapPin, FiBriefcase, FiClock } from "react-icons/fi";
+import { FiChevronLeft, FiStar, FiMapPin, FiBriefcase, FiClock, FiChevronDown } from "react-icons/fi";
 import config from "../../config";
 import { fetchConToken } from "../../utils/fetchConToken";
 import { useLoading } from "../../context/LoadingContext";
@@ -22,6 +22,30 @@ const PerfilProfesional: React.FC = () => {
   const [isSolicitudOpen, setIsSolicitudOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [mensaje, setMensaje] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
+
+  useEffect(() => {
+    const checkScrollable = () => {
+      setIsScrollable(document.documentElement.scrollHeight > window.innerHeight);
+    };
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    if (profesional) {
+      setTimeout(checkScrollable, 300);
+    }
+
+    window.addEventListener("resize", checkScrollable);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", checkScrollable);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [profesional]);
 
   useEffect(() => {
     const obtenerProfesional = async () => {
@@ -96,7 +120,7 @@ const PerfilProfesional: React.FC = () => {
         </div>
 
         {/* Description */}
-        <div className="mb-10">
+        <div id="acerca-de" className="mb-10 pt-4">
           <h3 className="text-lg font-bold text-neutral-900 mb-3">Acerca de</h3>
           <p className="text-neutral-600 leading-relaxed card p-5 border-neutral-200/60">
             {profesional.descripcion || t("sin_descripcion_profesional")}
@@ -117,6 +141,19 @@ const PerfilProfesional: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* Scroll Hint */}
+      {isScrollable && !scrolled && (
+        <div className="fixed bottom-[88px] left-0 right-0 flex justify-center z-30 pointer-events-none px-4 transition-opacity duration-300">
+          <button 
+            onClick={() => document.getElementById("acerca-de")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className="flex flex-col items-center gap-1 text-neutral-500 hover:text-neutral-700 transition-colors pointer-events-auto animate-bounce bg-white/90 px-4 py-2 rounded-full backdrop-blur-sm shadow-[var(--shadow-card)] border border-neutral-200/60"
+          >
+            <span className="text-xs font-semibold">Ver más información</span>
+            <FiChevronDown size={16} />
+          </button>
+        </div>
+      )}
 
       {/* Sticky Bottom CTA */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-neutral-200 z-40" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.05)" }}>
