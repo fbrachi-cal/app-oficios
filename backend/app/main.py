@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI
-from app.api.routes import users, requests, ratings, utils, contacts, chats, upload, cvs
+from app.api.routes import users, requests, ratings, utils, contacts, chats, upload, cvs, tyc
 from app.api.routes.admin import router as admin_router, reports_router
 from app.api.middleware.log_requests import LoggingMiddleware
 from app.shared.logger import log
@@ -41,6 +41,7 @@ app.include_router(requests.router)
 app.include_router(upload.router)
 app.include_router(ratings.router)
 app.include_router(cvs.router, prefix="/cvs", tags=["CVs"])
+app.include_router(tyc.router, prefix="/tyc", tags=["T&C"])
 
 # Admin module — strict separation:
 #   /admin/*  → admin_router (requires admin role)

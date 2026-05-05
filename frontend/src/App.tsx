@@ -23,6 +23,8 @@ import BlockedPage from './views/BlockedPage';
 import RequireRecruiter from './utils/RequireRecruiter';
 import RecruiterLayout from './layouts/Recruiter';
 import CvDashboard from './views/recruiter/CvDashboard';
+import RequireAcceptedTerms from './utils/RequireAcceptedTerms';
+import TermsAndConditionsPage from './views/auth/TermsAndConditionsPage';
 
 
 function App() {
@@ -34,6 +36,15 @@ function App() {
         <Route path="/auth">
           <Route path="login" element={<Login />} />
           <Route path="registro" element={<Register />} />
+          
+          <Route element={<RequireAcceptedTerms />}>
+            <Route path="completar-perfil" element={<CompletarPerfil />} />
+            <Route path="actualizar-perfil" element={<UpdateProfile />} />
+            <Route path="profesionales/:id" element={<PerfilProfesional />} />
+            <Route path="solicitudes/:id" element={<DetalleSolicitud />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/auth/login" replace />} />
         </Route>
 
         <Route path="/login" element={<Navigate to="/auth/login" replace />} />
@@ -43,6 +54,11 @@ function App() {
         <Route path="/home" element={<Navigate to="/buscar" replace />} />
         <Route path="/" element={<Landing />} />
         <Route path="/bloqueado" element={<BlockedPage />} />
+        <Route path="/terminos-y-condiciones" element={<TermsAndConditionsPage />} />
+
+        {/* Rutas protegidas por T&C */}
+        <Route element={<RequireAcceptedTerms />}>
+          <Route path="/home" element={<Home />} />
 
         {/* Consumer authenticated routes with AppShell (TopNav/BottomTabBar) */}
         <Route element={<AppShell />}>
@@ -72,6 +88,7 @@ function App() {
             <Route index element={<Navigate to="cvs" replace />} />
             <Route path="cvs" element={<CvDashboard />} />
           </Route>
+        </Route>
         </Route>
       </Routes>
 
