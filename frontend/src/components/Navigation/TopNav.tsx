@@ -28,8 +28,8 @@ const TopNav: React.FC = () => {
   ];
 
   return (
-    <header className="top-0 absolute z-40 w-full">
-      <nav className="px-4 py-3 border-b border-white/10">
+    <header className="top-0 fixed z-40 w-full bg-white border-b border-slate-200 shadow-sm">
+      <nav className="px-4 py-3">
         <div className="container mx-auto flex items-center justify-between gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center shrink-0" id="nav-logo">
@@ -51,8 +51,8 @@ const TopNav: React.FC = () => {
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
                       isActive
-                        ? "bg-white/20 text-white"
-                        : "text-white/70 hover:text-white hover:bg-white/10"
+                        ? "bg-blue-50 text-blue-700"
+                        : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     }`
                   }
                 >
@@ -73,13 +73,13 @@ const TopNav: React.FC = () => {
                 <div className="hidden sm:block">
                   <LanguageSwitcher />
                 </div>
-                <Link to="/auth/login" id="nav-login">
-                  <button className="bg-green-600 hover:bg-green-700 border border-transparent text-white text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow transition-colors duration-150">
+                <Link to="/login" id="nav-login">
+                  <button className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow-sm transition-colors duration-150">
                     {t("ingresar")}
                   </button>
                 </Link>
-                <Link to="/auth/registro" id="nav-registro">
-                  <button className="bg-transparent border border-white/40 text-white/80 hover:text-white hover:border-white/70 hover:bg-white/10 text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow transition-all duration-150">
+                <Link to="/registro" id="nav-registro">
+                  <button className="bg-blue-600 border border-transparent text-white hover:bg-blue-700 text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow-sm transition-all duration-150">
                     {t("registrarse")}
                   </button>
                 </Link>

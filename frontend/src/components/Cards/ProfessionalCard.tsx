@@ -27,7 +27,7 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
   const trabajos = profesional.trabajosRealizados || 0;
 
   return (
-    <div className="card flex flex-col p-5 group cursor-pointer hover:-translate-y-1 transition-transform" onClick={() => onVerPerfil?.(profesional.id)}>
+    <div className="card flex flex-col p-5 group cursor-pointer hover:-translate-y-1 transition-transform min-w-0 overflow-hidden" onClick={() => onVerPerfil?.(profesional.id)}>
       <div className="flex gap-4 mb-4">
         {/* Avatar */}
         <div className="shrink-0 relative">
@@ -46,7 +46,7 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
               {profesional.nombre}
             </h3>
             {profesional.disponibilidad && (
-              <span className="badge badge-available shrink-0 mt-0.5">
+              <span className="badge badge-available shrink-0 mt-0.5 truncate max-w-[40%]">
                 {profesional.disponibilidad}
               </span>
             )}
