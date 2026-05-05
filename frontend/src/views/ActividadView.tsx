@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { FiList, FiAlertCircle } from "react-icons/fi";
+import { FiList, FiAlertCircle, FiStar } from "react-icons/fi";
 import { useUser } from "../context/UserContext";
 import { solicitudService } from "../services/solicitudService";
 import { useLoading } from "../context/LoadingContext";
