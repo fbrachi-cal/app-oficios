@@ -24,16 +24,16 @@ const BuscarView: React.FC = () => {
       
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight mb-2">
           {t("buscar_profesionales")}
         </h1>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-neutral-500">
           {t("elige_zonas_y_categoria")}
         </p>
       </div>
 
       {/* Filters Form */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-8">
+      <div className="bg-white rounded-2xl shadow-[var(--shadow-card)] border border-neutral-200/60 p-5 mb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           
           {/* Zona Filter */}
@@ -99,7 +99,7 @@ const BuscarView: React.FC = () => {
             {(buscador.zonas.length > 0 || buscador.categoriaSeleccionada) && (
               <button
                 onClick={buscador.resetFilters}
-                className="btn-secondary h-[46px] px-3 shrink-0 text-slate-400 hover:text-slate-600"
+                className="btn-secondary h-[46px] px-3 shrink-0 text-neutral-400 hover:text-neutral-600"
                 title="Limpiar filtros"
               >
                 <FiX size={20} />
@@ -112,22 +112,22 @@ const BuscarView: React.FC = () => {
 
       {/* Results Grid */}
       {buscador.loading && !buscador.haBuscado ? (
-        <div className="py-20 text-center text-slate-500 font-medium">
+        <div className="py-20 text-center text-neutral-500 font-medium">
           {t("cargando")}
         </div>
       ) : buscador.haBuscado && buscador.resultados.length === 0 ? (
         <div className="py-20 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 text-slate-400 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-neutral-100 text-neutral-400 mb-4">
             <FiSearch size={28} />
           </div>
-          <h3 className="text-lg font-semibold text-slate-900 mb-2">No encontramos profesionales</h3>
-          <p className="text-slate-500">
+          <h3 className="text-lg font-semibold text-neutral-900 mb-2">No encontramos profesionales</h3>
+          <p className="text-neutral-500">
             {t("sin_resultados")}
           </p>
         </div>
       ) : (
         <>
-          <div className="mb-4 text-sm font-semibold text-slate-500">
+          <div className="mb-4 text-sm font-semibold text-neutral-500">
             {buscador.resultados.length} profesionales encontrados
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
