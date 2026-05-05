@@ -34,7 +34,7 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
           <img
             src={profesional.foto || default_avatar}
             alt={profesional.nombre}
-            className="w-16 h-16 rounded-full object-cover border border-slate-200"
+            className="w-16 h-16 rounded-full object-cover border border-neutral-200"
           />
           {/* Disponibilidad badge as a small dot if needed, or we show it below */}
         </div>
@@ -42,7 +42,7 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
         {/* Info */}
         <div className="flex-1 min-w-0">
           <div className="flex justify-between items-start mb-1">
-            <h3 className="text-base font-bold text-slate-900 truncate pr-2">
+            <h3 className="text-base font-bold text-neutral-900 truncate pr-2 group-hover:text-brand-600 transition-colors">
               {profesional.nombre}
             </h3>
             {profesional.disponibilidad && (
@@ -52,16 +52,16 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
             )}
           </div>
           
-          <p className="text-sm text-slate-500 truncate mb-2">
+          <p className="text-sm text-neutral-500 truncate mb-2">
             {(profesional.subcategorias && profesional.subcategorias.length > 0) 
               ? profesional.subcategorias.join(", ") 
               : profesional.categoria || t("no_especificada")}
           </p>
 
           <div className="flex items-center gap-1.5 text-sm">
-            <FaStarSolid className="text-amber-400" size={14} />
-            <span className="font-semibold text-slate-700">{rating.toFixed(1)}</span>
-            <span className="text-slate-400">({trabajos})</span>
+            <FaStarSolid className="text-warning-500" size={14} />
+            <span className="font-semibold text-neutral-700">{rating.toFixed(1)}</span>
+            <span className="text-neutral-400">({trabajos})</span>
           </div>
         </div>
       </div>
@@ -70,12 +70,12 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
       {profesional.zonas && profesional.zonas.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
           {profesional.zonas.slice(0, 2).map((zona, idx) => (
-            <span key={idx} className="inline-flex items-center px-2 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">
+            <span key={idx} className="inline-flex items-center px-2 py-1 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
               {zona}
             </span>
           ))}
           {profesional.zonas.length > 2 && (
-            <span className="inline-flex items-center px-2 py-1 rounded-md bg-slate-50 border border-slate-200 text-slate-500 text-xs font-medium">
+            <span className="inline-flex items-center px-2 py-1 rounded-md bg-neutral-50 border border-neutral-200 text-neutral-500 text-xs font-medium">
               +{profesional.zonas.length - 2}
             </span>
           )}
@@ -83,13 +83,13 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
       )}
 
       {/* Action */}
-      <div className="mt-auto pt-4 border-t border-slate-100">
+      <div className="mt-auto pt-4 border-t border-neutral-100">
         <button
           onClick={(e) => {
             e.stopPropagation(); // Prevenir doble navegación si hace click en el botón
             onVerPerfil?.(profesional.id);
           }}
-          className="w-full btn-primary py-2.5 bg-blue-50 text-blue-700 hover:bg-blue-100 active:bg-blue-200 shadow-none border border-transparent"
+          className="w-full btn-secondary py-2.5 shadow-sm border border-neutral-200 bg-white hover:bg-neutral-50 group-hover:border-neutral-300 transition-all"
         >
           {t("ver_perfil")}
         </button>
