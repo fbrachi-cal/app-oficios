@@ -40,13 +40,8 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => unsubscribe();
     }, []);
 
-    useEffect(() => {
-        if (initialized && firebaseUser) {
-          setTimeout(() => {
-            loadChats();
-          }, 3000); // lo hace en segundo plano, 3 segundos después de login
-        }
-      }, [initialized, firebaseUser, loadChats]);
+    // Global chat polling/fetching is disabled per project scope.
+    // Messaging occurs only within DetalleSolicitud.
 
     return (
         <ChatContext.Provider value={{ chats, reload: loadChats, unreadCount }}>
