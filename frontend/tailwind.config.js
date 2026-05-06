@@ -21,6 +21,13 @@ module.exports = {
       ...colors,
     },
     extend: {
+      colors: {
+        brand: colors.indigo,
+        neutral: colors.zinc,
+        success: colors.emerald,
+        warning: colors.amber,
+        danger: colors.rose,
+      },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },

@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import TopNav from "../components/Navigation/TopNav";
 import BottomTabBar from "../components/Navigation/BottomTabBar";
+import { BuscadorProvider } from "../context/BuscadorContext";
 
 /**
  * AppShell — authenticated consumer layout.
@@ -14,16 +15,18 @@ import BottomTabBar from "../components/Navigation/BottomTabBar";
  */
 const AppShell: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
-      <TopNav />
+    <BuscadorProvider>
+      <div className="min-h-screen bg-neutral-50 flex flex-col">
+        <TopNav />
 
-      {/* Main content — offset for the fixed top nav */}
-      <main className="flex-1 pt-20 pb-20 md:pb-6">
-        <Outlet />
-      </main>
+        {/* Main content — offset for the fixed top nav */}
+        <main className="flex-1 pt-20 pb-20 md:pb-6">
+          <Outlet />
+        </main>
 
-      <BottomTabBar />
-    </div>
+        <BottomTabBar />
+      </div>
+    </BuscadorProvider>
   );
 };
 
