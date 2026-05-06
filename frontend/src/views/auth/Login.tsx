@@ -17,6 +17,7 @@ import { logger } from "../../utils/logger";
 import { FiMail, FiLock } from "react-icons/fi";
 import googleIcon from "../../assets/img/google.svg";
 import facebookIcon from "../../assets/img/facebook.svg";
+import logoOficiosImg from "../../assets/img/logo_oficios.png";
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
@@ -101,6 +102,16 @@ const Login: React.FC = () => {
     <div className="min-h-[90vh] flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md">
         
+        {/* App Identity */}
+        <div className="text-center mb-8">
+          <img
+            src={logoOficiosImg}
+            alt={t("titulo")}
+            className="h-16 w-auto mx-auto mb-3 object-contain"
+          />
+          <p className="text-base font-semibold text-slate-500 tracking-wide">{t("titulo")}</p>
+        </div>
+
         {/* Card */}
         <div className="card p-8 shadow-md border-0 bg-white ring-1 ring-slate-200/50">
           <div className="text-center mb-8">
