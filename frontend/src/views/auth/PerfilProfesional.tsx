@@ -67,7 +67,7 @@ const PerfilProfesional: React.FC = () => {
   if (!profesional) return null; // Loading state is handled globally by useLoading
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col font-sans pb-24">
+    <div className="min-h-screen bg-neutral-50 flex flex-col font-sans pb-[calc(4rem+6rem)] md:pb-24">
       {/* Toast message */}
       {mensaje && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-success-600 text-white px-6 py-3 rounded-full shadow-lg z-50 text-sm font-semibold flex items-center gap-2">
@@ -144,7 +144,7 @@ const PerfilProfesional: React.FC = () => {
 
       {/* Scroll Hint */}
       {isScrollable && !scrolled && (
-        <div className="fixed bottom-[88px] left-0 right-0 flex justify-center z-30 pointer-events-none px-4 transition-opacity duration-300">
+        <div className="fixed bottom-[calc(4rem+88px)] md:bottom-[88px] left-0 right-0 flex justify-center z-30 pointer-events-none px-4 transition-opacity duration-300">
           <button 
             onClick={() => document.getElementById("acerca-de")?.scrollIntoView({ behavior: "smooth", block: "start" })}
             className="flex flex-col items-center gap-1 text-neutral-500 hover:text-neutral-700 transition-colors pointer-events-auto animate-bounce bg-white/90 px-4 py-2 rounded-full backdrop-blur-sm shadow-[var(--shadow-card)] border border-neutral-200/60"
@@ -156,7 +156,7 @@ const PerfilProfesional: React.FC = () => {
       )}
 
       {/* Sticky Bottom CTA */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-neutral-200 z-40" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.05)" }}>
+      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 p-4 bg-white border-t border-neutral-200 z-40" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.05)", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}>
         <div className="container mx-auto max-w-2xl">
           <button
             onClick={() => setIsSolicitudOpen(true)}

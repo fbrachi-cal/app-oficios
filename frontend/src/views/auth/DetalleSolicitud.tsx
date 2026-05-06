@@ -127,7 +127,7 @@ const DetalleSolicitud: React.FC = () => {
   const faltaCalificar = esConfirmada && ((user?.tipo === "cliente" && !solicitud.calificacion_cliente) || (user?.tipo === "profesional" && !solicitud.calificacion_profesional));
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-24">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-[calc(4rem+6rem)] md:pb-24">
       
       {/* Header compact */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 h-16 flex items-center justify-between">
@@ -289,7 +289,7 @@ const DetalleSolicitud: React.FC = () => {
         {/* Input box for active states */}
         {((user?.tipo === "profesional" && ["creada", "consulta"].includes(solicitud.estado)) ||
           (user?.tipo === "cliente" && solicitud.estado === "consulta")) && (
-          <div className="card p-3 flex items-end gap-2 bg-white sticky bottom-24 shadow-lg ring-1 ring-slate-200">
+          <div className="card p-3 flex items-end gap-2 bg-white sticky bottom-[calc(4rem+6rem)] md:bottom-24 shadow-lg ring-1 ring-slate-200">
             <div className="flex-1 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all p-2 flex flex-col">
               {archivosAdjuntos.length > 0 && (
                 <div className="flex gap-2 mb-2 overflow-x-auto pb-1">
@@ -337,7 +337,7 @@ const DetalleSolicitud: React.FC = () => {
       </main>
 
       {/* Sticky Bottom Actions */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 z-40" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.05)" }}>
+      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 z-40" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.05)", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}>
         <div className="container mx-auto max-w-2xl flex gap-3">
           
           {/* Client Actions */}
