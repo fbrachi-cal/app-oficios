@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 120" fill="none" role="img" aria-label="Click logo">
+  <defs>
+    <linearGradient id="textGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c8c8c8"/>
+      <stop offset="50%" stop-color="#e8e8e8"/>
+      <stop offset="100%" stop-color="#a0a0a0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- House body (yellow) -->
+  <rect x="28" y="52" width="56" height="52" rx="6" ry="6" fill="#F5C518"/>
+
+  <!-- Teal door/window (overlapping bottom-right of yellow) -->
+  <rect x="52" y="68" width="40" height="40" rx="6" ry="6" fill="#00BCD4"/>
+
+  <!-- Roof (coral/salmon pink) — drawn as a wide chevron/triangle using a path with rounded joins -->
+  <path
+    d="M16 62 L56 20 L96 62"
+    stroke="#F4695A"
+    stroke-width="14"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Chimney (yellow) -->
+  <rect x="68" y="22" width="12" height="22" rx="4" ry="4" fill="#F5C518"/>
+
+  <!-- Wordmark: "click" -->
+  <text
+    x="122"
+    y="88"
+    font-family="'Inter', 'Helvetica Neue', Arial, sans-serif"
+    font-size="72"
+    font-weight="300"
+    letter-spacing="-2"
+    fill="url(#textGrad)"
+  >click</text>
+</svg>

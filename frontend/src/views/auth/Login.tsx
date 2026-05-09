@@ -17,7 +17,7 @@ import { logger } from "../../utils/logger";
 import { FiMail, FiLock } from "react-icons/fi";
 import googleIcon from "../../assets/img/google.svg";
 import facebookIcon from "../../assets/img/facebook.svg";
-import logoOficiosImg from "../../assets/img/logo_oficios.png";
+import logoOficiosImg from "../../assets/img/logo.png";
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
@@ -106,7 +106,7 @@ const Login: React.FC = () => {
         <div className="text-center mb-8">
           <img
             src={logoOficiosImg}
-            alt={t("titulo")}
+            alt="Click"
             className="h-16 w-auto mx-auto mb-3 object-contain"
           />
           <p className="text-base font-semibold text-slate-500 tracking-wide">{t("titulo")}</p>
