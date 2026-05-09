@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
 import UserDropdown from "../Dropdowns/UserDropdown";
 import LanguageSwitcher from "../LanguageSwitcher";
-import logo from "../../assets/img/logo_oficios.png";
+import logo from "../../assets/img/logo.png";
 
 /**
  * Primary top navigation bar for the consumer-facing app.
@@ -35,7 +35,7 @@ const TopNav: React.FC = () => {
           <Link to="/" className="flex items-center shrink-0" id="nav-logo">
             <img
               src={logo}
-              alt="Logo Oficios"
+              alt="Click"
               className="h-12 lg:h-14 w-auto object-contain"
             />
           </Link>
