@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 log.info("APP INICIADA - API | ENABLE_LOGGING: {}", os.getenv("ENABLE_LOGGING", "true"))
 
-app = FastAPI(title="App de Oficios - API")
+app = FastAPI(title="Casa Click - API")
 
 allowed_origins_str = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173")
 allowed_origins = [origin.strip() for origin in allowed_origins_str.split(",") if origin.strip()]
