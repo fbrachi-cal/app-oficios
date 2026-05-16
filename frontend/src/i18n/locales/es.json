@@ -378,5 +378,25 @@
     "excellent": "Excelente",
     "intermediate": "Intermedio",
     "bad": "Malo"
+  },
+  "gamification": {
+    "badge_aria_label": "Tu nivel de reputación",
+    "current_level_label": "Nivel actual",
+    "next_level_label": "Siguiente:",
+    "max_level_reached": "¡Alcanzaste el nivel más alto!",
+    "levelup_title": "¡Subiste de nivel!",
+    "levelup_welcome_title": "¡Bienvenido/a!",
+    "levelup_subtitle": "Alcanzaste un nuevo nivel. ¡Seguí así!",
+    "levelup_welcome_subtitle": "Tu camino de reputación comienza aquí.",
+    "levelup_cta": "¡Genial, gracias!",
+    "load_error": "No se pudo cargar tu nivel de reputación.",
+    "metric": {
+      "completed_jobs_count": "Trabajos completados",
+      "average_rating": "Calificación promedio",
+      "profile_completed": "Perfil completo",
+      "phone_verified": "Teléfono verificado",
+      "recommended_professionals_count": "Profesionales recomendados",
+      "recommended_professionals_avg_rating": "Calificación promedio de tus recomendaciones"
+    }
   }
 }

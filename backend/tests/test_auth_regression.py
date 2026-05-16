@@ -23,22 +23,23 @@ def test_parse_status_expires_at():
     # None
     assert parse_status_expires_at(None) is None
 
-@patch('app.shared.firebase_auth.FirebaseUserRepository')
+@patch('app.adapters.firebase.firebase_user_repo.FirebaseUserRepository')
 @patch('app.shared.firebase_auth.auth.verify_id_token')
 def test_verify_token_valid_legacy_user(mock_verify_id_token, MockRepo):
-    # This verifies that a normal legacy user doesn't crash on expires_at and returns successfully
+    # FirebaseUserRepository is imported locally inside verify_token, so we patch
+    # its home module rather than the firebase_auth module.
     mock_verify_id_token.return_value = {'uid': '123'}
     repo_instance = MockRepo.return_value
-    repo_instance.get_user_by_id.return_value = {"id": "123"}  # No status Field
+    repo_instance.get_user_by_id.return_value = {"id": "123"}  # No status field
 
     class MockCredentials:
         credentials = "fake_token"
-    
+
     # Should not raise any exceptions
     token = verify_token(MockCredentials())
     assert token == {'uid': '123'}
 
-@patch('app.shared.firebase_auth.FirebaseUserRepository')
+@patch('app.adapters.firebase.firebase_user_repo.FirebaseUserRepository')
 @patch('app.shared.firebase_auth.auth.verify_id_token')
 def test_verify_token_expired_firebase_token(mock_verify_id_token, MockRepo):
     # An expired token should raise 401 specifically, not 500
@@ -46,39 +47,41 @@ def test_verify_token_expired_firebase_token(mock_verify_id_token, MockRepo):
 
     class MockCredentials:
         credentials = "fake_token"
-    
+
     with pytest.raises(HTTPException) as exc:
         verify_token(MockCredentials())
     assert exc.value.status_code == 401
     assert "expirado" in exc.value.detail.lower()
 
-@patch('app.shared.firebase_auth.FirebaseUserRepository')
+@patch('app.adapters.firebase.firebase_user_repo.FirebaseUserRepository')
 @patch('app.shared.firebase_auth.auth.verify_id_token')
 def test_verify_token_blocked_user(mock_verify_id_token, MockRepo):
     # A user designated as SUSPENDED or EXPELLED gets a 403
     mock_verify_id_token.return_value = {'uid': '456'}
     repo_instance = MockRepo.return_value
-    repo_instance.get_user_by_id.return_value = {"id": "456", "status": "EXPELLED", "status_reason": "Policy violation"}
+    repo_instance.get_user_by_id.return_value = {
+        "id": "456", "status": "EXPELLED", "status_reason": "Policy violation"
+    }
 
     class MockCredentials:
         credentials = "fake_token"
-    
+
     with pytest.raises(HTTPException) as exc:
         verify_token(MockCredentials())
     assert exc.value.status_code == 403
     assert exc.value.detail["status"] == "EXPELLED"
 
-@patch('app.shared.firebase_auth.FirebaseUserRepository')
+@patch('app.adapters.firebase.firebase_user_repo.FirebaseUserRepository')
 @patch('app.shared.firebase_auth.auth.verify_id_token')
 def test_verify_token_internal_server_error(mock_verify_id_token, MockRepo):
-    # Any unexpected python error (like a DB crash) should raise 500
+    # Any unexpected Python error (like a DB crash) should raise 500
     mock_verify_id_token.return_value = {'uid': '789'}
     repo_instance = MockRepo.return_value
     repo_instance.get_user_by_id.side_effect = Exception("DB Connection Lost")
 
     class MockCredentials:
         credentials = "fake_token"
-    
+
     with pytest.raises(HTTPException) as exc:
         verify_token(MockCredentials())
     assert exc.value.status_code == 500

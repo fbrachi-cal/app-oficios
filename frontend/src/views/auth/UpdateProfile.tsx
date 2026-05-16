@@ -8,12 +8,15 @@ import { auth } from "../../firebase";
 import { JSX } from "react/jsx-runtime";
 import default_avatar from "../../assets/img/default_avatar.png";
 import { useNavigate } from "react-router-dom";
+import { useGamification } from "../../hooks/useGamification";
+import GamificationBadge from "../../components/Gamification/GamificationBadge";
 
 
 const UpdateProfile = (): JSX.Element => {
   const { t } = useTranslation();
   const { user, refrescarUsuario } = useUser();
   const navigate = useNavigate();
+  const { data: gamificationData } = useGamification();
 
 
   const [foto, setFoto] = useState<File | null>(null);
@@ -142,6 +145,9 @@ const UpdateProfile = (): JSX.Element => {
               <hr className="mt-6 border-b-1 border-blueGray-300" />
             </div>
             <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+              {/* Gamification badge — purely additive, never blocks the form */}
+              {gamificationData && <GamificationBadge data={gamificationData} />}
+
               <div className="text-blueGray-400 text-center mb-3 font-bold">
                 <small>{t("actualiza_tu_informacion")}</small>
               </div>

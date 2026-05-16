@@ -98,28 +98,28 @@ def verify_token(auth_credentials: HTTPAuthorizationCredentials = Security(secur
         user = repo.get_user_by_id(uid)
         
         if user:
+            from datetime import datetime  # import here so it is available for all non-ACTIVE branches
             status = user.get("status", "ACTIVE")
             if status == "SUSPENDED" and user.get("status_expires_at"):
-                from datetime import datetime
                 expires_at = parse_status_expires_at(user.get("status_expires_at"))
                 if expires_at and datetime.utcnow() >= expires_at:
                     log.info(f"♻️ Suspensión expirada en chequeo DB. Auto-reactivando usuario {uid}")
                     repo.actualizar_campos_usuario(uid, {"status": "ACTIVE", "status_expires_at": None})
                     auth.update_user(uid, disabled=False)
                     status = "ACTIVE"
-                    
+
             if status != "ACTIVE":
                 reason = user.get("status_reason", "Sin motivo especificado")
                 expires_at = user.get("status_expires_at")
                 log.warning(f"Intento de acceso denegado. UID: {uid}, Estado: {status}")
-                
+
                 # Format expires_at safely
                 expires_str = None
                 if isinstance(expires_at, datetime):
                     expires_str = expires_at.isoformat()
                 elif isinstance(expires_at, str):
                     expires_str = expires_at
-                    
+
                 # Inject a structured error so frontend can parse it
                 raise HTTPException(status_code=403, detail={"status": status, "reason": reason, "expires_at": expires_str})
         
