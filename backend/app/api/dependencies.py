@@ -47,6 +47,19 @@ def get_admin_rating_service():
         user_repo=FirebaseUserRepository()
     )
 
+def get_professional_referrals_service():
+    from app.adapters.firebase.firebase_professional_referrals_repo import FirebaseProfessionalReferralsRepository
+    from app.adapters.firebase.firebase_gamification_repo import FirebaseGamificationRepository
+    from app.domain.services.gamification_service import GamificationService
+    from app.domain.services.professional_referrals_service import ProfessionalReferralsService
+    
+    gamification_repo = FirebaseGamificationRepository()
+    user_repo = FirebaseUserRepository()
+    gamification_service = GamificationService(gamification_repo, user_repo=user_repo)
+    repo = FirebaseProfessionalReferralsRepository()
+    
+    return ProfessionalReferralsService(repo, user_repo, gamification_service)
+
 #async def get_current_user_id(authorization: str = Header(...)) -> str:    
 async def get_current_user_id(authorization: Optional[str] = Header(None)) -> str:
 

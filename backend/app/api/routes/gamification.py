@@ -21,7 +21,12 @@ router = APIRouter()
 # ---------------------------------------------------------------------------
 
 def _get_gamification_service() -> GamificationService:
-    return GamificationService(gamification_repo=FirebaseGamificationRepository())
+    from app.adapters.firebase.firebase_professional_referrals_repo import FirebaseProfessionalReferralsRepository
+    return GamificationService(
+        gamification_repo=FirebaseGamificationRepository(),
+        user_repo=FirebaseUserRepository(),
+        referrals_repo=FirebaseProfessionalReferralsRepository()
+    )
 
 
 def _get_user_repo() -> FirebaseUserRepository:

@@ -44,6 +44,8 @@ app.include_router(ratings.router)
 app.include_router(cvs.router, prefix="/cvs", tags=["CVs"])
 app.include_router(tyc.router, prefix="/tyc", tags=["T&C"])
 app.include_router(gamification_router, prefix="/gamification", tags=["Gamification"])
+from app.api.routes import professional_referrals
+app.include_router(professional_referrals.router, prefix="/professional-referrals", tags=["Professional Referrals"])
 
 # Admin module — strict separation:
 #   /admin/*  → admin_router (requires admin role)

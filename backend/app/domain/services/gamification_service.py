@@ -78,7 +78,7 @@ def evaluate_rules(rules: List[dict], metrics: Dict[str, Any], mode: str = "all"
 # Metric adapters
 # ---------------------------------------------------------------------------
 
-def _resolve_professional_metrics(user: dict) -> Dict[str, Any]:
+def _resolve_professional_metrics(user: dict, user_repo=None, referrals_repo=None) -> Dict[str, Any]:
     """
     Build the metrics snapshot for a professional user.
 
@@ -100,25 +100,46 @@ def _resolve_professional_metrics(user: dict) -> Dict[str, Any]:
     }
 
 
-def _resolve_client_metrics(user: dict) -> Dict[str, Any]:
+def _resolve_client_metrics(user: dict, user_repo=None, referrals_repo=None) -> Dict[str, Any]:
     """
     Build the metrics snapshot for a client user.
 
     recommended_professionals_count / recommended_professionals_avg_rating:
-        Both return 0 — no recommendation collection exists yet.
-        Wire these to a RecommendationRepository once that feature is built.
+        Counts linked/registered/active referrals for the client.
+        Computes the average rating of those linked professionals.
     """
+    count = 0
+    total_rating = 0.0
+
+    if referrals_repo and user_repo:
+        user_id = user.get("id")
+        if user_id:
+            referrals = referrals_repo.get_linked_referrals_for_client(user_id)
+            count = len(referrals)
+            
+            # Fetch professional users to calculate average rating
+            prof_ids = [r.get("professional_user_id") for r in referrals if r.get("professional_user_id")]
+            if prof_ids:
+                profs = user_repo.get_users_by_ids(prof_ids)
+                ratings = []
+                for p in profs:
+                    # Only include ratings from professionals who actually have ratings
+                    if float(p.get("cantidadCalificaciones", 0.0)) > 0:
+                        ratings.append(float(p.get("promedioCalificacion", 0.0)))
+                if ratings:
+                    total_rating = sum(ratings) / len(ratings)
+
     return {
-        "recommended_professionals_count": 0,
-        "recommended_professionals_avg_rating": 0.0,
+        "recommended_professionals_count": count,
+        "recommended_professionals_avg_rating": total_rating,
     }
 
 
-def _resolve_metrics(user: dict, program_id: str) -> Dict[str, Any]:
+def _resolve_metrics(user: dict, program_id: str, user_repo=None, referrals_repo=None) -> Dict[str, Any]:
     if program_id == "professional_reputation":
-        return _resolve_professional_metrics(user)
+        return _resolve_professional_metrics(user, user_repo, referrals_repo)
     if program_id == "client_reputation":
-        return _resolve_client_metrics(user)
+        return _resolve_client_metrics(user, user_repo, referrals_repo)
     log.warning(f"No metric adapter for program_id='{program_id}' — returning empty metrics")
     return {}
 
@@ -149,8 +170,10 @@ def _find_achieved_level(levels: List[dict], metrics: Dict[str, Any]) -> Optiona
 # ---------------------------------------------------------------------------
 
 class GamificationService:
-    def __init__(self, gamification_repo: GamificationRepository):
+    def __init__(self, gamification_repo: GamificationRepository, user_repo=None, referrals_repo=None):
         self.repo = gamification_repo
+        self.user_repo = user_repo
+        self.referrals_repo = referrals_repo
 
     def evaluate_user(self, user: dict, program_id: str) -> dict:
         """
@@ -174,7 +197,7 @@ class GamificationService:
             return {}
 
         # Build metrics snapshot
-        metrics = _resolve_metrics(user, program_id)
+        metrics = _resolve_metrics(user, program_id, self.user_repo, self.referrals_repo)
         log.info(f"Evaluating user={user_id} program={program_id} metrics={metrics}")
 
         # Determine achieved level

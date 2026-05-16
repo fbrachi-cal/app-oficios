@@ -387,5 +387,17 @@
             "recommended_professionals_count": "Professionals recommended",
             "recommended_professionals_avg_rating": "Avg. rating of your recommendations"
         }
+    },
+    "referral": {
+        "title": "Recommend a professional",
+        "subtitle": "Do you know a good professional? Recommend them and earn reputation points when they join the platform.",
+        "error_name_required": "The professional's name is required.",
+        "error_contact_required": "You must enter at least a phone number or an email address.",
+        "success_message": "Recommendation sent successfully! Your reputation will increase when the professional registers using this same email or phone.",
+        "contact_hint": "It is necessary to provide at least the phone or email of the professional.",
+        "comment_placeholder": "Why do you recommend them?",
+        "worked_with_before": "I have worked with this professional before",
+        "submit_button": "Recommend",
+        "recommend_button": "Recommend a professional"
     }
 }

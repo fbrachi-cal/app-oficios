@@ -241,7 +241,7 @@ def test_client_level_progression_colaborador():
 
     original = svc_module._resolve_client_metrics
 
-    def patched_metrics(_user):
+    def patched_metrics(*args, **kwargs):
         return {
             "recommended_professionals_count": 2,
             "recommended_professionals_avg_rating": 4.2,

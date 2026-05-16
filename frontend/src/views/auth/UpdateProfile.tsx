@@ -144,9 +144,21 @@ const UpdateProfile = (): JSX.Element => {
               </div>
               <hr className="mt-6 border-b-1 border-blueGray-300" />
             </div>
-            <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+              <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
               {/* Gamification badge — purely additive, never blocks the form */}
               {gamificationData && <GamificationBadge data={gamificationData} />}
+
+              {user?.tipo === "cliente" && (
+                <div className="mt-4 mb-6 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/recomendar-profesional")}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg transition-all duration-150 w-full"
+                  >
+                    {t("referral.recommend_button", { defaultValue: "Recomendar un profesional" })}
+                  </button>
+                </div>
+              )}
 
               <div className="text-blueGray-400 text-center mb-3 font-bold">
                 <small>{t("actualiza_tu_informacion")}</small>

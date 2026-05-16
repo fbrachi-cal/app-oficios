@@ -398,5 +398,17 @@
       "recommended_professionals_count": "Profesionales recomendados",
       "recommended_professionals_avg_rating": "Calificación promedio de tus recomendaciones"
     }
+  },
+  "referral": {
+    "title": "Recomendar un profesional",
+    "subtitle": "¿Conocés a un buen profesional? Recomendalo y ganá puntos de reputación cuando se una a la plataforma.",
+    "error_name_required": "El nombre del profesional es obligatorio.",
+    "error_contact_required": "Debes ingresar al menos un teléfono o un correo electrónico.",
+    "success_message": "¡Recomendación enviada con éxito! Tu reputación aumentará cuando el profesional se registre utilizando este mismo correo o teléfono.",
+    "contact_hint": "Es necesario proveer al menos el teléfono o el email del profesional.",
+    "comment_placeholder": "¿Por qué lo recomendás?",
+    "worked_with_before": "He trabajado con este profesional anteriormente",
+    "submit_button": "Recomendar",
+    "recommend_button": "Recomendar un profesional"
   }
 }
