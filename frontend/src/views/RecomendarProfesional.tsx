@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useGamification } from "../../hooks/useGamification";
-import { createProfessionalReferral, ReferralCreatePayload } from "../../services/referralService";
-import config from "../../config";
-import { logger } from "../../utils/logger";
-import { useUser } from "../../context/UserContext";
+import { useGamification } from "../hooks/useGamification";
+import { createProfessionalReferral, ReferralCreatePayload } from "../services/referralService";
+import config from "../config";
+import { logger } from "../utils/logger";
+import { useUser } from "../context/UserContext";
 
 const RecomendarProfesional: React.FC = () => {
   const { t } = useTranslation();
