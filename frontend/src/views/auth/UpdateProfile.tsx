@@ -82,7 +82,7 @@ const UpdateProfile = (): JSX.Element => {
   }, [mensajeExito, error]);
 
   const handleCompartirApp = async () => {
-    const landingUrl = import.meta.env.VITE_LANDING_URL || config.frontendUrl || window.location.origin;
+    const landingUrl = import.meta.env.VITE_LANDING_URL || window.location.origin;
     if (navigator.share) {
       try {
         await navigator.share({
