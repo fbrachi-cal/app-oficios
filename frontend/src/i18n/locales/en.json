@@ -268,6 +268,16 @@
     "trabajos": "Jobs",
     "error_zonas_subcategorias": "You must select at least one zone and one specialty",
     "volver": "Go back",
+    "registrando_usuario": "Registering...",
+    "volver_a_contactar": "Contact again",
+    "recomendar_la_app": "Recommend the app",
+    "compartir_app_texto": "I recommend this app to find trusted professionals.",
+    "compartir_app_exito": "Link copied to clipboard",
+    "compartir_app_error": "Error copying link",
+    "aceptando": "Accepting...",
+    "lee_acepta_terminos": "Please read and accept the terms to continue.",
+    "error_cargar_terminos": "Could not load terms.",
+    "aceptar_terminos": "Accept Terms",
     "admin": {
         "panel_label": "Admin Panel",
         "nav": {

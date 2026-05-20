@@ -184,12 +184,22 @@ const ActividadView: React.FC = () => {
                 {/* Rating Visibility */}
                 {s.estado === "confirmada" && (
                   <div className="flex flex-col gap-1 mt-2 border-t border-slate-100 pt-2">
-                    {/* User's own rating */}
                     {user?.tipo === "cliente" && s.calificacion_cliente && (
-                      <div className="text-xs font-semibold text-amber-600 flex items-center gap-1">
-                        <FiStar className="fill-amber-500 text-amber-500" />
-                        {typeof s.calificacion_cliente === "number" ? `Calificaste con ${s.calificacion_cliente}` : "Ya calificaste este trabajo"}
-                      </div>
+                      <>
+                        <div className="text-xs font-semibold text-amber-600 flex items-center gap-1 mb-2">
+                          <FiStar className="fill-amber-500 text-amber-500" />
+                          {typeof s.calificacion_cliente === "number" ? `Calificaste con ${s.calificacion_cliente}` : "Ya calificaste este trabajo"}
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/profesional/${s.profesional_id}`, { state: { openContactModal: true } });
+                          }}
+                          className="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs px-3 py-1.5 rounded-md transition-colors inline-block"
+                        >
+                          {t("volver_a_contactar")}
+                        </button>
+                      </>
                     )}
                     {user?.tipo === "profesional" && s.calificacion_profesional && (
                       <div className="text-xs font-semibold text-amber-600 flex items-center gap-1">

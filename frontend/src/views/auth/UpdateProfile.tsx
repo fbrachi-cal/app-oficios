@@ -81,6 +81,29 @@ const UpdateProfile = (): JSX.Element => {
     }
   }, [mensajeExito, error]);
 
+  const handleCompartirApp = async () => {
+    const landingUrl = import.meta.env.VITE_LANDING_URL || config.frontendUrl || window.location.origin;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: t("titulo"),
+          text: t("compartir_app_texto"),
+          url: landingUrl,
+        });
+      } catch (e) {
+        logger.error("Error sharing app", e);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(landingUrl);
+        setMensajeExito(t("compartir_app_exito"));
+      } catch (e) {
+        logger.error("Error copy clipboard", e);
+        setError(t("compartir_app_error"));
+      }
+    }
+  };
+
   const handleActualizarPerfil = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -148,8 +171,8 @@ const UpdateProfile = (): JSX.Element => {
               {/* Gamification badge — purely additive, never blocks the form */}
               {gamificationData && <GamificationBadge data={gamificationData} />}
 
-              {user?.tipo === "cliente" && (
-                <div className="mt-4 mb-6 flex justify-center">
+              <div className="mt-4 mb-6 flex flex-col gap-3 justify-center">
+                {user?.tipo === "cliente" && (
                   <button
                     type="button"
                     onClick={() => navigate("/recomendar-profesional")}
@@ -157,8 +180,15 @@ const UpdateProfile = (): JSX.Element => {
                   >
                     {t("referral.recommend_button", { defaultValue: "Recomendar un profesional" })}
                   </button>
-                </div>
-              )}
+                )}
+                <button
+                  type="button"
+                  onClick={handleCompartirApp}
+                  className="bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg transition-all duration-150 w-full"
+                >
+                  {t("recomendar_la_app")}
+                </button>
+              </div>
 
               <div className="text-blueGray-400 text-center mb-3 font-bold">
                 <small>{t("actualiza_tu_informacion")}</small>

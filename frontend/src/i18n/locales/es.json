@@ -279,6 +279,16 @@
   "trabajos": "Trabajos",
   "error_zonas_subcategorias": "Debes seleccionar al menos una zona y una especialidad",
   "volver": "Volver",
+  "registrando_usuario": "Registrando...",
+  "volver_a_contactar": "Volver a contactar",
+  "recomendar_la_app": "Recomendar la app",
+  "compartir_app_texto": "Te recomiendo esta app para encontrar profesionales de confianza.",
+  "compartir_app_exito": "Enlace copiado al portapapeles",
+  "compartir_app_error": "Error al copiar el enlace",
+  "aceptando": "Aceptando...",
+  "lee_acepta_terminos": "Por favor, lee y acepta los términos para continuar.",
+  "error_cargar_terminos": "No se pudieron cargar los términos.",
+  "aceptar_terminos": "Aceptar Términos",
   "admin": {
     "panel_label": "Panel Admin",
     "nav": {

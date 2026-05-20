@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FiChevronLeft, FiStar, FiMapPin, FiBriefcase, FiClock, FiChevronDown } from "react-icons/fi";
 import config from "../../config";
@@ -24,6 +24,14 @@ const PerfilProfesional: React.FC = () => {
   const [mensaje, setMensaje] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [isScrollable, setIsScrollable] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.openContactModal && profesional) {
+      setIsSolicitudOpen(true);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, profesional, navigate, location.pathname]);
 
   useEffect(() => {
     const checkScrollable = () => {
