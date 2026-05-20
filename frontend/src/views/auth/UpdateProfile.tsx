@@ -8,12 +8,15 @@ import { auth } from "../../firebase";
 import { JSX } from "react/jsx-runtime";
 import default_avatar from "../../assets/img/default_avatar.png";
 import { useNavigate } from "react-router-dom";
+import { useGamification } from "../../hooks/useGamification";
+import GamificationBadge from "../../components/Gamification/GamificationBadge";
 
 
 const UpdateProfile = (): JSX.Element => {
   const { t } = useTranslation();
   const { user, refrescarUsuario } = useUser();
   const navigate = useNavigate();
+  const { data: gamificationData } = useGamification();
 
 
   const [foto, setFoto] = useState<File | null>(null);
@@ -78,6 +81,29 @@ const UpdateProfile = (): JSX.Element => {
     }
   }, [mensajeExito, error]);
 
+  const handleCompartirApp = async () => {
+    const landingUrl = import.meta.env.VITE_LANDING_URL || config.frontendUrl || window.location.origin;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: t("titulo"),
+          text: t("compartir_app_texto"),
+          url: landingUrl,
+        });
+      } catch (e) {
+        logger.error("Error sharing app", e);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(landingUrl);
+        setMensajeExito(t("compartir_app_exito"));
+      } catch (e) {
+        logger.error("Error copy clipboard", e);
+        setError(t("compartir_app_error"));
+      }
+    }
+  };
+
   const handleActualizarPerfil = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -141,7 +167,29 @@ const UpdateProfile = (): JSX.Element => {
               </div>
               <hr className="mt-6 border-b-1 border-blueGray-300" />
             </div>
-            <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+              <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
+              {/* Gamification badge — purely additive, never blocks the form */}
+              {gamificationData && <GamificationBadge data={gamificationData} />}
+
+              <div className="mt-4 mb-6 flex flex-col gap-3 justify-center">
+                {user?.tipo === "cliente" && (
+                  <button
+                    type="button"
+                    onClick={() => navigate("/recomendar-profesional")}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg transition-all duration-150 w-full"
+                  >
+                    {t("referral.recommend_button", { defaultValue: "Recomendar un profesional" })}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleCompartirApp}
+                  className="bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg transition-all duration-150 w-full"
+                >
+                  {t("recomendar_la_app")}
+                </button>
+              </div>
+
               <div className="text-blueGray-400 text-center mb-3 font-bold">
                 <small>{t("actualiza_tu_informacion")}</small>
               </div>

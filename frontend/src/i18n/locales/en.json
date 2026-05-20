@@ -268,6 +268,16 @@
     "trabajos": "Jobs",
     "error_zonas_subcategorias": "You must select at least one zone and one specialty",
     "volver": "Go back",
+    "registrando_usuario": "Registering...",
+    "volver_a_contactar": "Contact again",
+    "recomendar_la_app": "Recommend the app",
+    "compartir_app_texto": "I recommend this app to find trusted professionals.",
+    "compartir_app_exito": "Link copied to clipboard",
+    "compartir_app_error": "Error copying link",
+    "aceptando": "Accepting...",
+    "lee_acepta_terminos": "Please read and accept the terms to continue.",
+    "error_cargar_terminos": "Could not load terms.",
+    "aceptar_terminos": "Accept Terms",
     "admin": {
         "panel_label": "Admin Panel",
         "nav": {
@@ -367,5 +377,37 @@
         "excellent": "Excellent",
         "intermediate": "Intermediate",
         "bad": "Bad"
+    },
+    "gamification": {
+        "badge_aria_label": "Your reputation level",
+        "current_level_label": "Current level",
+        "next_level_label": "Next:",
+        "max_level_reached": "You've reached the highest level!",
+        "levelup_title": "Level up!",
+        "levelup_welcome_title": "Welcome!",
+        "levelup_subtitle": "You've reached a new level. Keep it up!",
+        "levelup_welcome_subtitle": "Your reputation journey starts here.",
+        "levelup_cta": "Great, thanks!",
+        "load_error": "Could not load your reputation level.",
+        "metric": {
+            "completed_jobs_count": "Completed jobs",
+            "average_rating": "Average rating",
+            "profile_completed": "Complete profile",
+            "phone_verified": "Phone verified",
+            "recommended_professionals_count": "Professionals recommended",
+            "recommended_professionals_avg_rating": "Avg. rating of your recommendations"
+        }
+    },
+    "referral": {
+        "title": "Recommend a professional",
+        "subtitle": "Do you know a good professional? Recommend them and earn reputation points when they join the platform.",
+        "error_name_required": "The professional's name is required.",
+        "error_contact_required": "You must enter at least a phone number or an email address.",
+        "success_message": "Recommendation sent successfully! Your reputation will increase when the professional registers using this same email or phone.",
+        "contact_hint": "It is necessary to provide at least the phone or email of the professional.",
+        "comment_placeholder": "Why do you recommend them?",
+        "worked_with_before": "I have worked with this professional before",
+        "submit_button": "Recommend",
+        "recommend_button": "Recommend a professional"
     }
 }

@@ -3,13 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import config from "../../config";
 import { useUser } from "../../context/UserContext";
+import { useLoading } from "../../context/LoadingContext";
+import { useTranslation } from "react-i18next";
 
 const TermsAndConditionsPage = () => {
+  const { t } = useTranslation();
   const [terms, setTerms] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [accepting, setAccepting] = useState(false);
   const navigate = useNavigate();
   const { user, refrescarUsuario } = useUser();
+  const { setLoading: setGlobalLoading } = useLoading();
 
   useEffect(() => {
     // If user doesn't require acceptance anymore, redirect to home
@@ -37,6 +41,7 @@ const TermsAndConditionsPage = () => {
 
   const handleAccept = async () => {
     setAccepting(true);
+    setGlobalLoading(true);
     try {
       const firebaseUser = auth.currentUser;
       if (!firebaseUser) return;
@@ -58,26 +63,27 @@ const TermsAndConditionsPage = () => {
       console.error(err);
     } finally {
       setAccepting(false);
+      setGlobalLoading(false);
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Cargando términos...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center">{t("cargando")}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-2xl">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Términos y Condiciones
+          {t("terminos_condiciones")}
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Por favor, lee y acepta los términos para continuar.
+          {t("lee_acepta_terminos")}
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <div className="mb-6 h-64 overflow-y-auto p-4 border border-gray-200 rounded-md bg-gray-50 text-sm text-gray-700 whitespace-pre-wrap">
-            {terms?.text || "No se pudieron cargar los términos."}
+            {terms?.text || t("error_cargar_terminos")}
           </div>
 
           <div className="flex items-center justify-end">
@@ -88,7 +94,7 @@ const TermsAndConditionsPage = () => {
                 (accepting || !terms) ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
-              {accepting ? "Aceptando..." : "Aceptar Términos"}
+              {accepting ? t("aceptando") : t("aceptar_terminos")}
             </button>
           </div>
         </div>

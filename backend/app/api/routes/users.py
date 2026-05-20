@@ -1,4 +1,4 @@
-from app.api.dependencies import get_user_repo
+from app.api.dependencies import get_user_repo, get_professional_referrals_service
 from app.ports.user_repository import UserRepository
 from fastapi import APIRouter, HTTPException, Depends
 from app.adapters.firebase.firebase_user_repo import FirebaseUserRepository
@@ -57,11 +57,16 @@ def accept_tyc(user_data: dict = Depends(verify_token), user_repo: UserRepositor
 def actualizar_usuario_autenticado(
     datos: UsuarioUpdate,
     user_data: dict = Depends(verify_token),
-    service: UserService = Depends(get_user_service)
+    service: UserService = Depends(get_user_service),
+    referrals_service = Depends(get_professional_referrals_service)
 ):
     uid = user_data["uid"]
     usuario_actualizado = service.actualizar_usuario(uid, datos)
     if usuario_actualizado:
+        if usuario_actualizado.get("tipo") == "profesional":
+            email = user_data.get("email")
+            phone = user_data.get("phone_number")
+            referrals_service.link_professional(uid, phone=phone, email=email)
         return {"mensaje": "Usuario actualizado con éxito", "usuario": usuario_actualizado}
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
@@ -83,10 +88,21 @@ def obtener_rol_usuario_legacy(user_data: dict = Depends(verify_token)):
 
 
 @router.post("/")
-def registrar_usuario(usuario: UsuarioRegistro, service: UserService = Depends(get_user_service)):
+def registrar_usuario(
+    usuario: UsuarioRegistro, 
+    user_data: dict = Depends(verify_token),
+    service: UserService = Depends(get_user_service),
+    referrals_service = Depends(get_professional_referrals_service)
+):
     try:
         print(f"ANTES DE REGISTRAR: {usuario.dict()}")
         service.registrar_usuario(usuario)
+        
+        if usuario.tipo == "profesional":
+            email = user_data.get("email")
+            phone = user_data.get("phone_number")
+            referrals_service.link_professional(usuario.id, phone=phone, email=email)
+            
         print("LUEGO DE REGISTRAR")
         return {"mensaje": "Usuario registrado con éxito"}
     except ValueError as e:

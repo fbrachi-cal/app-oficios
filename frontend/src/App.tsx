@@ -25,7 +25,8 @@ import RecruiterLayout from './layouts/Recruiter';
 import CvDashboard from './views/recruiter/CvDashboard';
 import RequireAcceptedTerms from './utils/RequireAcceptedTerms';
 import TermsAndConditionsPage from './views/auth/TermsAndConditionsPage';
-
+import RecomendarProfesional from './views/RecomendarProfesional';
+import { GamificationProvider } from './context/GamificationContext';
 
 function App() {
   return (
@@ -61,13 +62,18 @@ function App() {
           <Route path="/home" element={<Home />} />
 
         {/* Consumer authenticated routes with AppShell (TopNav/BottomTabBar) */}
-        <Route element={<AppShell />}>
+        <Route element={
+          <GamificationProvider>
+            <AppShell />
+          </GamificationProvider>
+        }>
           <Route path="/buscar" element={<BuscarView />} />
           <Route path="/actividad" element={<ActividadView />} />
           <Route path="/perfil" element={<UpdateProfile />} />
           <Route path="/completar-perfil" element={<CompletarPerfil />} />
           <Route path="/profesional/:id" element={<PerfilProfesional />} />
           <Route path="/solicitud/:id" element={<DetalleSolicitud />} />
+          <Route path="/recomendar-profesional" element={<RecomendarProfesional />} />
         </Route>
 
         {/* Admin panel — protected by role guard */}

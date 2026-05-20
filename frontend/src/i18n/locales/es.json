@@ -279,6 +279,16 @@
   "trabajos": "Trabajos",
   "error_zonas_subcategorias": "Debes seleccionar al menos una zona y una especialidad",
   "volver": "Volver",
+  "registrando_usuario": "Registrando...",
+  "volver_a_contactar": "Volver a contactar",
+  "recomendar_la_app": "Recomendar la app",
+  "compartir_app_texto": "Te recomiendo esta app para encontrar profesionales de confianza.",
+  "compartir_app_exito": "Enlace copiado al portapapeles",
+  "compartir_app_error": "Error al copiar el enlace",
+  "aceptando": "Aceptando...",
+  "lee_acepta_terminos": "Por favor, lee y acepta los términos para continuar.",
+  "error_cargar_terminos": "No se pudieron cargar los términos.",
+  "aceptar_terminos": "Aceptar Términos",
   "admin": {
     "panel_label": "Panel Admin",
     "nav": {
@@ -378,5 +388,37 @@
     "excellent": "Excelente",
     "intermediate": "Intermedio",
     "bad": "Malo"
+  },
+  "gamification": {
+    "badge_aria_label": "Tu nivel de reputación",
+    "current_level_label": "Nivel actual",
+    "next_level_label": "Siguiente:",
+    "max_level_reached": "¡Alcanzaste el nivel más alto!",
+    "levelup_title": "¡Subiste de nivel!",
+    "levelup_welcome_title": "¡Bienvenido/a!",
+    "levelup_subtitle": "Alcanzaste un nuevo nivel. ¡Seguí así!",
+    "levelup_welcome_subtitle": "Tu camino de reputación comienza aquí.",
+    "levelup_cta": "¡Genial, gracias!",
+    "load_error": "No se pudo cargar tu nivel de reputación.",
+    "metric": {
+      "completed_jobs_count": "Trabajos completados",
+      "average_rating": "Calificación promedio",
+      "profile_completed": "Perfil completo",
+      "phone_verified": "Teléfono verificado",
+      "recommended_professionals_count": "Profesionales recomendados",
+      "recommended_professionals_avg_rating": "Calificación promedio de tus recomendaciones"
+    }
+  },
+  "referral": {
+    "title": "Recomendar un profesional",
+    "subtitle": "¿Conocés a un buen profesional? Recomendalo y ganá puntos de reputación cuando se una a la plataforma.",
+    "error_name_required": "El nombre del profesional es obligatorio.",
+    "error_contact_required": "Debes ingresar al menos un teléfono o un correo electrónico.",
+    "success_message": "¡Recomendación enviada con éxito! Tu reputación aumentará cuando el profesional se registre utilizando este mismo correo o teléfono.",
+    "contact_hint": "Es necesario proveer al menos el teléfono o el email del profesional.",
+    "comment_placeholder": "¿Por qué lo recomendás?",
+    "worked_with_before": "He trabajado con este profesional anteriormente",
+    "submit_button": "Recomendar",
+    "recommend_button": "Recomendar un profesional"
   }
 }

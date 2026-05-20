@@ -15,6 +15,7 @@ import facebookIcon from "../../assets/img/facebook.svg";
 import googleIcon from "../../assets/img/google.svg";
 import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
 import { useAuth } from "../../context/AuthContext";
+import { useLoading } from "../../context/LoadingContext";
 import { JSX } from "react/jsx-runtime";
 
 
@@ -38,7 +39,9 @@ const Register = (): JSX.Element => {
   const [preview, setPreview] = useState<string | null>(null);
   const [descripcion, setDescripcion] = useState<string>("");
   const [disponibilidad, setDisponibilidad] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { setUsuario } = useAuth();
+  const { setLoading: setGlobalLoading } = useLoading();
 
   useEffect(() => {
     auth.signOut().then(() => {
@@ -94,6 +97,8 @@ const Register = (): JSX.Element => {
   const handleRegistro = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsSubmitting(true);
+    setGlobalLoading(true);
 
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
@@ -141,6 +146,8 @@ const Register = (): JSX.Element => {
     } catch (err: any) {
       logger.error("Error al registrar", err);
       setError(t("error_registrar", { detalle: err.message }));
+      setIsSubmitting(false);
+      setGlobalLoading(false);
     }
   };
 
@@ -379,9 +386,10 @@ const Register = (): JSX.Element => {
                 <div className="text-center mt-6">
                   <button
                     type="submit"
-                    className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                    disabled={isSubmitting}
+                    className={`bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    {t("crear_cuenta")}
+                    {isSubmitting ? t("registrando_usuario") : t("crear_cuenta")}
                   </button>
                 </div>
               </form>
