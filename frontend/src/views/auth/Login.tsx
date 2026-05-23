@@ -107,7 +107,7 @@ const Login: React.FC = () => {
           <img
             src={logoOficiosImg}
             alt="Click"
-            className="h-16 w-auto mx-auto mb-3 object-contain"
+            className="h-[77px] w-auto mx-auto mb-3 object-contain"
           />
           <p className="text-base font-semibold text-slate-500 tracking-wide">{t("titulo")}</p>
         </div>
@@ -201,13 +201,13 @@ const Login: React.FC = () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="w-4 h-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
                 />
                 <span className="text-sm font-medium text-slate-600">
                   {t("recordarme")}
                 </span>
               </label>
-              <a href="#" onClick={(e) => e.preventDefault()} className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+              <a href="#" onClick={(e) => e.preventDefault()} className="text-sm font-semibold text-brand-700 hover:text-brand-800">
                 {t("olvido_password")}
               </a>
             </div>
@@ -221,7 +221,7 @@ const Login: React.FC = () => {
         <div className="text-center mt-8">
           <p className="text-slate-600 text-sm">
             ¿No tienes cuenta?{" "}
-            <Link to="/auth/registro" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+            <Link to="/auth/registro" className="font-semibold text-brand-700 hover:text-brand-800 transition-colors">
               {t("crear_cuenta_nueva")}
             </Link>
           </p>

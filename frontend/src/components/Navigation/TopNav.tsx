@@ -36,7 +36,7 @@ const TopNav: React.FC = () => {
             <img
               src={logo}
               alt="Click"
-              className="h-12 lg:h-14 w-auto object-contain"
+              className="h-[53px] lg:h-[62px] w-auto object-contain"
             />
           </Link>
 
@@ -51,7 +51,7 @@ const TopNav: React.FC = () => {
                   className={({ isActive }) =>
                     `flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
                       isActive
-                        ? "bg-blue-50 text-blue-700"
+                        ? "bg-brand-50 text-brand-700"
                         : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                     }`
                   }
@@ -79,7 +79,7 @@ const TopNav: React.FC = () => {
                   </button>
                 </Link>
                 <Link to="/registro" id="nav-registro">
-                  <button className="bg-blue-600 border border-transparent text-white hover:bg-blue-700 text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow-sm transition-all duration-150">
+                  <button className="bg-brand-600 border border-transparent text-white hover:bg-brand-700 text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow-sm transition-all duration-150">
                     {t("registrarse")}
                   </button>
                 </Link>

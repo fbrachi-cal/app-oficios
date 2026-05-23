@@ -60,7 +60,7 @@ const Landing: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-slate-100 text-center">
               
               <div className="flex flex-col items-center pt-8 md:pt-0">
-                <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                <div className="w-12 h-12 bg-brand-50 text-brand-700 rounded-2xl flex items-center justify-center mb-4">
                   <FiUsers size={24} />
                 </div>
                 <h3 className="text-4xl font-bold text-slate-900 mb-2">+500</h3>

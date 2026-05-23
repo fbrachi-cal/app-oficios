@@ -22,11 +22,31 @@ module.exports = {
     },
     extend: {
       colors: {
-        brand: colors.indigo,
+        brand: {
+          ...colors.cyan,
+          400: '#26C6DA',
+          500: '#00BCD4',
+          600: '#00ACC1',
+          700: '#00838F', // Darker teal for accessible text
+          800: '#006064', // Even darker for high contrast
+          DEFAULT: '#00BCD4',
+        },
         neutral: colors.zinc,
         success: colors.emerald,
-        warning: colors.amber,
-        danger: colors.rose,
+        warning: {
+          ...colors.amber,
+          400: '#F9D657',
+          500: '#F5C518',
+          600: '#E1B313',
+          DEFAULT: '#F5C518',
+        },
+        danger: {
+          ...colors.rose,
+          400: '#F6968A',
+          500: '#F4695A',
+          600: '#EC3927',
+          DEFAULT: '#F4695A',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
