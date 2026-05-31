@@ -46,7 +46,6 @@ const CompletarPerfil: React.FC = () => {
   logger.info("CompletarPerfil TEMP State:", {
     step,
     telefonoValidadoPresent: !!telefonoValidado,
-    canGoNext: canGoNext(),
   });
 
   useEffect(() => {
