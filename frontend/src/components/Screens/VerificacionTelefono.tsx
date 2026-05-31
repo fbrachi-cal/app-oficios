@@ -11,7 +11,7 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
   const [telefono, setTelefono] = useState("");
   const [codigo, setCodigo] = useState("");
   const [cooldown, setCooldown] = useState(0);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<any>(null);
 
   const {
     enviarSMS,

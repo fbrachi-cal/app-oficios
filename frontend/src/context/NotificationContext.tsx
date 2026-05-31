@@ -91,7 +91,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       navigator.serviceWorker
         .register("/firebase-messaging-sw.js")
         .then((reg) => {
-          logger.info("FCM Service Worker registered successfully:", reg.scope);
+          logger.info("FCM Service Worker registered successfully:", { scope: reg.scope });
         })
         .catch((err) => {
           logger.error("FCM Service Worker registration failed:", err);
@@ -161,7 +161,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
       const token = await getToken(messaging, { vapidKey });
       if (token) {
-        logger.info("Obtained FCM token:", token);
+        logger.info("Obtained FCM token:", { token });
         await notificationService.registerFCMToken(token);
         setFcmToken(token);
       } else {
