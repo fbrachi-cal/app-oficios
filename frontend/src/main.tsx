@@ -4,6 +4,7 @@ import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { UserProvider } from "./context/UserContext";
+import { NotificationProvider } from './context/NotificationContext';
 import './i18n';
 import './index.css';
 import './tailwind.css';
@@ -20,11 +21,13 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <BrowserRouter>
           <AuthProvider>
             <UserProvider>
-              <LoadingProvider>
-                <ChatProvider>
-                  <App />
-                </ChatProvider>
-              </LoadingProvider>
+              <NotificationProvider>
+                <LoadingProvider>
+                  <ChatProvider>
+                    <App />
+                  </ChatProvider>
+                </LoadingProvider>
+              </NotificationProvider>
             </UserProvider>
           </AuthProvider>
         </BrowserRouter>
@@ -32,3 +35,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </ErrorBoundary>
   </React.StrictMode>
 );
+

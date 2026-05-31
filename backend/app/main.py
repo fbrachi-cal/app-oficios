@@ -1,8 +1,9 @@
 import os
 from fastapi import FastAPI
-from app.api.routes import users, requests, ratings, utils, contacts, chats, upload, cvs, tyc
+from app.api.routes import users, requests, ratings, utils, contacts, chats, upload, cvs, tyc, notifications
 from app.api.routes.gamification import router as gamification_router
 from app.api.routes.admin import router as admin_router, reports_router
+
 from app.api.middleware.log_requests import LoggingMiddleware
 from app.shared.logger import log
 from fastapi.middleware.cors import CORSMiddleware
@@ -47,7 +48,9 @@ app.include_router(gamification_router, prefix="/gamification", tags=["Gamificat
 from app.api.routes import professional_referrals
 app.include_router(professional_referrals.router, prefix="/professional-referrals", tags=["Professional Referrals"])
 
+app.include_router(notifications.router)
 # Admin module — strict separation:
+
 #   /admin/*  → admin_router (requires admin role)
 #   /reports  → reports_router (any authenticated user)
 app.include_router(admin_router, prefix="/admin")

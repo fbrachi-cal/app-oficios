@@ -5,8 +5,10 @@ import { FiSearch, FiList, FiUser } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
 import { useUser } from "../../context/UserContext";
 import UserDropdown from "../Dropdowns/UserDropdown";
+import NotificationBell from "./NotificationBell";
 import LanguageSwitcher from "../LanguageSwitcher";
 import logo from "../../assets/img/logo.png";
+
 
 /**
  * Primary top navigation bar for the consumer-facing app.
@@ -66,7 +68,10 @@ const TopNav: React.FC = () => {
           {/* Right side actions */}
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
-              <UserDropdown usuario={usuario} />
+              <>
+                <NotificationBell />
+                <UserDropdown usuario={usuario} />
+              </>
             ) : (
               <>
                 {/* Language switcher only for unauthenticated */}

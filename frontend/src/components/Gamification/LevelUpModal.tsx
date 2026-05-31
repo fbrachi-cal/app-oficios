@@ -40,14 +40,14 @@ const LevelUpModal: React.FC<LevelUpModalProps> = ({ event, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="levelup-title"
       onClick={onClose}               /* close on backdrop click */
     >
       <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-7 text-center animate-[fadeInScale_0.25s_ease-out]"
+        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-7 text-center animate-[fadeInScale_0.25s_ease-out] max-h-[90dvh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()} /* prevent backdrop handler */
       >
         {/* Close button */}

@@ -3,10 +3,12 @@ from app.domain.services.request_service import RequestService
 from app.ports.request_repository import RequestRepository
 from fastapi import APIRouter, Depends, Form, File, UploadFile, HTTPException, Body
 from typing import List
-from app.api.dependencies import get_current_user_id, get_request_repo, get_user_repo, get_file_uploader
+from app.api.dependencies import get_current_user_id, get_request_repo, get_user_repo, get_file_uploader, get_notification_service
+from app.domain.services.notification_service import NotificationService
 from app.shared.logger import log
 from app.ports.user_repository import UserRepository
 from app.ports.file_uploader import FileUploader
+
 
 router = APIRouter(prefix="/solicitudes", tags=["solicitudes"])
 
@@ -31,13 +33,41 @@ async def agregar_consulta_a_solicitud(
     consulta: ConsultaRequest,
     user_id: str = Depends(get_current_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
+    user_repo: UserRepository = Depends(get_user_repo),
+    notification_service: NotificationService = Depends(get_notification_service),
 ):
     try:
         service = RequestService(request_repo)
-        return service.agregar_consulta(id, user_id, consulta.mensaje, consulta.fotos)
+        res = service.agregar_consulta(id, user_id, consulta.mensaje, consulta.fotos)
+        
+        # Trigger message received notification for request query/comment
+        try:
+            solicitud = request_repo.get_by_id(id)
+            if solicitud:
+                recipient_uid = (
+                    solicitud["profesional_id"]
+                    if user_id == solicitud["solicitante_id"]
+                    else solicitud["solicitante_id"]
+                )
+                sender = user_repo.get_user_by_id(user_id)
+                sender_name = sender.get("nombre", "Usuario") if sender else "Usuario"
+                await notification_service.create_and_send_notification(
+                    recipient_uid=recipient_uid,
+                    actor_uid=user_id,
+                    type="message_received",
+                    title="Nuevo mensaje en solicitud",
+                    body=f"{sender_name}: {consulta.mensaje}",
+                    related_entity_type="request",
+                    related_entity_id=id
+                )
+        except Exception as notif_err:
+            log.error(f"Error sending query notification: {notif_err}")
+
+        return res
     except Exception as e:
         log.error(f"Error al agregar consulta: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.patch("/{id}/responder")
 async def responder_solicitud(
@@ -96,6 +126,8 @@ async def crear_solicitud(
     user_id: str = Depends(get_current_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
     uploader: FileUploader = Depends(get_file_uploader), 
+    user_repo: UserRepository = Depends(get_user_repo),
+    notification_service: NotificationService = Depends(get_notification_service),
 ):
     urls = []
     for foto in fotos:
@@ -114,7 +146,25 @@ async def crear_solicitud(
         descripcion=descripcion,
         fotos_urls=urls
     )
+
+    # Trigger professional contacted notification
+    try:
+        client = user_repo.get_user_by_id(user_id)
+        client_name = client.get("nombre", "Un cliente") if client else "Un cliente"
+        await notification_service.create_and_send_notification(
+            recipient_uid=profesional_id,
+            actor_uid=user_id,
+            type="professional_contacted",
+            title="Nueva solicitud de servicio",
+            body=f"{client_name} te ha enviado una solicitud de {subcategoria} en {zona}.",
+            related_entity_type="request",
+            related_entity_id=solicitud["id"]
+        )
+    except Exception as e:
+        log.error(f"Error sending professional contacted notification from request: {e}")
+
     return {"message": "Solicitud guardada", "data": solicitud}
+
 
 @router.get("/{id}")
 async def obtener_solicitud_por_id(

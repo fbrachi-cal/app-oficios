@@ -409,5 +409,11 @@
         "worked_with_before": "I have worked with this professional before",
         "submit_button": "Recommend",
         "recommend_button": "Recommend a professional"
+    },
+    "notificaciones": {
+        "titulo": "Notifications",
+        "marcar_todas_leidas": "Mark as read",
+        "sin_notificaciones": "You have no notifications at the moment.",
+        "ver_detalle": "View detail"
     }
 }
