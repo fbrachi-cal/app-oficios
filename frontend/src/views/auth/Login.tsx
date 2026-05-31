@@ -33,6 +33,7 @@ const Login: React.FC = () => {
   // Centralized redirect effect
   useEffect(() => {
     if (usuario && !profileLoading) {
+      setLoading(false);
       if (profileStatus === "ready" && backendUser) {
         if (backendUser.requires_tyc_acceptance) {
           navigate("/terminos-y-condiciones", { replace: true });

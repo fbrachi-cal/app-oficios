@@ -54,6 +54,7 @@ const Register = (): JSX.Element => {
   // Centralized redirect effect
   useEffect(() => {
     if (usuario && !profileLoading) {
+      setGlobalLoading(false);
       if (profileStatus === "ready" && backendUser) {
         if (backendUser.requires_tyc_acceptance) {
           navigate("/terminos-y-condiciones", { replace: true });

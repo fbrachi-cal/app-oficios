@@ -11,6 +11,22 @@ const RequireAcceptedTerms = () => {
     location.pathname === "/completar-perfil" || 
     location.pathname === "/auth/completar-perfil";
 
+  console.log("[Guard Log TEMP]", {
+    pathname: location.pathname,
+    firebaseUserExists: !!usuario,
+    backendUserExists: !!user,
+    profileStatus,
+    profileLoading,
+    authLoading,
+    decision: (authLoading || profileLoading)
+      ? "loading"
+      : (!usuario
+        ? "redirect to login"
+        : (profileStatus === "missing"
+          ? "render completar-perfil"
+          : "render outlet")),
+  });
+
   if (authLoading || profileLoading) {
     // Si auth está cargando, o si estamos logueados en Firebase pero UserContext todavía no terminó de traer el perfil.
     return null;

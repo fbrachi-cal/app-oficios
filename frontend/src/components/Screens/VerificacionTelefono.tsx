@@ -13,6 +13,14 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
   const [cooldown, setCooldown] = useState(0);
   const timerRef = useRef<any>(null);
 
+  // Temporary diagnostics logs
+  useEffect(() => {
+    logger.info("VerificacionTelefono TEMP: component mounted");
+    return () => {
+      logger.info("VerificacionTelefono TEMP: component unmounted");
+    };
+  }, []);
+
   const {
     enviarSMS,
     verificado,
@@ -47,6 +55,7 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
     }
 
     const success = await enviarSMS(trimmedPhone);
+    logger.info("VerificacionTelefono TEMP: enviarSMS result", { success });
     if (success) {
       setCooldown(60); // 60 seconds cooldown
     }
@@ -57,12 +66,14 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
     if (trimmedCode.length !== 6) return;
 
     const success = await verificarCodigo(trimmedCode);
+    logger.info("VerificacionTelefono TEMP: verificarCodigo result", { success, onVerifiedCalled: success });
     if (success) {
       onVerified(telefono.trim());
     }
   };
 
   const handleCambiarTelefono = () => {
+    logger.info("VerificacionTelefono TEMP: Cambiar clicked / reset called");
     reset();
     setCodigo("");
     onVerified("");

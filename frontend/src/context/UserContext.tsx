@@ -36,8 +36,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<UserData | null>(null);
     const [profileStatus, setProfileStatus] = useState<ProfileStatus>("loading");
 
-    const refrescarUsuario = async () => {
-        const firebaseUser = auth.currentUser;
+    const refrescarUsuario = async (fUser?: any) => {
+        const firebaseUser = fUser || auth.currentUser;
         if (firebaseUser) {
             setProfileStatus("loading");
             try {
@@ -83,7 +83,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
             if (firebaseUser) {
-                await refrescarUsuario();
+                await refrescarUsuario(firebaseUser);
             } else {
                 setUser(null);
                 setProfileStatus("missing");
