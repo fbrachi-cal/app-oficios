@@ -52,6 +52,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 } else if (res.status === 404) {
                     setUser(null);
                     setProfileStatus("missing");
+                } else if (res.status === 403) {
+                    setUser(null);
+                    setProfileStatus("error");
+                    try {
+                        const errorData = await res.json();
+                        const searchParams = new URLSearchParams();
+                        if (errorData.detail?.status) searchParams.set("status", errorData.detail.status);
+                        if (errorData.detail?.reason) searchParams.set("reason", errorData.detail.reason);
+                        if (errorData.detail?.expires_at) searchParams.set("expires_at", errorData.detail.expires_at);
+                        window.location.href = `/bloqueado?${searchParams.toString()}`;
+                    } catch (e) {
+                        window.location.href = "/bloqueado";
+                    }
                 } else {
                     setUser(null);
                     setProfileStatus("error");

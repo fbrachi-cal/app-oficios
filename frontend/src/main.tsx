@@ -19,8 +19,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <ErrorBoundary>
       <I18nextProvider i18n={i18n}>
         <BrowserRouter>
-          <AuthProvider>
-            <UserProvider>
+          <UserProvider>
+            <AuthProvider>
               <NotificationProvider>
                 <LoadingProvider>
                   <ChatProvider>
@@ -28,8 +28,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                   </ChatProvider>
                 </LoadingProvider>
               </NotificationProvider>
-            </UserProvider>
-          </AuthProvider>
+            </AuthProvider>
+          </UserProvider>
         </BrowserRouter>
       </I18nextProvider>
     </ErrorBoundary>
