@@ -274,7 +274,6 @@ const CompletarPerfil: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
 
           {/* STEP 3: Professional Details (Zonas & Oficios) */}
           <div className={step === 3 && tipo === "profesional" ? "space-y-6 animate-in fade-in slide-in-from-right-4 duration-300" : "hidden"}>
@@ -325,7 +324,6 @@ const CompletarPerfil: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
 
           {/* Footer Navigation */}
           <div className="mt-8 flex gap-3 pt-6 border-t border-slate-100">
