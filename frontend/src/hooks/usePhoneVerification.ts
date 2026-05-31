@@ -166,6 +166,14 @@ export const usePhoneVerification = () => {
     }
   };
 
+  const reset = () => {
+    clearRecaptcha();
+    setConfirmacion(null);
+    setError(null);
+    setVerificado(false);
+    setLoading(false);
+  };
+
   return {
     enviarSMS,
     confirmarCodigo,
@@ -173,6 +181,7 @@ export const usePhoneVerification = () => {
     error,
     setError,
     loading,
+    reset,
     verificarCodigo: confirmarCodigo, // alias
     confirmationResult: confirmacion, // alias
   };
