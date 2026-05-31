@@ -49,6 +49,9 @@ const CompletarPerfil: React.FC = () => {
     }
     setUid(user.uid);
     setNombre(user.displayName || "");
+    if (user.photoURL) {
+      setPreview(user.photoURL);
+    }
     user.getIdToken().then(setToken);
 
     fetch(`${config.apiBaseUrl}/utils/zonas`).then(r => r.json()).then(setZonasDisponibles);
