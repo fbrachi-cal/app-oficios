@@ -35,6 +35,19 @@ const CompletarPerfil: React.FC = () => {
   const [uid, setUid] = useState("");
   const [token, setToken] = useState("");
 
+  // Temporary diagnostics logs
+  useEffect(() => {
+    logger.info("CompletarPerfil TEMP: component mounted");
+    return () => {
+      logger.info("CompletarPerfil TEMP: component unmounted");
+    };
+  }, []);
+
+  logger.info("CompletarPerfil TEMP State:", {
+    step,
+    telefonoValidadoPresent: !!telefonoValidado,
+  });
+
   useEffect(() => {
     return () => {
       if (preview) URL.revokeObjectURL(preview);
@@ -49,6 +62,9 @@ const CompletarPerfil: React.FC = () => {
     }
     setUid(user.uid);
     setNombre(user.displayName || "");
+    if (user.photoURL) {
+      setPreview(user.photoURL);
+    }
     user.getIdToken().then(setToken);
 
     fetch(`${config.apiBaseUrl}/utils/zonas`).then(r => r.json()).then(setZonasDisponibles);
@@ -64,6 +80,7 @@ const CompletarPerfil: React.FC = () => {
   };
 
   const handleGuardarPerfil = async () => {
+    logger.info("CompletarPerfil TEMP: handleGuardarPerfil called", { uid, telefonoValidadoPresent: !!telefonoValidado });
     setError("");
     setIsSubmitting(true);
     let fotoURL = auth.currentUser?.photoURL || "";
@@ -121,6 +138,7 @@ const CompletarPerfil: React.FC = () => {
   };
 
   const nextStep = () => {
+    logger.info("CompletarPerfil TEMP: nextStep clicked", { step, telefonoValidadoPresent: !!telefonoValidado });
     if (canGoNext()) {
       if (step === 2 && tipo === "cliente") {
         handleGuardarPerfil(); // Skip step 3 for clients
@@ -168,8 +186,7 @@ const CompletarPerfil: React.FC = () => {
           )}
 
           {/* STEP 1: Personal Info */}
-          {step === 1 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+          <div className={step === 1 ? "space-y-6 animate-in fade-in slide-in-from-right-4 duration-300" : "hidden"}>
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Contanos sobre vos</h2>
                 <p className="text-sm text-slate-500">Completá tus datos básicos para comenzar.</p>
@@ -212,11 +229,9 @@ const CompletarPerfil: React.FC = () => {
                 <VerificacionTelefono t={t} onVerified={setTelefonoValidado} />
               </div>
             </div>
-          )}
 
           {/* STEP 2: Account Type */}
-          {step === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+          <div className={step === 2 ? "space-y-6 animate-in fade-in slide-in-from-right-4 duration-300" : "hidden"}>
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">¿Cómo querés usar la app?</h2>
                 <p className="text-sm text-slate-500">Podés buscar ayuda o ofrecer tus servicios.</p>
@@ -258,11 +273,9 @@ const CompletarPerfil: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
 
           {/* STEP 3: Professional Details (Zonas & Oficios) */}
-          {step === 3 && tipo === "profesional" && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+          <div className={step === 3 && tipo === "profesional" ? "space-y-6 animate-in fade-in slide-in-from-right-4 duration-300" : "hidden"}>
               <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold text-slate-900 mb-2">Tus servicios</h2>
                 <p className="text-sm text-slate-500">Seleccioná dónde trabajás y qué hacés.</p>
@@ -310,7 +323,6 @@ const CompletarPerfil: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
 
           {/* Footer Navigation */}
           <div className="mt-8 flex gap-3 pt-6 border-t border-slate-100">

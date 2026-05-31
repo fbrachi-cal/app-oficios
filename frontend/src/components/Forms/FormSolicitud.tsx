@@ -125,17 +125,17 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-100">
+      <div className="flex flex-row gap-3 pt-4 border-t border-slate-100">
         <button
           type="button"
           onClick={onCancel}
-          className="btn-secondary w-full sm:w-1/3 py-3"
+          className="btn-secondary w-1/3 py-3"
         >
           {t("cancelar")}
         </button>
         <button
           type="submit"
-          className="btn-primary w-full sm:w-2/3 py-3"
+          className="btn-primary w-2/3 py-3"
         >
           {t("enviar_solicitud")}
         </button>

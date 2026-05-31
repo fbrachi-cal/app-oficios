@@ -16,6 +16,7 @@ import googleIcon from "../../assets/img/google.svg";
 import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
 import { useAuth } from "../../context/AuthContext";
 import { useLoading } from "../../context/LoadingContext";
+import { useUser } from "../../context/UserContext";
 import { JSX } from "react/jsx-runtime";
 
 
@@ -40,14 +41,31 @@ const Register = (): JSX.Element => {
   const [descripcion, setDescripcion] = useState<string>("");
   const [disponibilidad, setDisponibilidad] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { setUsuario } = useAuth();
+  const { setUsuario, usuario } = useAuth();
   const { setLoading: setGlobalLoading } = useLoading();
+  const { refrescarUsuario, profileStatus, profileLoading, user: backendUser } = useUser();
 
   useEffect(() => {
     auth.signOut().then(() => {
       logger.info("Sesión cerrada");
     });
   }, []);
+
+  // Centralized redirect effect
+  useEffect(() => {
+    if (usuario && !profileLoading) {
+      setGlobalLoading(false);
+      if (profileStatus === "ready" && backendUser) {
+        if (backendUser.requires_tyc_acceptance) {
+          navigate("/terminos-y-condiciones", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
+      } else if (profileStatus === "missing") {
+        navigate("/completar-perfil", { replace: true });
+      }
+    }
+  }, [usuario, profileStatus, profileLoading, backendUser, navigate]);
 
 
   useEffect(() => {
@@ -140,8 +158,8 @@ const Register = (): JSX.Element => {
 
       if (!res.ok) throw new Error(t("error_guardar_backend"));
 
+      await refrescarUsuario();
       navigate("/");
-      navigate(0);
 
     } catch (err: any) {
       logger.error("Error al registrar", err);
@@ -152,30 +170,17 @@ const Register = (): JSX.Element => {
   };
 
   const handleSocialSignup = async (provider: any) => {
+    setError("");
+    setIsSubmitting(true);
+    setGlobalLoading(true);
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-      const token = await user.getIdToken();
-
-      const res = await fetch(`${config.apiBaseUrl}/usuarios/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.ok) {
-        const userData = await res.json();
-        if (userData && userData.id) {
-          navigate("/");
-        } else {
-          navigate("/completar-perfil");
-        }
-      } else if (res.status === 404 || res.status === 401) {
-        navigate("/completar-perfil");
-      } else {
-        setError(t("error_verificar_usuario"));
-      }
+      await signInWithPopup(auth, provider);
+      // Centralized useEffect handles redirect
     } catch (err) {
-      logger.error("Error en registro", err);
+      logger.error("Error en registro social", err);
       setError(t("error_registro_red_social"));
+      setIsSubmitting(false);
+      setGlobalLoading(false);
     }
   };
 

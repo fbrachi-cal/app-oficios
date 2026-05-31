@@ -8,9 +8,12 @@ from app.adapters.firebase.firebase_report_repo import FirebaseReportRepository
 from app.domain.services.admin_service import AdminService
 from app.domain.services.report_service import ReportService
 from app.domain.services.admin_rating_service import AdminRatingService
-from fastapi import Header, HTTPException
+from fastapi import Header, HTTPException, Depends
 from firebase_admin import auth
+from app.adapters.firebase.firebase_notification_repo import FirebaseNotificationRepository
+from app.domain.services.notification_service import NotificationService
 from app.shared.logger import log
+
 
 
 def get_calificacion_repo():
@@ -30,6 +33,13 @@ def get_file_uploader():
 
 def get_report_repo():
     return FirebaseReportRepository()
+
+def get_notification_repo():
+    return FirebaseNotificationRepository()
+
+def get_notification_service(repo=Depends(get_notification_repo)):
+    return NotificationService(repo)
+
 
 def get_admin_service():
     return AdminService(

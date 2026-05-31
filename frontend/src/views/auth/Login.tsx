@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -8,8 +8,8 @@ import {
   FacebookAuthProvider,
 } from "firebase/auth";
 import { auth } from "../../firebase";
-import config from "../../config";
 import { useUser } from "../../context/UserContext";
+import { useAuth } from "../../context/AuthContext";
 import { useLoading } from "../../context/LoadingContext";
 import { logger } from "../../utils/logger";
 
@@ -22,47 +22,38 @@ import logoOficiosImg from "../../assets/img/logo.png";
 const Login: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { refrescarUsuario } = useUser();
+  const { usuario } = useAuth();
+  const { user: backendUser, profileStatus, profileLoading } = useUser();
   const { setLoading } = useLoading();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const procesarLoginBackend = async (token: string) => {
-    const res = await fetch(`${config.apiBaseUrl}/usuarios/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (res.ok) {
-      const userData = await res.json();
-      if (
-        userData.tipo === "profesional" &&
-        (!userData.oficios?.length || !userData.zonas?.length)
-      ) {
-        navigate("/completar-perfil");
-      } else if (userData.tipo === "admin" || userData.tipo === "moderator") {
-        navigate("/admin");
-      } else if (userData.tipo === "recruiter") {
-        navigate("/recruiter/cvs");
-      } else {
-        navigate("/");
+  // Centralized redirect effect
+  useEffect(() => {
+    if (usuario && !profileLoading) {
+      setLoading(false);
+      if (profileStatus === "ready" && backendUser) {
+        if (backendUser.requires_tyc_acceptance) {
+          navigate("/terminos-y-condiciones", { replace: true });
+        } else if (backendUser.tipo === "admin" || backendUser.tipo === "moderator") {
+          navigate("/admin", { replace: true });
+        } else if (backendUser.tipo === "recruiter") {
+          navigate("/recruiter/cvs", { replace: true });
+        } else if (
+          backendUser.tipo === "profesional" &&
+          (!backendUser.oficios?.length || !backendUser.zonas?.length)
+        ) {
+          navigate("/completar-perfil", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
+      } else if (profileStatus === "missing") {
+        navigate("/completar-perfil", { replace: true });
       }
-    } else if (res.status === 404) {
-      navigate("/completar-perfil");
-    } else if (res.status === 403) {
-      const errorData = await res.json();
-      const searchParams = new URLSearchParams();
-      if (errorData.detail?.status) searchParams.set("status", errorData.detail.status);
-      if (errorData.detail?.reason) searchParams.set("reason", errorData.detail.reason);
-      if (errorData.detail?.expires_at) searchParams.set("expires_at", errorData.detail.expires_at);
-      navigate(`/bloqueado?${searchParams.toString()}`);
-    } else if (res.status === 401) {
-      setError("La sesión ha expirado o el token es inválido.");
-    } else {
-      setError(t("error_verificar_usuario"));
     }
-  };
+  }, [usuario, profileStatus, profileLoading, backendUser, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,13 +61,11 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const token = await userCredential.user.getIdToken();
-      await procesarLoginBackend(token);
+      await signInWithEmailAndPassword(auth, email, password);
+      // Centralized useEffect handles redirect
     } catch (err) {
       logger.error("Error en login con email", err);
       setError(t("error_usuario_password"));
-    } finally {
       setLoading(false);
     }
   };
@@ -86,14 +75,11 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const result = await signInWithPopup(auth, providerInstance);
-      const token = await result.user.getIdToken();
-      await refrescarUsuario();
-      await procesarLoginBackend(token);
+      await signInWithPopup(auth, providerInstance);
+      // Centralized useEffect handles redirect
     } catch (err) {
       logger.error("Error en login social", err);
       setError(t("error_inicio_sesion"));
-    } finally {
       setLoading(false);
     }
   };

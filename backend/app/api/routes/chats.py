@@ -1,10 +1,12 @@
 from http.client import HTTPException
 from fastapi import Body, APIRouter, Depends
-from app.api.dependencies import get_current_user_id, get_chat_repo, get_user_repo
+from app.api.dependencies import get_current_user_id, get_chat_repo, get_user_repo, get_notification_service
+from app.domain.services.notification_service import NotificationService
 from app.ports.chat_repository import ChatRepository
 from app.ports.user_repository import UserRepository
-from app.domain.services.chat_service import ChatService  
+from app.domain.services.chat_service import ChatService
 from app.shared.logger import log
+
 
 router = APIRouter(prefix="/chats", tags=["chats"])
 
@@ -41,6 +43,8 @@ async def post_chat_message(
     body: str = Body(..., embed=True),
     user_id: str = Depends(get_current_user_id),
     chat_repo: ChatRepository = Depends(get_chat_repo),
+    user_repo: UserRepository = Depends(get_user_repo),
+    notification_service: NotificationService = Depends(get_notification_service),
 ):
     log.info(f"Enviando mensaje al chat {chat_id} por el usuario {user_id}, payload: {body}")
     # verificamos que el usuario participe del chat
@@ -49,6 +53,27 @@ async def post_chat_message(
         raise HTTPException(status_code=403, detail="No tienes acceso a este chat")
 
     # creamos el mensaje en tu repositorio
-    # asumo que tu ChatRepository tiene un método create_message(chat_id, sender_id, body)
     new_msg = chat_repo.add_message(chat_id, user_id, body)
+    
+    # Trigger message received notification
+    try:
+        participants = chat.get("participants", [])
+        recipients = [p for p in participants if p != user_id]
+        if recipients:
+            recipient_uid = recipients[0]
+            sender = user_repo.get_user_by_id(user_id)
+            sender_name = sender.get("nombre", "Usuario") if sender else "Usuario"
+            await notification_service.create_and_send_notification(
+                recipient_uid=recipient_uid,
+                actor_uid=user_id,
+                type="message_received",
+                title=f"Mensaje de {sender_name}",
+                body=body,
+                related_entity_type="chat",
+                related_entity_id=chat_id
+            )
+    except Exception as e:
+        log.error(f"Error sending message received notification: {e}")
+        
     return new_msg
+

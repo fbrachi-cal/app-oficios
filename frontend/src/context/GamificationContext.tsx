@@ -7,6 +7,7 @@ import {
 } from "../services/gamificationService";
 import { logger } from "../utils/logger";
 import { useAuth } from "./AuthContext";
+import { useUser } from "./UserContext";
 
 interface GamificationContextValue {
   data: GamificationMeResponse | null;
@@ -24,6 +25,7 @@ export const GamificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [error, setError] = useState<string | null>(null);
   const [fetchTick, setFetchTick] = useState(0);
   const { usuario } = useAuth(); // Re-fetch or clear when auth changes
+  const { profileStatus } = useUser();
 
   const dismissingRef = useRef(false);
 
@@ -32,7 +34,8 @@ export const GamificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   }, []);
 
   useEffect(() => {
-    if (!usuario) {
+    // Gate gamification loading behind profileStatus === "ready"
+    if (!usuario || profileStatus !== "ready") {
       setData(null);
       setLoading(false);
       return;
@@ -50,8 +53,14 @@ export const GamificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         if (cancelled) return;
         if (axios.isCancel(err)) return;
 
-        logger.error("GamificationProvider: fetch failed", err);
-        setError("gamification_load_error");
+        // Downgrade expected 404 logs during onboarding to info level
+        const status = (err as any)?.response?.status;
+        if (status === 404) {
+          logger.info("Gamification data not found (expected during onboarding/registration)");
+        } else {
+          logger.error("GamificationProvider: fetch failed", err);
+          setError("gamification_load_error");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -61,7 +70,7 @@ export const GamificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     return () => {
       cancelled = true;
     };
-  }, [fetchTick, usuario]);
+  }, [fetchTick, usuario, profileStatus]);
 
   const dismissPendingEvent = useCallback(async () => {
     if (dismissingRef.current) return;

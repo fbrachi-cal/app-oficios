@@ -420,5 +420,11 @@
     "worked_with_before": "He trabajado con este profesional anteriormente",
     "submit_button": "Recomendar",
     "recommend_button": "Recomendar un profesional"
+  },
+  "notificaciones": {
+    "titulo": "Notificaciones",
+    "marcar_todas_leidas": "Marcar como leídas",
+    "sin_notificaciones": "No tienes notificaciones por el momento.",
+    "ver_detalle": "Ver detalle"
   }
 }
