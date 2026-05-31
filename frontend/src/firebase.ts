@@ -20,6 +20,14 @@ if (import.meta.env.MODE === 'development' && import.meta.env.VITE_FIREBASE_DISA
     (auth as any).settings.appVerificationDisabledForTesting = true;
 }
 
+console.log("[Firebase Init Log]", {
+    projectId: firebaseConfig.projectId,
+    authDomain: firebaseConfig.authDomain,
+    origin: typeof window !== 'undefined' ? window.location.origin : null,
+    hostname: typeof window !== 'undefined' ? window.location.hostname : null,
+    appVerificationDisabled: (auth as any).settings.appVerificationDisabledForTesting || false
+});
+
 export const storage = getStorage(app); 
 
 export const messagingPromise = isSupported().then((supported) => {

@@ -104,8 +104,12 @@ export const usePhoneVerification = () => {
       const errorMessage = err?.message || String(err);
 
       logger.error("Failed SMS verification attempt", {
+        projectId: auth.app.options.projectId,
+        authDomain: auth.app.options.authDomain,
+        origin: window.location.origin,
         hostname,
         maskedPhone,
+        appVerificationDisabled: (auth as any).settings.appVerificationDisabledForTesting || false,
         errorCode,
         errorMessage
       });
