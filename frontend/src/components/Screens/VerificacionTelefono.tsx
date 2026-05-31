@@ -13,25 +13,22 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
 
   const {
     enviarSMS,
-    confirmarCodigo,
     verificado,
     error,
-    setError,
+    loading,
     verificarCodigo,
     confirmationResult,
   } = usePhoneVerification();
 
-  logger.info("CONFIRMAR CODIGO", { confirmarCodigo });
-  logger.info("SET ERROR CODIGO", { setError });
-
-
   const handleEnviarSMS = async () => {
+    if (!telefono.trim()) return;
     await enviarSMS(telefono);
   };
 
   const handleConfirmarCodigo = async () => {
-    await verificarCodigo(codigo);
-    if (!error) {
+    if (!codigo.trim()) return;
+    const success = await verificarCodigo(codigo);
+    if (success) {
       onVerified(telefono);
     }
   };
@@ -47,16 +44,20 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
             id="telefono"
             type="tel"
             value={telefono}
+            disabled={loading}
             onChange={(e) => setTelefono(e.target.value)}
-            className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full"
+            className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full disabled:opacity-60"
             placeholder="+54 9 11 1234 5678"
           />
           <button
             type="button"
             onClick={handleEnviarSMS}
-            className="text-xs text-blueGray-700 underline mt-1"
+            disabled={loading || !telefono.trim()}
+            className={`text-xs text-blueGray-700 underline mt-1 block ${
+              loading || !telefono.trim() ? "opacity-50 cursor-not-allowed" : "hover:text-blueGray-900"
+            }`}
           >
-            {t("verificar_telefono")}
+            {loading && !confirmationResult ? "Enviando..." : t("verificar_telefono")}
           </button>
 
           {confirmationResult && (
@@ -68,28 +69,30 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
                 id="codigo"
                 type="text"
                 value={codigo}
+                disabled={loading}
                 onChange={(e) => setCodigo(e.target.value)}
-                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full"
+                className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow w-full disabled:opacity-60"
               />
               <button
                 type="button"
                 onClick={handleConfirmarCodigo}
-                className="text-xs text-blueGray-700 underline mt-1"
+                disabled={loading || !codigo.trim()}
+                className={`text-xs text-blueGray-700 underline mt-1 block ${
+                  loading || !codigo.trim() ? "opacity-50 cursor-not-allowed" : "hover:text-blueGray-900"
+                }`}
               >
-                {t("confirmar_codigo")}
+                {loading ? "Confirmando..." : t("confirmar_codigo")}
               </button>
             </>
           )}
         </>
       )}
-      {verificado && <p className="text-green-600 text-sm">{t("telefono_verificado")}</p>}
+      {verificado && <p className="text-green-600 text-sm font-semibold mt-2">{t("telefono_verificado")}</p>}
       {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
       <div className="mt-4">
         <div id="recaptcha-container"></div>
       </div>
-
     </div>
-    
   );
 };
 
