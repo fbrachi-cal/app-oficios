@@ -35,6 +35,7 @@ export const useUser = () => useContext(UserContext);
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<UserData | null>(null);
     const [profileStatus, setProfileStatus] = useState<ProfileStatus>("loading");
+    const [loadedUid, setLoadedUid] = useState<string>("");
 
     const refrescarUsuario = async (fUser?: any) => {
         const firebaseUser = fUser || auth.currentUser;
@@ -73,10 +74,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 console.error("Error al refrescar usuario:", err);
                 setUser(null);
                 setProfileStatus("error");
+            } finally {
+                setLoadedUid(firebaseUser.uid);
             }
         } else {
             setUser(null);
             setProfileStatus("missing");
+            setLoadedUid("");
         }
     };
 
@@ -87,13 +91,14 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             } else {
                 setUser(null);
                 setProfileStatus("missing");
+                setLoadedUid("");
             }
         });
 
         return () => unsubscribe();
     }, []);
 
-    const profileLoading = profileStatus === "loading";
+    const profileLoading = profileStatus === "loading" || (!!auth.currentUser && loadedUid !== auth.currentUser.uid);
 
     return (
         <UserContext.Provider value={{ user, setUser, profileStatus, profileLoading, refrescarUsuario }}>

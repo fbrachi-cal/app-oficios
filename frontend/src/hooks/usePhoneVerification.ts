@@ -1,6 +1,6 @@
 import { logger } from "../utils/logger";
 import { useState, useEffect } from "react";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { RecaptchaVerifier, signInWithPhoneNumber, PhoneAuthProvider, linkWithCredential } from "firebase/auth";
 import { auth } from "../firebase";
 
 declare global {
@@ -139,28 +139,49 @@ export const usePhoneVerification = () => {
     setError(null);
 
     const hostname = window.location.hostname;
-    logger.info("Attempting to confirm code", { hostname });
+    logger.info("Attempting to confirm code by linking credential", { hostname });
 
     try {
       if (!confirmacion) {
         throw new Error("No hay confirmación pendiente");
       }
-      await confirmacion.confirm(codigo);
+      const currentUser = auth.currentUser;
+      if (!currentUser) {
+        throw new Error("auth/no-current-user");
+      }
+
+      // Link the phone credential to the existing user instead of signing in separately
+      const credential = PhoneAuthProvider.credential(confirmacion.verificationId, codigo);
+      await linkWithCredential(currentUser, credential);
+
       setVerificado(true);
-      logger.info("Code confirmed successfully", { hostname });
+      logger.info("Code confirmed and phone linked successfully", { hostname });
       setLoading(false);
       return true;
     } catch (err: any) {
       const errorCode = err?.code || "unknown";
       const errorMessage = err?.message || String(err);
 
-      logger.error("Failed code confirmation", {
+      logger.error("Failed code confirmation / linking", {
         hostname,
         errorCode,
         errorMessage
       });
 
-      setError("Código incorrecto o vencido. Por favor, verifique e intente de nuevo.");
+      let friendlyError = "Código incorrecto o vencido. Por favor, verifique e intente de nuevo.";
+      if (errorCode === "auth/no-current-user") {
+        friendlyError = "No se detectó un usuario autenticado. Por favor, inicie sesión de nuevo.";
+      } else if (errorCode === "auth/credential-already-in-use") {
+        friendlyError = "Este teléfono ya está asociado a otra cuenta.";
+      } else if (errorCode === "auth/provider-already-linked") {
+        friendlyError = "Esta cuenta ya tiene un teléfono verificado y asociado.";
+      } else if (errorCode === "auth/requires-recent-login") {
+        friendlyError = "Para realizar esta acción, debe volver a iniciar sesión.";
+      } else if (errorCode === "auth/invalid-verification-code") {
+        friendlyError = "Código incorrecto o vencido. Por favor, verifique e intente de nuevo.";
+      }
+
+      setError(friendlyError);
       setLoading(false);
       return false;
     }
