@@ -120,6 +120,19 @@ const CompletarPerfil: React.FC = () => {
       });
 
       if (!res.ok) throw new Error(t("error_guardar_backend"));
+
+      try {
+        await fetch(`${config.apiBaseUrl}/usuarios/me/tyc/accept`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      } catch (tycErr) {
+        logger.error("Error al auto-aceptar términos en CompletarPerfil", tycErr);
+      }
+
       await refrescarUsuario();
       navigate("/");
     } catch (err: any) {

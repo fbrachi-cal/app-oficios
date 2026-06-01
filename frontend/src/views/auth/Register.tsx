@@ -45,6 +45,11 @@ const Register = (): JSX.Element => {
   const { setLoading: setGlobalLoading } = useLoading();
   const { refrescarUsuario, profileStatus, profileLoading, user: backendUser } = useUser();
 
+  const [aceptarTyc, setAceptarTyc] = useState(false);
+  const [aceptarPrivacidad, setAceptarPrivacidad] = useState(false);
+  const [aceptarResponsabilidad, setAceptarResponsabilidad] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState<"tyc" | "privacidad" | "compromiso" | null>(null);
+
   useEffect(() => {
     auth.signOut().then(() => {
       logger.info("Sesión cerrada");
@@ -114,6 +119,10 @@ const Register = (): JSX.Element => {
 
   const handleRegistro = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!aceptarTyc || !aceptarPrivacidad || !aceptarResponsabilidad) {
+      setError(t("error_aceptar_terminos_privacidad_responsabilidad"));
+      return;
+    }
     setError("");
     setIsSubmitting(true);
     setGlobalLoading(true);
@@ -158,6 +167,18 @@ const Register = (): JSX.Element => {
 
       if (!res.ok) throw new Error(t("error_guardar_backend"));
 
+      try {
+        await fetch(`${config.apiBaseUrl}/usuarios/me/tyc/accept`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+      } catch (tycErr) {
+        logger.error("Error al auto-aceptar términos en backend", tycErr);
+      }
+
       await refrescarUsuario();
       navigate("/");
 
@@ -170,6 +191,10 @@ const Register = (): JSX.Element => {
   };
 
   const handleSocialSignup = async (provider: any) => {
+    if (!aceptarTyc || !aceptarPrivacidad || !aceptarResponsabilidad) {
+      setError(t("error_aceptar_terminos_privacidad_responsabilidad"));
+      return;
+    }
     setError("");
     setIsSubmitting(true);
     setGlobalLoading(true);
@@ -388,6 +413,95 @@ const Register = (): JSX.Element => {
                   </>
                 )}
 
+                {/* Terms and conditions checkboxes */}
+                <div className="mt-6 border-t border-blueGray-200 pt-4 space-y-4">
+                  {/* Checkbox 1 */}
+                  <div className="flex items-start">
+                    <div className="flex items-center h-5">
+                      <input
+                        id="checkbox-tyc"
+                        type="checkbox"
+                        checked={aceptarTyc}
+                        onChange={(e) => setAceptarTyc(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-blueGray-300 rounded focus:ring-blue-500 cursor-pointer"
+                      />
+                    </div>
+                    <div className="ml-3 text-xs leading-normal">
+                      <label htmlFor="checkbox-tyc" className="font-medium text-blueGray-600 cursor-pointer select-none">
+                        He leído y acepto los{" "}
+                        <span
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setModalAbierto("tyc");
+                          }}
+                          className="text-blue-600 hover:text-blue-800 underline font-semibold cursor-pointer"
+                        >
+                          Términos y Condiciones de Uso
+                        </span>
+                        .
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Checkbox 2 */}
+                  <div className="flex items-start">
+                    <div className="flex items-center h-5">
+                      <input
+                        id="checkbox-privacidad"
+                        type="checkbox"
+                        checked={aceptarPrivacidad}
+                        onChange={(e) => setAceptarPrivacidad(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-blueGray-300 rounded focus:ring-blue-500 cursor-pointer"
+                      />
+                    </div>
+                    <div className="ml-3 text-xs leading-normal">
+                      <label htmlFor="checkbox-privacidad" className="font-medium text-blueGray-600 cursor-pointer select-none">
+                        He leído y acepto la{" "}
+                        <span
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setModalAbierto("privacidad");
+                          }}
+                          className="text-blue-600 hover:text-blue-800 underline font-semibold cursor-pointer"
+                        >
+                          Política de Privacidad
+                        </span>
+                        .
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Checkbox 3 */}
+                  <div className="flex items-start">
+                    <div className="flex items-center h-5">
+                      <input
+                        id="checkbox-responsabilidad"
+                        type="checkbox"
+                        checked={aceptarResponsabilidad}
+                        onChange={(e) => setAceptarResponsabilidad(e.target.checked)}
+                        className="w-4 h-4 text-blue-600 border-blueGray-300 rounded focus:ring-blue-500 cursor-pointer"
+                      />
+                    </div>
+                    <div className="ml-3 text-xs leading-normal">
+                      <label htmlFor="checkbox-responsabilidad" className="font-medium text-blueGray-600 cursor-pointer select-none">
+                        Comprendo que Casa Click es una plataforma que facilita el contacto entre usuarios y profesionales independientes, sin participar en la contratación, ejecución ni cobro de los servicios ofrecidos.{" "}
+                        <span
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setModalAbierto("compromiso");
+                          }}
+                          className="text-blue-600 hover:text-blue-800 underline font-semibold cursor-pointer"
+                        >
+                          (Ver Compromiso de Comunidad)
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="text-center mt-6">
                   <button
                     type="submit"
@@ -402,6 +516,42 @@ const Register = (): JSX.Element => {
           </div>
         </div>
       </div>
+
+      {/* Legal Text Modals */}
+      {modalAbierto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[85vh] flex flex-col">
+            <div className="px-6 py-4 border-b border-blueGray-200 flex justify-between items-center bg-blueGray-50 rounded-t-lg">
+              <h3 className="text-lg font-bold text-blueGray-800">
+                {modalAbierto === "tyc" && "Términos y Condiciones de Uso"}
+                {modalAbierto === "privacidad" && "Política de Privacidad"}
+                {modalAbierto === "compromiso" && "Compromiso de Comunidad"}
+              </h3>
+              <button
+                onClick={() => setModalAbierto(null)}
+                className="text-blueGray-500 hover:text-blueGray-800 text-2xl font-bold cursor-pointer outline-none focus:outline-none"
+                type="button"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto text-sm text-blueGray-600 whitespace-pre-wrap leading-relaxed flex-1">
+              {modalAbierto === "tyc" && t("texto_terminos_condiciones")}
+              {modalAbierto === "privacidad" && t("texto_politica_privacidad")}
+              {modalAbierto === "compromiso" && t("texto_compromiso_comunidad")}
+            </div>
+            <div className="px-6 py-4 border-t border-blueGray-200 flex justify-end bg-blueGray-50 rounded-b-lg">
+              <button
+                onClick={() => setModalAbierto(null)}
+                className="bg-blueGray-800 text-white active:bg-blueGray-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none transition-all duration-150 cursor-pointer"
+                type="button"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
