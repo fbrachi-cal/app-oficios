@@ -21,13 +21,13 @@ const UserContext = createContext<{
     setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
     profileStatus: ProfileStatus;
     profileLoading: boolean;
-    refrescarUsuario: () => Promise<void>;
+    refrescarUsuario: (fUser?: any) => Promise<void>;
 }>({
     user: null,
     setUser: () => { },
     profileStatus: "loading",
     profileLoading: true,
-    refrescarUsuario: async () => { },
+    refrescarUsuario: async (fUser?: any) => { },
 });
 
 export const useUser = () => useContext(UserContext);
