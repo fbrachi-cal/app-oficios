@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import { auth } from "../firebase";
 import config from "../config";
+import { fetchConToken } from "../utils/fetchConToken";
 
 type UserData = {
     id: string;
@@ -42,10 +43,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (firebaseUser) {
             setProfileStatus("loading");
             try {
-                const token = await firebaseUser.getIdToken();
-                const res = await fetch(`${config.apiBaseUrl}/usuarios/me`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const res = await fetchConToken(`${config.apiBaseUrl}/usuarios/me`);
                 if (res.status === 200) {
                     const data = await res.json();
                     setUser(data);

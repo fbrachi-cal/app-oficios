@@ -4,6 +4,7 @@ import { onAuthStateChanged, getIdToken } from 'firebase/auth';
 import { auth } from '../firebase';
 import config from '../config';
 import { useUser } from './UserContext';
+import { fetchConToken } from "../utils/fetchConToken";
 
 interface AuthContextType {
   usuario: any;
@@ -39,13 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Gate role/type loading behind profileStatus === "ready"
       if (usuario && profileStatus === "ready") {
         try {
-          const token = await getIdToken(usuario);
-          const res = await fetch(`${config.apiBaseUrl}/usuarios/me/tipo`, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const res = await fetchConToken(`${config.apiBaseUrl}/usuarios/me/tipo`);
 
           if (res.ok) {
             const data = await res.json();
