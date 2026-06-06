@@ -5,6 +5,7 @@ import { useUser } from "../../context/UserContext";
 import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
 import config from "../../config";
 import { auth } from "../../firebase";
+import { fetchConToken } from "../../utils/fetchConToken";
 import { JSX } from "react/jsx-runtime";
 import default_avatar from "../../assets/img/default_avatar.png";
 import { useNavigate } from "react-router-dom";
@@ -132,14 +133,8 @@ const UpdateProfile = (): JSX.Element => {
         payload.subcategorias = subcategoriasSeleccionadas;
       }
 
-      const token = await auth.currentUser?.getIdToken();
-
-      const res = await fetch(`${config.apiBaseUrl}/usuarios/me`, {
+      const res = await fetchConToken(`${config.apiBaseUrl}/usuarios/me`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
         body: JSON.stringify(payload),
       });
 

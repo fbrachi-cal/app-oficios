@@ -30,10 +30,37 @@ axiosWithAuth.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor para atrapar 403 (suspensiones/bloqueos) y redirigir
+// Interceptor para atrapar 401 (token expirado/inválido) y reintentar, o 403 (suspensiones/bloqueos) y redirigir
 axiosWithAuth.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const originalRequest = error.config;
+
+    // Si responde con 401 y no hemos reintentado todavía
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        const user = getAuth().currentUser;
+        if (user) {
+          // Forzar refresco de token Firebase
+          const token = await user.getIdToken(true);
+          
+          // Actualizar cabecera de autorización en originalRequest
+          if (originalRequest.headers instanceof AxiosHeaders) {
+            originalRequest.headers.set("Authorization", `Bearer ${token}`);
+          } else {
+            originalRequest.headers = new AxiosHeaders(originalRequest.headers);
+            originalRequest.headers.set("Authorization", `Bearer ${token}`);
+          }
+          
+          // Reintentar la solicitud original con el nuevo token
+          return axiosWithAuth(originalRequest);
+        }
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
+    }
+
     if (error.response?.status === 403 && error.response?.data?.detail?.status) {
       const { status, reason, expires_at } = error.response.data.detail;
       const auth = getAuth();

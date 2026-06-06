@@ -49,6 +49,9 @@ const Register = (): JSX.Element => {
         }
       } else if (profileStatus === "missing") {
         navigate("/completar-perfil", { replace: true });
+      } else if (profileStatus === "error") {
+        setError(t("error_verificar_usuario"));
+        auth.signOut();
       }
     }
   }, [usuario, profileStatus, profileLoading, backendUser, navigate]);

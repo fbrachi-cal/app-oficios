@@ -104,50 +104,56 @@ const PerfilProfesional: React.FC = () => {
           />
           <h2 className="text-2xl font-bold text-neutral-900 mb-1">{profesional.nombre}</h2>
           <p className="text-neutral-500 font-medium">
-            {profesional.subcategorias?.join(", ") || t("sin_oficios")}
+            {profesional.tipo === "cliente" ? t("rol_cliente") : (profesional.subcategorias?.join(", ") || t("sin_oficios"))}
           </p>
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4 mb-10">
+        <div className={`grid ${profesional.tipo === "cliente" ? "grid-cols-2" : "grid-cols-3"} gap-4 mb-10`}>
           <div className="card p-4 text-center">
             <FiBriefcase className="mx-auto text-brand-500 mb-2" size={20} />
             <div className="text-xl font-bold text-neutral-900">{profesional.cantidadCalificaciones ?? 0}</div>
-            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">{t("trabajos")}</div>
+            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">
+              {profesional.tipo === "cliente" ? t("trabajos_solicitados") : t("trabajos")}
+            </div>
           </div>
           <div className="card p-4 text-center">
             <FiStar className="mx-auto text-warning-500 mb-2" size={20} />
             <div className="text-xl font-bold text-neutral-900">{profesional.promedioCalificacion ?? 0}</div>
             <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">{t("calificacion")}</div>
           </div>
-          <div className="card p-4 text-center">
-            <FiClock className="mx-auto text-success-500 mb-2" size={20} />
-            <div className="text-xl font-bold text-neutral-900">{profesional.disponibilidad || "N/A"}</div>
-            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">{t("disponibilidad")}</div>
-          </div>
+          {profesional.tipo !== "cliente" && (
+            <div className="card p-4 text-center">
+              <FiClock className="mx-auto text-success-500 mb-2" size={20} />
+              <div className="text-xl font-bold text-neutral-900">{profesional.disponibilidad || "N/A"}</div>
+              <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">{t("disponibilidad")}</div>
+            </div>
+          )}
         </div>
 
         {/* Description */}
         <div id="acerca-de" className="mb-10 pt-4">
           <h3 className="text-lg font-bold text-neutral-900 mb-3">Acerca de</h3>
           <p className="text-neutral-600 leading-relaxed card p-5 border-neutral-200/60">
-            {profesional.descripcion || t("sin_descripcion_profesional")}
+            {profesional.descripcion || (profesional.tipo === "cliente" ? t("sin_descripcion_cliente") : t("sin_descripcion_profesional"))}
           </p>
         </div>
 
         {/* Zonas */}
-        <div className="mb-10">
-          <h3 className="text-lg font-bold text-neutral-900 mb-3 flex items-center gap-2">
-            <FiMapPin className="text-neutral-400" /> {t("zonas")}
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {profesional.zonas?.map((z: string, i: number) => (
-              <span key={i} className="px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-lg text-sm font-medium border border-neutral-200/60">
-                {z}
-              </span>
-            )) || <span className="text-neutral-500 italic">{t("sin_zonas_asignadas")}</span>}
+        {profesional.tipo !== "cliente" && (
+          <div className="mb-10">
+            <h3 className="text-lg font-bold text-neutral-900 mb-3 flex items-center gap-2">
+              <FiMapPin className="text-neutral-400" /> {t("zonas")}
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {profesional.zonas?.map((z: string, i: number) => (
+                <span key={i} className="px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-lg text-sm font-medium border border-neutral-200/60">
+                  {z}
+                </span>
+              )) || <span className="text-neutral-500 italic">{t("sin_zonas_asignadas")}</span>}
+            </div>
           </div>
-        </div>
+        )}
       </main>
 
       {/* Scroll Hint */}

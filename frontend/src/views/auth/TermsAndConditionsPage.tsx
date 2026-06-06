@@ -5,6 +5,7 @@ import config from "../../config";
 import { useUser } from "../../context/UserContext";
 import { useLoading } from "../../context/LoadingContext";
 import { useTranslation } from "react-i18next";
+import { fetchConToken } from "../../utils/fetchConToken";
 
 const TermsAndConditionsPage = () => {
   const { t } = useTranslation();
@@ -43,15 +44,8 @@ const TermsAndConditionsPage = () => {
     setAccepting(true);
     setGlobalLoading(true);
     try {
-      const firebaseUser = auth.currentUser;
-      if (!firebaseUser) return;
-      const token = await firebaseUser.getIdToken();
-      const res = await fetch(`${config.apiBaseUrl}/usuarios/me/tyc/accept`, {
+      const res = await fetchConToken(`${config.apiBaseUrl}/usuarios/me/tyc/accept`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
       });
       if (res.ok) {
         await refrescarUsuario();
