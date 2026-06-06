@@ -89,7 +89,22 @@ const CompletarPerfil: React.FC = () => {
     logger.info("CompletarPerfil TEMP: handleGuardarPerfil called", { uid, telefonoValidadoPresent: !!telefonoValidado });
     setError("");
     setIsSubmitting(true);
-    let fotoURL = auth.currentUser?.photoURL || "";
+
+    const user = auth.currentUser;
+    if (!user) {
+      setError(t("error_verificar_usuario"));
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (user.uid !== uid) {
+      logger.error("User UID mismatch in CompletarPerfil", { currentUid: user.uid, stateUid: uid });
+      setError(t("error_verificar_usuario"));
+      setIsSubmitting(false);
+      return;
+    }
+
+    let fotoURL = user.photoURL || "";
 
     if (foto) {
       try {
@@ -100,8 +115,9 @@ const CompletarPerfil: React.FC = () => {
     }
 
     try {
-      // Force refresh the Firebase ID token to guarantee token has phone_number claims
-      const tokenActualizado = await auth.currentUser?.getIdToken(true);
+      // Force reload the user and refresh the Firebase ID token to guarantee token has phone_number claims and is not revoked
+      await user.reload();
+      const tokenActualizado = await user.getIdToken(true);
       if (!tokenActualizado) {
         throw new Error(t("error_verificar_usuario"));
       }

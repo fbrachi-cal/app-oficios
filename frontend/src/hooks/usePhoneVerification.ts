@@ -154,6 +154,10 @@ export const usePhoneVerification = () => {
       const credential = PhoneAuthProvider.credential(confirmacion.verificationId, codigo);
       await linkWithCredential(currentUser, credential);
 
+      // Force reload the user and refresh token to guarantee claims/tokens are updated in the local client session
+      await currentUser.reload();
+      await currentUser.getIdToken(true);
+
       setVerificado(true);
       logger.info("Code confirmed and phone linked successfully", { hostname });
       setLoading(false);
@@ -173,6 +177,8 @@ export const usePhoneVerification = () => {
         friendlyError = "No se detectó un usuario autenticado. Por favor, inicie sesión de nuevo.";
       } else if (errorCode === "auth/credential-already-in-use") {
         friendlyError = "Este teléfono ya está asociado a otra cuenta.";
+      } else if (errorCode === "auth/account-exists-with-different-credential") {
+        friendlyError = "El teléfono ya está registrado en otro perfil.";
       } else if (errorCode === "auth/provider-already-linked") {
         friendlyError = "Esta cuenta ya tiene un teléfono verificado y asociado.";
       } else if (errorCode === "auth/requires-recent-login") {
