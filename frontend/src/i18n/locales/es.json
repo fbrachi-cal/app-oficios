@@ -84,7 +84,7 @@
   "confirmar_cancelacion_titulo": "¿Estás seguro?",
   "confirmar_cancelacion_mensaje": "Esta acción es definitiva. La solicitud será cancelada y no podrá recuperarse.",
   "confirmar_confirmacion_titulo": "Confirmar solicitud",
-  "confirmar_confirmacion_mensaje": "¿Estás seguro de que querés confirmar esta solicitud?",
+  "confirmar_confirmacion_mensaje": "¿Todo listo? Al confirmar el trabajo, la solicitud quedará finalizada, se cerrará el intercambio de mensajes y podrás compartir tu experiencia calificando al profesional.",
   "rechazar_solicitud": "Rechazar solicitud",
   "ver": "Ver",
   "solicitudes_recibidas": "Solicitudes recibidas",

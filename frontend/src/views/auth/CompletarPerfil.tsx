@@ -8,6 +8,7 @@ import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
 import { useUser } from "../../context/UserContext";
 import { logger } from "../../utils/logger";
 import { FiUser, FiBriefcase, FiMapPin, FiCamera, FiCheck, FiChevronRight, FiChevronLeft } from "react-icons/fi";
+import { useCategorias } from "../../hooks/useCategorias";
 
 const CompletarPerfil: React.FC = () => {
   const { t } = useTranslation();
@@ -32,9 +33,10 @@ const CompletarPerfil: React.FC = () => {
   const [aceptarResponsabilidad, setAceptarResponsabilidad] = useState(false);
   const [modalAbierto, setModalAbierto] = useState<"tyc" | "privacidad" | "compromiso" | null>(null);
 
+  const { categorias } = useCategorias();
+
   // Data State
   const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
-  const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -74,7 +76,6 @@ const CompletarPerfil: React.FC = () => {
     user.getIdToken().then(setToken);
 
     fetch(`${config.apiBaseUrl}/utils/zonas`).then(r => r.json()).then(setZonasDisponibles);
-    fetch(`${config.apiBaseUrl}/utils/oficios`).then(r => r.json()).then(setOficiosDisponibles);
   }, [navigate]);
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -458,22 +459,29 @@ const CompletarPerfil: React.FC = () => {
 
               <div>
                 <label className="input-label mt-6 mb-3 flex items-center gap-1.5"><FiBriefcase size={14} /> {t("oficios")}</label>
-                <div className="flex flex-wrap gap-2">
-                  {oficiosDisponibles.map(o => {
-                    const isSelected = oficios.includes(o);
-                    return (
-                      <button
-                        key={o}
-                        type="button"
-                        onClick={() => toggleSelection(o, oficios, setOficios)}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
-                          isSelected ? "bg-blue-600 text-white border-blue-600" : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                        }`}
-                      >
-                        {o}
-                      </button>
-                    )
-                  })}
+                <div className="space-y-4">
+                  {categorias.map(cat => (
+                    <div key={cat.id} className="space-y-2">
+                      <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t(`categorias.${cat.nombre}`, { defaultValue: cat.nombre })}</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {cat.subcategorias.map((sc: any) => {
+                          const isSelected = oficios.includes(sc.nombre);
+                          return (
+                            <button
+                              key={sc.nombre}
+                              type="button"
+                              onClick={() => toggleSelection(sc.nombre, oficios, setOficios)}
+                              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
+                                isSelected ? "bg-blue-600 text-white border-blue-600" : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
+                              }`}
+                            >
+                              {t(`categorias.${sc.nombre}`, { defaultValue: sc.nombre })}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
