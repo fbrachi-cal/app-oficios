@@ -12,10 +12,18 @@ class FirebaseUserRepository(UserRepository):
         user_id = user_data.get("id")
         if not user_id:
             raise ValueError("El usuario debe tener un ID")
+            
+        # Align oficios and subcategorias for professional users
+        if user_data.get("tipo") == "profesional":
+            if "oficios" in user_data and user_data["oficios"] and ("subcategorias" not in user_data or not user_data["subcategorias"]):
+                user_data["subcategorias"] = user_data["oficios"]
+            elif "subcategorias" in user_data and user_data["subcategorias"] and ("oficios" not in user_data or not user_data["oficios"]):
+                user_data["oficios"] = user_data["subcategorias"]
+                
         log.info(f"🔥 Datos que se van a guardar: {user_data}")
         
         # Si es profesional, completar categorías desde subcategorías
-        if user_data.get("tipo") == "profesional" and "subcategorias" in user_data:
+        if user_data.get("tipo") == "profesional" and "subcategorias" in user_data and user_data["subcategorias"]:
             subcategorias_usuario = set(user_data["subcategorias"])
             categorias_ref = self.db.collection("categorias").stream()
 

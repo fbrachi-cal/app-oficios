@@ -61,12 +61,24 @@ def actualizar_usuario_autenticado(
     referrals_service = Depends(get_professional_referrals_service)
 ):
     uid = user_data["uid"]
+    usuario_existente = service.obtener_usuario(uid)
+    if not usuario_existente:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+    phone_number = user_data.get("phone_number")
+    
+    # Enforce phone if they don't have it in Firestore yet
+    if not usuario_existente.get("telefono") and not phone_number:
+        raise HTTPException(status_code=400, detail="Se requiere un número de teléfono verificado para completar esta acción.")
+
+    if phone_number:
+        datos.telefono = phone_number
+
     usuario_actualizado = service.actualizar_usuario(uid, datos)
     if usuario_actualizado:
         if usuario_actualizado.get("tipo") == "profesional":
             email = user_data.get("email")
-            phone = user_data.get("phone_number")
-            referrals_service.link_professional(uid, phone=phone, email=email)
+            referrals_service.link_professional(uid, phone=phone_number, email=email)
         return {"mensaje": "Usuario actualizado con éxito", "usuario": usuario_actualizado}
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
@@ -95,16 +107,25 @@ def registrar_usuario(
     referrals_service = Depends(get_professional_referrals_service)
 ):
     try:
+        # Validate phone_number is present in Firebase user data
+        phone_number = user_data.get("phone_number")
+        if not phone_number:
+            raise HTTPException(status_code=400, detail="Se requiere un número de teléfono verificado.")
+
+        # Overwrite user schema's telefono field with the trusted phone_number from verified token
+        usuario.telefono = phone_number
+
         print(f"ANTES DE REGISTRAR: {usuario.dict()}")
         service.registrar_usuario(usuario)
         
         if usuario.tipo == "profesional":
             email = user_data.get("email")
-            phone = user_data.get("phone_number")
-            referrals_service.link_professional(usuario.id, phone=phone, email=email)
+            referrals_service.link_professional(usuario.id, phone=phone_number, email=email)
             
         print("LUEGO DE REGISTRAR")
         return {"mensaje": "Usuario registrado con éxito"}
+    except HTTPException:
+        raise
     except ValueError as e:
         print(f"ERROR: {e}")
         raise HTTPException(status_code=400, detail=str(e))

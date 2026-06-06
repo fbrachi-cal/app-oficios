@@ -26,6 +26,12 @@ const CompletarPerfil: React.FC = () => {
   const [zonas, setZonas] = useState<string[]>([]);
   const [oficios, setOficios] = useState<string[]>([]);
 
+  // Terms Acceptance State
+  const [aceptarTyc, setAceptarTyc] = useState(false);
+  const [aceptarPrivacidad, setAceptarPrivacidad] = useState(false);
+  const [aceptarResponsabilidad, setAceptarResponsabilidad] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState<"tyc" | "privacidad" | "compromiso" | null>(null);
+
   // Data State
   const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
   const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
@@ -94,6 +100,12 @@ const CompletarPerfil: React.FC = () => {
     }
 
     try {
+      // Force refresh the Firebase ID token to guarantee token has phone_number claims
+      const tokenActualizado = await auth.currentUser?.getIdToken(true);
+      if (!tokenActualizado) {
+        throw new Error(t("error_verificar_usuario"));
+      }
+
       const payload: any = {
         id: uid,
         nombre,
@@ -108,33 +120,51 @@ const CompletarPerfil: React.FC = () => {
         }
         payload.zonas = zonas;
         payload.oficios = oficios;
+        payload.subcategorias = oficios; // Keep subcategorias in sync for backend
       }
 
       const res = await fetch(`${config.apiBaseUrl}/usuarios/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${tokenActualizado}`,
         },
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) throw new Error(t("error_guardar_backend"));
+      if (!res.ok) {
+        let detalleError = "";
+        try {
+          const errData = await res.json();
+          detalleError = errData.detail || errData.message || "";
+        } catch (_) {}
+        throw new Error(detalleError || t("error_guardar_backend"));
+      }
 
+      let tycAccepted = false;
       try {
-        await fetch(`${config.apiBaseUrl}/usuarios/me/tyc/accept`, {
+        const acceptRes = await fetch(`${config.apiBaseUrl}/usuarios/me/tyc/accept`, {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${tokenActualizado}`,
             "Content-Type": "application/json",
           },
         });
+        if (acceptRes.ok) {
+          tycAccepted = true;
+        } else {
+          logger.error("Endpoint /usuarios/me/tyc/accept returned non-ok status", { status: acceptRes.status });
+        }
       } catch (tycErr) {
         logger.error("Error al auto-aceptar términos en CompletarPerfil", tycErr);
       }
 
       await refrescarUsuario();
-      navigate("/");
+      if (tycAccepted) {
+        navigate("/");
+      } else {
+        navigate("/terminos-y-condiciones");
+      }
     } catch (err: any) {
       logger.error("Error al completar perfil", err);
       setError(err.message || t("error_completar_perfil", { detalle: err.message }));
@@ -144,7 +174,13 @@ const CompletarPerfil: React.FC = () => {
   };
 
   const canGoNext = () => {
-    if (step === 1) return nombre.trim().length > 0 && telefonoValidado;
+    if (step === 1) {
+      return nombre.trim().length > 0 && 
+             !!telefonoValidado && 
+             aceptarTyc && 
+             aceptarPrivacidad && 
+             aceptarResponsabilidad;
+    }
     if (step === 2) return true; // Tipo is always selected
     if (step === 3 && tipo === "profesional") return zonas.length > 0 && oficios.length > 0;
     return true;
@@ -240,6 +276,95 @@ const CompletarPerfil: React.FC = () => {
               {/* Assuming VerificacionTelefono handles its own UI, we just wrap it */}
               <div className="pt-2">
                 <VerificacionTelefono t={t} onVerified={setTelefonoValidado} />
+              </div>
+
+              {/* Terms and conditions checkboxes */}
+              <div className="mt-6 border-t border-slate-100 pt-4 space-y-4 text-left">
+                {/* Checkbox 1 */}
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="checkbox-tyc"
+                      type="checkbox"
+                      checked={aceptarTyc}
+                      onChange={(e) => setAceptarTyc(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"
+                    />
+                  </div>
+                  <div className="ml-3 text-xs leading-normal">
+                    <label htmlFor="checkbox-tyc" className="font-medium text-slate-600 cursor-pointer select-none">
+                      {t("he_leido_aceptar_tyc")}{" "}
+                      <span
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setModalAbierto("tyc");
+                        }}
+                        className="text-blue-600 hover:text-blue-800 underline font-semibold cursor-pointer"
+                      >
+                        {t("terminos_condiciones")}
+                      </span>
+                      .
+                    </label>
+                  </div>
+                </div>
+
+                {/* Checkbox 2 */}
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="checkbox-privacidad"
+                      type="checkbox"
+                      checked={aceptarPrivacidad}
+                      onChange={(e) => setAceptarPrivacidad(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"
+                    />
+                  </div>
+                  <div className="ml-3 text-xs leading-normal">
+                    <label htmlFor="checkbox-privacidad" className="font-medium text-slate-600 cursor-pointer select-none">
+                      {t("he_leido_aceptar_privacidad")}{" "}
+                      <span
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setModalAbierto("privacidad");
+                        }}
+                        className="text-blue-600 hover:text-blue-800 underline font-semibold cursor-pointer"
+                      >
+                        {t("politica_privacidad")}
+                      </span>
+                      .
+                    </label>
+                  </div>
+                </div>
+
+                {/* Checkbox 3 */}
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="checkbox-responsabilidad"
+                      type="checkbox"
+                      checked={aceptarResponsabilidad}
+                      onChange={(e) => setAceptarResponsabilidad(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer"
+                    />
+                  </div>
+                  <div className="ml-3 text-xs leading-normal">
+                    <label htmlFor="checkbox-responsabilidad" className="font-medium text-slate-600 cursor-pointer select-none">
+                      {t("comprendo_responsabilidad_casa_click")}{" "}
+                      <span
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setModalAbierto("compromiso");
+                        }}
+                        className="text-blue-600 hover:text-blue-800 underline font-semibold cursor-pointer"
+                      >
+                        ({t("ver_compromiso")})
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -368,6 +493,42 @@ const CompletarPerfil: React.FC = () => {
 
         </div>
       </div>
+
+      {/* Legal Text Modals */}
+      {modalAbierto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[85vh] flex flex-col text-left">
+            <div className="px-6 py-4 border-b border-slate-200 flex justify-between items-center bg-slate-50 rounded-t-lg">
+              <h3 className="text-lg font-bold text-slate-800">
+                {modalAbierto === "tyc" && t("terminos_condiciones")}
+                {modalAbierto === "privacidad" && t("politica_privacidad")}
+                {modalAbierto === "compromiso" && t("ver_compromiso")}
+              </h3>
+              <button
+                onClick={() => setModalAbierto(null)}
+                className="text-slate-500 hover:text-slate-800 text-2xl font-bold cursor-pointer outline-none focus:outline-none"
+                type="button"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto text-sm text-slate-600 whitespace-pre-wrap leading-relaxed flex-1">
+              {modalAbierto === "tyc" && t("texto_terminos_condiciones")}
+              {modalAbierto === "privacidad" && t("texto_politica_privacidad")}
+              {modalAbierto === "compromiso" && t("texto_compromiso_comunidad")}
+            </div>
+            <div className="px-6 py-4 border-t border-slate-200 flex justify-end bg-slate-50 rounded-b-lg">
+              <button
+                onClick={() => setModalAbierto(null)}
+                className="bg-slate-800 text-white active:bg-slate-600 text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none transition-all duration-150 cursor-pointer"
+                type="button"
+              >
+                {t("cerrar")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

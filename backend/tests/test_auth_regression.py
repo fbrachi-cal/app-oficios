@@ -107,3 +107,104 @@ def test_registrar_usuario_prevents_overwrite():
     # Assert save_user was NEVER called
     mock_repo.save_user.assert_not_called()
 
+
+def test_registrar_usuario_without_phone_rejected():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    
+    # Mock verify_token to return user info without phone_number
+    app.dependency_overrides[verify_token] = lambda: {"uid": "new_user_123"}
+    
+    with TestClient(app) as client:
+        payload = {
+            "id": "new_user_123",
+            "nombre": "Nico",
+            "tipo": "cliente"
+        }
+        res = client.post("/usuarios/", json=payload)
+        assert res.status_code == 400
+        assert "Se requiere un número de teléfono verificado" in res.json()["detail"]
+        
+    app.dependency_overrides.clear()
+
+
+def test_registrar_usuario_with_phone_success():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    from app.api.dependencies import get_user_repo
+    
+    mock_repo = MagicMock()
+    mock_repo.get_user_by_id.return_value = None  # User doesn't exist yet
+    
+    app.dependency_overrides[verify_token] = lambda: {"uid": "new_user_123", "phone_number": "+5491112345678"}
+    app.dependency_overrides[get_user_repo] = lambda: mock_repo
+    
+    with TestClient(app) as client:
+        payload = {
+            "id": "new_user_123",
+            "nombre": "Nico",
+            "tipo": "cliente"
+        }
+        res = client.post("/usuarios/", json=payload)
+        assert res.status_code == 200
+        assert res.json()["mensaje"] == "Usuario registrado con éxito"
+        
+        # Verify that save_user was called and telefono was securely populated from token
+        saved_arg = mock_repo.save_user.call_args[0][0]
+        assert saved_arg["telefono"] == "+5491112345678"
+        
+    app.dependency_overrides.clear()
+
+
+def test_actualizar_usuario_without_phone_rejected():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    from app.api.dependencies import get_user_repo
+    
+    mock_repo = MagicMock()
+    # Simulates existing user record that DOES NOT have a telefono key
+    mock_repo.get_user_by_id.return_value = {"id": "user_123", "nombre": "Federico", "tipo": "cliente"}
+    
+    app.dependency_overrides[verify_token] = lambda: {"uid": "user_123"}
+    app.dependency_overrides[get_user_repo] = lambda: mock_repo
+    
+    with TestClient(app) as client:
+        payload = {
+            "id": "user_123",
+            "nombre": "Federico Editado",
+            "tipo": "cliente"
+        }
+        res = client.put("/usuarios/me", json=payload)
+        assert res.status_code == 400
+        assert "Se requiere un número de teléfono verificado" in res.json()["detail"]
+        
+    app.dependency_overrides.clear()
+
+
+def test_actualizar_usuario_legacy_retains_phone_success():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    from app.api.dependencies import get_user_repo
+    
+    mock_repo = MagicMock()
+    # Simulates legacy user record that ALREADY has a telefono key
+    mock_repo.get_user_by_id.return_value = {"id": "user_123", "nombre": "Federico", "tipo": "cliente", "telefono": "+5491155555555"}
+    
+    app.dependency_overrides[verify_token] = lambda: {"uid": "user_123"}
+    app.dependency_overrides[get_user_repo] = lambda: mock_repo
+    
+    with TestClient(app) as client:
+        payload = {
+            "id": "user_123",
+            "nombre": "Federico Editado",
+            "tipo": "cliente"
+        }
+        res = client.put("/usuarios/me", json=payload)
+        assert res.status_code == 200
+        assert res.json()["mensaje"] == "Usuario actualizado con éxito"
+        
+    app.dependency_overrides.clear()
