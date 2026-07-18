@@ -66,7 +66,7 @@ async def post_chat_message(
             await notification_service.create_and_send_notification(
                 recipient_uid=recipient_uid,
                 actor_uid=user_id,
-                type="message_received",
+                type="chat_message",
                 title=f"Mensaje de {sender_name}",
                 body=body,
                 related_entity_type="chat",
