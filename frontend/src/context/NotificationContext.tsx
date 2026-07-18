@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 import { getToken, onMessage } from "firebase/messaging";
 import { messagingPromise } from "../firebase";
 import { useUser } from "./UserContext";
@@ -73,10 +74,11 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   }, [user]);
 
-  // 2) Service Worker and FCM token setup
+  // 2) Service Worker and FCM token setup (skipped on native platforms)
   useEffect(() => {
+    if (Capacitor.isNativePlatform()) return;
+
     if (!user || !usuario) {
-      // If user logs out, clear FCM token if registered
       if (fcmToken) {
         notificationService.unregisterFCMToken(fcmToken)
           .then(() => setFcmToken(null))
@@ -86,7 +88,6 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
       return;
     }
 
-    // Register FCM Service Worker
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/firebase-messaging-sw.js")
@@ -98,9 +99,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         });
     }
 
-    // Check permission status defensively
+    if (typeof Notification === "undefined") return;
+
     if (Notification.permission === "default") {
-      // Visual contextual banner delay
       const timer = setTimeout(() => setShowPermissionPrompt(true), 3000);
       return () => clearTimeout(timer);
     } else if (Notification.permission === "granted") {
@@ -108,8 +109,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   }, [user, usuario]);
 
-  // 3) Listen for foreground notifications
+  // 3) Listen for foreground notifications (skipped on native platforms)
   useEffect(() => {
+    if (Capacitor.isNativePlatform()) return;
     let unsubscribe: (() => void) | undefined;
 
     const setupForegroundListener = async () => {
@@ -119,15 +121,11 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
         unsubscribe = onMessage(messaging, (payload) => {
           logger.info("Foreground notification payload received:", payload);
-          // Show foreground app toast
           setToastMessage({
             title: payload.notification?.title || "Casa Click",
             body: payload.notification?.body || "Nueva notificación recibida"
           });
-          // Auto dismiss toast after 5 seconds
           setTimeout(() => setToastMessage(null), 5000);
-
-          // Force refresh list to keep in-app badge in sync
           void fetchNotifications();
         });
       } catch (err) {
@@ -175,6 +173,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   // 4) Request notification permissions contextually
   const requestPushPermission = async () => {
     setShowPermissionPrompt(false);
+    if (typeof Notification === "undefined") return;
     try {
       const permission = await Notification.requestPermission();
       if (permission === "granted") {

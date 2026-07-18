@@ -10,7 +10,7 @@ import { logger } from "../utils/logger";
 
 const ActividadView: React.FC = () => {
   const { t } = useTranslation();
-  const { user } = useUser();
+  const { user, profileLoading } = useUser();
   const navigate = useNavigate();
   const { setLoading } = useLoading();
 
@@ -90,6 +90,10 @@ const ActividadView: React.FC = () => {
         return <span className="badge badge-pending">{t(`estado.${lower}`)}</span>;
     }
   };
+
+  if (!user || profileLoading) {
+    return null;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
