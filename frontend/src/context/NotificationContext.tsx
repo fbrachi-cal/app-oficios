@@ -128,6 +128,19 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
         await PushNotifications.addListener('pushNotificationReceived', (notification) => {
           logger.info("Foreground native notification received", { notification });
+          
+          const data = notification.data;
+          window.dispatchEvent(new CustomEvent("casaclick:notification-received", {
+            detail: {
+              type: data?.type || "unknown",
+              related_entity_type: data?.related_entity_type || "",
+              related_entity_id: data?.related_entity_id || "",
+              requestId: data?.requestId || "",
+              chatId: data?.chatId || "",
+              data: data
+            }
+          }));
+
           setToastMessage({
             title: notification.title || "Casa Click",
             body: notification.body || "Nueva notificación recibida"
@@ -207,6 +220,19 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
         unsubscribe = onMessage(messaging, (payload) => {
           logger.info("Foreground notification payload received:", payload);
+          
+          const data = payload.data;
+          window.dispatchEvent(new CustomEvent("casaclick:notification-received", {
+            detail: {
+              type: data?.type || "unknown",
+              related_entity_type: data?.related_entity_type || "",
+              related_entity_id: data?.related_entity_id || "",
+              requestId: data?.requestId || "",
+              chatId: data?.chatId || "",
+              data: data
+            }
+          }));
+
           setToastMessage({
             title: payload.notification?.title || "Casa Click",
             body: payload.notification?.body || "Nueva notificación recibida"

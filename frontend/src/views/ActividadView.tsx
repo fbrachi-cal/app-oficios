@@ -21,28 +21,38 @@ const ActividadView: React.FC = () => {
   const [modalCalificarAbierta, setModalCalificarAbierta] = useState(false);
   const [solicitudSeleccionada, setSolicitudSeleccionada] = useState<any>(null);
 
-  useEffect(() => {
-    const cargarSolicitudes = async () => {
-      try {
-        setLoading(true);
-        const data = await solicitudService.obtenerSolicitudes();
-        // Sort newest first based on status change date
-        const sorted = data.sort(
-          (a: any, b: any) =>
-            new Date(b.fecha_cambio_estado).getTime() -
-            new Date(a.fecha_cambio_estado).getTime()
-        );
-        setSolicitudes(sorted);
-        setError(null);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const cargarSolicitudes = React.useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await solicitudService.obtenerSolicitudes();
+      const sorted = data.sort(
+        (a: any, b: any) =>
+          new Date(b.fecha_cambio_estado).getTime() -
+          new Date(a.fecha_cambio_estado).getTime()
+      );
+      setSolicitudes(sorted);
+      setError(null);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [setLoading]);
 
+  useEffect(() => {
     if (user) cargarSolicitudes();
-  }, [user, setLoading]);
+  }, [user, cargarSolicitudes]);
+
+  useEffect(() => {
+    const handleNotification = () => {
+      logger.info("Auto-refreshing activity list from foreground notification");
+      if (user) void cargarSolicitudes();
+    };
+    window.addEventListener("casaclick:notification-received", handleNotification);
+    return () => {
+      window.removeEventListener("casaclick:notification-received", handleNotification);
+    };
+  }, [user, cargarSolicitudes]);
 
   const pendingRatingSolicitud = solicitudes.find((s) => {
     if (s.estado !== "confirmada") return false;

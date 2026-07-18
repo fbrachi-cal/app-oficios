@@ -55,7 +55,9 @@ class NotificationService:
                     "type": str(type),
                     "related_entity_type": str(related_entity_type or ""),
                     "related_entity_id": str(related_entity_id or ""),
-                    "notification_id": str(saved_notif.get("id"))
+                    "notification_id": str(saved_notif.get("id")),
+                    "requestId": str(related_entity_id or "") if related_entity_type == "request" else "",
+                    "chatId": str(related_entity_id or "") if related_entity_type == "chat" else ""
                 }
             )
             response = messaging.send_each_for_multicast(message)

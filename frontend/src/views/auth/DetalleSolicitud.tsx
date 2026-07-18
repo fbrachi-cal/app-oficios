@@ -35,6 +35,22 @@ const DetalleSolicitud: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
 
+  useEffect(() => {
+    const handleNotification = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const { requestId, related_entity_id } = customEvent.detail;
+      const targetId = requestId || related_entity_id;
+      if (targetId === id) {
+        logger.info("Auto-refreshing request details from foreground notification", { requestId: targetId });
+        void cargarSolicitud();
+      }
+    };
+    window.addEventListener("casaclick:notification-received", handleNotification);
+    return () => {
+      window.removeEventListener("casaclick:notification-received", handleNotification);
+    };
+  }, [id, user]);
+
   const cargarSolicitud = async () => {
     try {
       setLoading(true);
