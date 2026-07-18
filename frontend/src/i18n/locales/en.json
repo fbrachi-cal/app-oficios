@@ -73,7 +73,7 @@
     "confirmar_cancelacion_titulo": "Are you sure?",
     "confirmar_cancelacion_mensaje": "This action cannot be undone. Do you want to continue?",
     "confirmar_confirmacion_titulo": "Confirm request",
-    "confirmar_confirmacion_mensaje": "Are you sure you want to confirm this request?",
+    "confirmar_confirmacion_mensaje": "Ready? By confirming the job, the request will be finalized, the exchange of messages will be closed, and you will be able to share your experience by rating the professional.",
     "rechazar_solicitud": "Reject request",
     "ver": "View",
     "solicitudes_recibidas": "Received requests",

@@ -9,6 +9,7 @@ type UserData = {
     tipo: string;
     zonas?: string[];
     oficios?: string[];
+    subcategorias?: string[];
     foto?: string;
     descripcion: string;
     disponibilidad: string;    

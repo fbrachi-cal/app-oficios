@@ -11,6 +11,7 @@ import default_avatar from "../../assets/img/default_avatar.png";
 import { useNavigate } from "react-router-dom";
 import { useGamification } from "../../hooks/useGamification";
 import GamificationBadge from "../../components/Gamification/GamificationBadge";
+import { useCategorias } from "../../hooks/useCategorias";
 
 
 const UpdateProfile = (): JSX.Element => {
@@ -28,13 +29,13 @@ const UpdateProfile = (): JSX.Element => {
   const [tipo] = useState<"cliente" | "profesional">(user?.tipo as "cliente" | "profesional");
   const [zonas, setZonas] = useState<string[]>(user?.zonas || []);
   const [subcategoriasSeleccionadas, setSubcategoriasSeleccionadas] = useState<string[]>([]);
-  const [categorias, setCategorias] = useState<any[]>([]);
-  const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<{ nombre: string, orden: number }[]>([]);
   const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
-  const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [descripcion, setDescripcion] = useState<string>(user?.descripcion || "");
   const [disponibilidad, setDisponibilidad] = useState<string>(user?.disponibilidad || "");
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const { categorias } = useCategorias();
 
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,26 +56,21 @@ const UpdateProfile = (): JSX.Element => {
     fetch(`${config.apiBaseUrl}/utils/zonas`)
       .then((res) => res.json())
       .then(setZonasDisponibles);
-
-    fetch(`${config.apiBaseUrl}/utils/categorias`)
-      .then((res) => res.json())
-      .then(setCategorias);
   }, []);
 
   useEffect(() => {
-    fetch(`${config.apiBaseUrl}/utils/categorias`)
-      .then((res) => res.json())
-      .then((data) => {
-        setCategorias(data);
-        const todas = data.flatMap((cat: any) =>
-          cat.subcategorias.map((sub: any) => ({
-            nombre: sub.nombre,
-            categoria: cat.nombre,
-          }))
-        );
-        setSubcategoriasDisponibles(todas);
-      });
-  }, []);
+    if (user && !isInitialized) {
+      setNombre(user.nombre || "");
+      setZonas(user.zonas || []);
+      setSubcategoriasSeleccionadas(user.subcategorias || user.oficios || []);
+      setDescripcion(user.descripcion || "");
+      setDisponibilidad(user.disponibilidad || "");
+      if (user.foto) {
+        setPreview(user.foto);
+      }
+      setIsInitialized(true);
+    }
+  }, [user, isInitialized]);
 
   useEffect(() => {
     if (mensajeExito || error) {
@@ -276,10 +272,10 @@ const UpdateProfile = (): JSX.Element => {
                       }
                     >
                       {categorias.map((cat) => (
-                        <optgroup key={cat.id} label={cat.nombre}>
+                        <optgroup key={cat.id} label={t(`categorias.${cat.nombre}`, { defaultValue: cat.nombre })}>
                           {cat.subcategorias.map((sc: { nombre: string }) => (
                             <option key={`${cat.nombre}-${sc.nombre}`} value={sc.nombre}>
-                              {sc.nombre}
+                              {t(`categorias.${sc.nombre}`, { defaultValue: sc.nombre })}
                             </option>
                           ))}
                         </optgroup>

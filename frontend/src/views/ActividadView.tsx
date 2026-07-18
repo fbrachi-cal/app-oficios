@@ -252,7 +252,7 @@ const ActividadView: React.FC = () => {
         isOpen={modalCalificarAbierta}
         onClose={() => setModalCalificarAbierta(false)}
         onSubmit={enviarCalificacion}
-        titulo={t("califica_al_profesional")}
+        titulo={user?.tipo === "cliente" ? t("califica_al_profesional") : t("califica_al_cliente")}
       />
 
     </div>

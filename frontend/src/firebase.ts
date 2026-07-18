@@ -16,8 +16,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-if (import.meta.env.MODE === 'development' && import.meta.env.VITE_FIREBASE_DISABLE_APP_VERIFICATION === 'true') {
-    (auth as any).settings.appVerificationDisabledForTesting = true;
+const disableAppVerification =
+  import.meta.env.DEV &&
+  import.meta.env.VITE_FIREBASE_DISABLE_APP_VERIFICATION === 'true';
+
+if (disableAppVerification) {
+  (auth as any).settings.appVerificationDisabledForTesting = true;
 }
 
 console.log("[Firebase Init Log]", {

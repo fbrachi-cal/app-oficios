@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
+import { cerrarSesion as authServiceCerrarSesion } from "../../services/authService";
 import { useTranslation } from "react-i18next";
 import { createPopper } from "@popperjs/core";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +19,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({usuario}) => {
     const popoverDropdownRef = useRef<HTMLDivElement>(null);
     const { user } = useUser();
     const cerrarSesion = async () => {
-        await signOut(auth);
+        await authServiceCerrarSesion();
     };
 
     const irAlPerfil = () => {

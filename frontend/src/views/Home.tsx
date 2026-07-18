@@ -1,7 +1,8 @@
 import { logger } from "../utils/logger";
 import { useEffect, useState } from 'react';
 import { auth } from '../firebase';
-import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { cerrarSesion } from '../services/authService';
 import { useNavigate } from 'react-router-dom';
 import config from '../config';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +26,7 @@ const Home = () => {
   }, []);
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await cerrarSesion();
     navigate('/login');
   };
 

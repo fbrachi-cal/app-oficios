@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Capacitor } from "@capacitor/core";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -12,6 +13,7 @@ import { useUser } from "../../context/UserContext";
 import { useAuth } from "../../context/AuthContext";
 import { useLoading } from "../../context/LoadingContext";
 import { logger } from "../../utils/logger";
+import { iniciarSesionConGoogle, cerrarSesion } from "../../services/authService";
 
 // Icons
 import { FiMail, FiLock } from "react-icons/fi";
@@ -53,7 +55,7 @@ const Login: React.FC = () => {
         navigate("/completar-perfil", { replace: true });
       } else if (profileStatus === "error") {
         setError(t("error_verificar_usuario"));
-        auth.signOut();
+        cerrarSesion();
       }
     }
   }, [usuario, profileStatus, profileLoading, backendUser, navigate]);
@@ -73,13 +75,32 @@ const Login: React.FC = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await iniciarSesionConGoogle();
+    } catch (err: any) {
+      logger.error("Error en login con Google", err);
+      const msg = err?.message || String(err);
+      if (
+        msg.toLowerCase().includes("cancel") || 
+        msg.toLowerCase().includes("popup_closed_by_user") || 
+        msg.toLowerCase().includes("user-cancelled")
+      ) {
+        setLoading(false);
+      } else {
+        setError(t("error_inicio_sesion"));
+        setLoading(false);
+      }
+    }
+  };
+
   const handleSocialLogin = async (providerInstance: any) => {
     setError("");
     setLoading(true);
-
     try {
       await signInWithPopup(auth, providerInstance);
-      // Centralized useEffect handles redirect
     } catch (err) {
       logger.error("Error en login social", err);
       setError(t("error_inicio_sesion"));
@@ -111,21 +132,28 @@ const Login: React.FC = () => {
           {/* Social Buttons */}
           <div className="space-y-3 mb-8">
             <button
-              onClick={() => handleSocialLogin(new GoogleAuthProvider())}
+              onClick={handleGoogleLogin}
               className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 text-slate-700 font-semibold text-sm px-4 py-3 rounded-xl hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
               type="button"
             >
               <img alt="Google" className="w-5 h-5" src={googleIcon} />
               Continuar con Google
             </button>
-            <button
-              onClick={() => handleSocialLogin(new FacebookAuthProvider())}
-              className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 text-slate-700 font-semibold text-sm px-4 py-3 rounded-xl hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
-              type="button"
-            >
-              <img alt="Facebook" className="w-5 h-5" src={facebookIcon} />
-              Continuar con Facebook
-            </button>
+
+            {Capacitor.isNativePlatform() ? (
+              <div className="text-center p-3 bg-slate-50 border border-slate-200 text-slate-500 rounded-xl text-xs font-semibold leading-relaxed">
+                El inicio de sesión con Facebook no está disponible en la app móvil.
+              </div>
+            ) : (
+              <button
+                onClick={() => handleSocialLogin(new FacebookAuthProvider())}
+                className="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 text-slate-700 font-semibold text-sm px-4 py-3 rounded-xl hover:bg-slate-50 active:bg-slate-100 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
+                type="button"
+              >
+                <img alt="Facebook" className="w-5 h-5" src={facebookIcon} />
+                Continuar con Facebook
+              </button>
+            )}
           </div>
 
           <div className="relative mb-8">

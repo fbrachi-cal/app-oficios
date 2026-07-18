@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">CasaClick</string>
+    <string name="title_activity_main">CasaClick</string>
+    <string name="package_name">ar.casaclick.app</string>
+    <string name="custom_url_scheme">ar.casaclick.app</string>
+</resources>

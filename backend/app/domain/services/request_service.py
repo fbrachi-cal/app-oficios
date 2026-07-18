@@ -16,6 +16,9 @@ class RequestService:
         if user_id not in [solicitud["solicitante_id"], solicitud["profesional_id"]]:
             raise Exception("No tenés permiso para comentar en esta solicitud")
 
+        if solicitud["estado"] not in ["creada", "consulta", "aceptada"]:
+            raise Exception("No se pueden enviar mensajes en una solicitud finalizada o cancelada")
+
         consulta = {
             "mensaje": mensaje,
             "usuario_id": user_id,

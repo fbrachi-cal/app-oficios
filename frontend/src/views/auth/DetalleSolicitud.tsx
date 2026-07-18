@@ -230,7 +230,7 @@ const DetalleSolicitud: React.FC = () => {
         {faltaCalificar && (
           <div className="card p-6 bg-amber-50 border-amber-200 text-center">
             <FiStar className="text-amber-500 mx-auto mb-3" size={32} />
-            <h3 className="text-lg font-bold text-amber-900 mb-2">¡Calificá el trabajo!</h3>
+            <h3 className="text-lg font-bold text-amber-900 mb-2">¡{user?.tipo === "cliente" ? t("califica_al_profesional") : t("califica_al_cliente")}!</h3>
             <p className="text-sm text-amber-700 mb-4">
               Ayudá a la comunidad contando tu experiencia con {otroUsuario.nombre}.
             </p>
@@ -287,8 +287,7 @@ const DetalleSolicitud: React.FC = () => {
         )}
 
         {/* Input box for active states */}
-        {((user?.tipo === "profesional" && ["creada", "consulta"].includes(solicitud.estado)) ||
-          (user?.tipo === "cliente" && solicitud.estado === "consulta")) && (
+        {["creada", "consulta", "aceptada"].includes(solicitud.estado) && (
           <div className="card p-3 flex items-end gap-2 bg-white sticky bottom-[calc(4rem+6rem)] md:bottom-24 shadow-lg ring-1 ring-slate-200">
             <div className="flex-1 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all p-2 flex flex-col">
               {archivosAdjuntos.length > 0 && (

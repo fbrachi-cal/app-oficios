@@ -1,5 +1,6 @@
 import axios, { AxiosHeaders,InternalAxiosRequestConfig } from "axios";
 import { getAuth } from "firebase/auth";
+import { cerrarSesion } from "../services/authService";
 
 // Crear instancia de Axios
 const axiosWithAuth = axios.create({
@@ -65,7 +66,7 @@ axiosWithAuth.interceptors.response.use(
       const { status, reason, expires_at } = error.response.data.detail;
       const auth = getAuth();
       if (auth.currentUser) {
-        await auth.signOut();
+        await cerrarSesion();
       }
       const searchParams = new URLSearchParams();
       searchParams.set("status", status);
