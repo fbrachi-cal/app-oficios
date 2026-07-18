@@ -184,6 +184,8 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
           });
       }
 
+      if (typeof Notification === "undefined") return;
+
       if (Notification.permission === "default") {
         const timer = setTimeout(() => setShowPermissionPrompt(true), 3000);
         return () => clearTimeout(timer);
@@ -269,6 +271,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         logger.error("Error requesting native push permission:", err);
       }
     } else {
+      if (typeof Notification === "undefined") return;
       try {
         const permission = await Notification.requestPermission();
         if (permission === "granted") {

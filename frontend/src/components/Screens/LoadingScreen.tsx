@@ -8,10 +8,10 @@ const LoadingScreen = () => {
   if (!loading) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[rgba(0,0,0,0.7)] bg-opacity-50">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-lightBlue-500 mb-4"></div>
-        <p className="text-lg font-semibold text-blueGray-700">{t("cargando")}</p>
+    <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black/60 backdrop-blur-xs">
+      <div className="flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-600 mb-4 mx-auto"></div>
+        <p className="text-lg font-semibold text-white">{t("cargando")}</p>
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ const TopNav: React.FC = () => {
             <img
               src={logo}
               alt="Click"
-              className="h-12 lg:h-14 w-auto object-contain"
+              className="h-9 sm:h-12 lg:h-14 w-auto object-contain"
             />
           </Link>
 
@@ -66,7 +66,7 @@ const TopNav: React.FC = () => {
           )}
 
           {/* Right side actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {isAuthenticated ? (
               <>
                 <NotificationBell />
@@ -79,12 +79,12 @@ const TopNav: React.FC = () => {
                   <LanguageSwitcher />
                 </div>
                 <Link to="/login" id="nav-login">
-                  <button className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow-sm transition-colors duration-150">
+                  <button className="bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:text-slate-900 text-[10px] sm:text-xs font-bold uppercase px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg shadow-sm transition-colors duration-150">
                     {t("ingresar")}
                   </button>
                 </Link>
                 <Link to="/registro" id="nav-registro">
-                  <button className="bg-blue-600 border border-transparent text-white hover:bg-blue-700 text-xs font-bold uppercase px-5 py-2.5 rounded-lg shadow-sm transition-all duration-150">
+                  <button className="bg-blue-600 border border-transparent text-white hover:bg-blue-700 text-[10px] sm:text-xs font-bold uppercase px-3 py-2 sm:px-5 sm:py-2.5 rounded-lg shadow-sm transition-all duration-150">
                     {t("registrarse")}
                   </button>
                 </Link>
