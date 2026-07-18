@@ -81,7 +81,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     if (user && usuario) {
       const pendingRoute = localStorage.getItem("pending_push_route");
       if (pendingRoute) {
-        logger.info("Redirecting to pending notification route:", pendingRoute);
+        logger.info("Redirecting to pending notification route", { pendingRoute });
         localStorage.removeItem("pending_push_route");
         navigate(pendingRoute);
       }
@@ -113,7 +113,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         await PushNotifications.removeAllListeners();
 
         await PushNotifications.addListener('registration', (token) => {
-          logger.info("Obtained Native FCM token:", token.value);
+          logger.info("Obtained Native FCM token", { token: token.value ? token.value.substring(0, 10) + "..." : "null" });
           setFcmToken(token.value);
           localStorage.setItem("casaclick_push_token", token.value);
           notificationService.registerPushToken(token.value, {
@@ -127,7 +127,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         });
 
         await PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          logger.info("Foreground native notification received:", notification);
+          logger.info("Foreground native notification received", { notification });
           setToastMessage({
             title: notification.title || "Casa Click",
             body: notification.body || "Nueva notificación recibida"
@@ -138,7 +138,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
         await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
           const data = action.notification.data;
-          logger.info("Tapped native notification payload:", data);
+          logger.info("Tapped native notification payload", { data });
           let targetRoute = "/actividad";
           if (data?.related_entity_type === "request" && data?.related_entity_id) {
             targetRoute = `/solicitud/${data.related_entity_id}`;
