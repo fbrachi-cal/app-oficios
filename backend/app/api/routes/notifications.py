@@ -92,3 +92,85 @@ async def unregister_token(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Error al eliminar token FCM"
         )
+
+from typing import Optional
+
+class DeviceRegistrationPayload(BaseModel):
+    token: str
+    platform: str = "android"
+    app_version: Optional[str] = None
+    device_id: Optional[str] = None
+    permission_status: Optional[str] = None
+
+@router.post("/devices", status_code=status.HTTP_201_CREATED)
+async def register_device(
+    payload: DeviceRegistrationPayload,
+    user_id: str = Depends(get_current_user_id),
+    service: NotificationService = Depends(get_notification_service)
+):
+    try:
+        service.register_device_token(
+            uid=user_id,
+            token=payload.token,
+            platform=payload.platform,
+            app_version=payload.app_version,
+            device_id=payload.device_id,
+            permission_status=payload.permission_status
+        )
+        return {"status": "registered"}
+    except Exception as e:
+        log.error(f"Error registering device token for {user_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error al registrar dispositivo"
+        )
+
+@router.post("/devices/deactivate", status_code=status.HTTP_200_OK)
+async def deactivate_device(
+    payload: FCMTokenPayload,
+    user_id: str = Depends(get_current_user_id),
+    service: NotificationService = Depends(get_notification_service)
+):
+    try:
+        service.unregister_device_token(user_id, payload.token)
+        return {"status": "deactivated"}
+    except Exception as e:
+        log.error(f"Error deactivating device token for {user_id}: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Error al desactivar dispositivo"
+        )
+
+@router.post("/test-push", status_code=status.HTTP_200_OK)
+async def send_test_push(
+    payload: FCMTokenPayload,
+    service: NotificationService = Depends(get_notification_service)
+):
+    import os
+    if os.getenv("ENV") == "production":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Test push endpoint is disabled in production"
+        )
+    try:
+        from firebase_admin import messaging
+        message = messaging.Message(
+            token=payload.token,
+            notification=messaging.Notification(
+                title="CasaClick Test",
+                body="Esta es una notificación de prueba de CasaClick."
+            ),
+            data={
+                "type": "test_push",
+                "message": "Hola, esto es una prueba!"
+            }
+        )
+        msg_id = messaging.send(message)
+        return {"status": "sent", "message_id": msg_id}
+    except Exception as e:
+        log.error(f"Error sending test push: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al enviar push de prueba: {str(e)}"
+        )
+

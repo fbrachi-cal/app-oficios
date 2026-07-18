@@ -24,5 +24,21 @@ export const notificationService = {
   async unregisterFCMToken(token: string) {
     const res = await axios.delete(`/notifications/fcm-token?token=${encodeURIComponent(token)}`);
     return res.data;
+  },
+
+  async registerPushToken(token: string, metadata?: { platform?: string, app_version?: string, device_id?: string, permission_status?: string }) {
+    const res = await axios.post("/notifications/devices", {
+      token,
+      platform: metadata?.platform || "android",
+      app_version: metadata?.app_version,
+      device_id: metadata?.device_id,
+      permission_status: metadata?.permission_status
+    });
+    return res.data;
+  },
+
+  async deactivatePushToken(token: string) {
+    const res = await axios.post("/notifications/devices/deactivate", { token });
+    return res.data;
   }
 };

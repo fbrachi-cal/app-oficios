@@ -33,7 +33,7 @@ async def create_contact(
         await notification_service.create_and_send_notification(
             recipient_uid=payload.professional_id,
             actor_uid=client_id,
-            type="professional_contacted",
+            type="contact_requested",
             title="Te han contactado",
             body=f"{client_name} ha iniciado un contacto contigo.",
             related_entity_type="chat",

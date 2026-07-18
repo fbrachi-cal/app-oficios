@@ -48,6 +48,7 @@ def mock_repo():
         }
     ]
     repo.get_fcm_tokens_by_uid.return_value = ["token-1", "token-2"]
+    repo.get_device_tokens_by_uid.return_value = []
     return repo
 
 @pytest.fixture
@@ -134,7 +135,7 @@ def test_create_and_send_notification_success(mock_send_each, mock_repo):
 
     assert saved["id"] == "notif-new"
     mock_repo.save_notification.assert_called_once()
-    mock_repo.get_fcm_tokens_by_uid.assert_called_once_with("user-abc")
+    mock_repo.get_device_tokens_by_uid.assert_called_once_with("user-abc")
     mock_send_each.assert_called_once()
 
 @patch('firebase_admin.messaging.send_each_for_multicast')
@@ -154,7 +155,6 @@ def test_create_and_send_notification_logs_failures_defensively(mock_send_each, 
     service = NotificationService(repo=mock_repo)
     
     import asyncio
-    # FCM error must not raise an exception, the function should complete successfully
     saved = asyncio.run(service.create_and_send_notification(
         recipient_uid="user-abc",
         actor_uid="user-xyz",
@@ -165,3 +165,44 @@ def test_create_and_send_notification_logs_failures_defensively(mock_send_each, 
 
     assert saved["id"] == "notif-new"
     mock_send_each.assert_called_once()
+
+def test_register_device(client, mock_repo):
+    payload = {
+        "token": "device-token-123",
+        "platform": "android",
+        "app_version": "1.0.0",
+        "device_id": "device-id-xyz",
+        "permission_status": "granted"
+    }
+    response = client.post("/notifications/devices", json=payload)
+    assert response.status_code == 201
+    assert response.json() == {"status": "registered"}
+    mock_repo.save_device_token.assert_called_once_with(
+        "test-user-123",
+        "device-token-123",
+        "android",
+        "1.0.0",
+        "device-id-xyz",
+        "granted"
+    )
+
+def test_deactivate_device(client, mock_repo):
+    response = client.post("/notifications/devices/deactivate", json={"token": "device-token-123"})
+    assert response.status_code == 200
+    assert response.json() == {"status": "deactivated"}
+    mock_repo.delete_device_token.assert_called_once_with("test-user-123", "device-token-123")
+
+@patch('firebase_admin.messaging.send')
+def test_send_test_push(mock_send, client):
+    mock_send.return_value = "msg-123"
+    response = client.post("/notifications/test-push", json={"token": "test-token-456"})
+    assert response.status_code == 200
+    assert response.json() == {"status": "sent", "message_id": "msg-123"}
+    mock_send.assert_called_once()
+
+@patch('firebase_admin.messaging.send')
+def test_send_test_push_production_forbidden(mock_send, client):
+    with patch.dict('os.environ', {'ENV': 'production'}):
+        response = client.post("/notifications/test-push", json={"token": "test-token-456"})
+        assert response.status_code == 403
+

@@ -9,27 +9,23 @@
     "build:css": "tailwindcss -i ./src/styles/tailwind.input.css -o ./src/tailwind.css --minify",
     "lint": "eslint .",
     "preview": "vite preview",
-
     "cap:sync:android": "pnpm cap sync android",
     "cap:open:android": "pnpm cap open android",
-
     "android:build": "pnpm build && pnpm cap sync android && cd android && gradlew assembleDebug",
     "android:build:unix": "pnpm build && pnpm cap sync android && cd android && ./gradlew assembleDebug",
-
     "build:android:prod": "VITE_API_URL=https://oficios-web-back.onrender.com pnpm build",
     "cap:sync:android:prod": "VITE_API_URL=https://oficios-web-back.onrender.com pnpm cap sync android",
     "android:build:prod": "pnpm build:android:prod && pnpm cap:sync:android:prod && cd android && cmd.exe /c gradlew.bat clean assembleDebug",
-
     "android:install:wsl": "cd android && cp app/build/outputs/apk/debug/app-debug.apk /mnt/c/Users/Federico/Downloads/app-debug.apk && /mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe uninstall ar.casaclick.app || true && /mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe install 'C:\\Users\\Federico\\Downloads\\app-debug.apk'",
     "android:launch:wsl": "/mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe shell monkey -p ar.casaclick.app 1",
     "android:reinstall:prod": "pnpm android:build:prod && pnpm android:install:wsl && pnpm android:launch:wsl",
-
     "android:verify-api-url": "grep -Roh 'oficios-web-back.onrender.com\\|192\\.168\\.[0-9.]*\\|127\\.0\\.0\\.1\\|localhost:8000' dist/assets/*.js android/app/src/main/assets/public/assets/*.js | sort -u"
   },
   "dependencies": {
     "@capacitor-firebase/authentication": "6.3.1",
     "@capacitor/android": "^6.2.1",
     "@capacitor/core": "^6.2.1",
+    "@capacitor/push-notifications": "^6.0.5",
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/forms": "^0.5.10",
     "axion": "^0.1.0",

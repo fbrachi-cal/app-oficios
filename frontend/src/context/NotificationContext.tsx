@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Capacitor } from "@capacitor/core";
 import { getToken, onMessage } from "firebase/messaging";
 import { messagingPromise } from "../firebase";
 import { useUser } from "./UserContext";
@@ -8,6 +7,9 @@ import { notificationService } from "../services/notificationService";
 import { useTranslation } from "react-i18next";
 import { logger } from "../utils/logger";
 import { FiBell, FiX } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
+import { PushNotifications } from "@capacitor/push-notifications";
 
 interface NotificationType {
   id: string;
@@ -40,6 +42,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const { user } = useUser();
   const { usuario } = useAuth();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -65,7 +68,6 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   useEffect(() => {
     if (user) {
       fetchNotifications();
-      // Poll every 30 seconds as history fallback
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     } else {
@@ -74,46 +76,130 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     }
   }, [user]);
 
-  // 2) Service Worker and FCM token setup (skipped on native platforms)
+  // Redirect if there is a pending push notification route
   useEffect(() => {
-    if (Capacitor.isNativePlatform()) return;
+    if (user && usuario) {
+      const pendingRoute = localStorage.getItem("pending_push_route");
+      if (pendingRoute) {
+        logger.info("Redirecting to pending notification route:", pendingRoute);
+        localStorage.removeItem("pending_push_route");
+        navigate(pendingRoute);
+      }
+    }
+  }, [user, usuario, navigate]);
 
+  // 2) Service Worker and FCM token setup (guarded for native vs web)
+  useEffect(() => {
     if (!user || !usuario) {
-      if (fcmToken) {
-        notificationService.unregisterFCMToken(fcmToken)
-          .then(() => setFcmToken(null))
-          .catch((err) => logger.error("Error unregistering FCM token on logout", err));
+      const savedToken = fcmToken || localStorage.getItem("casaclick_push_token");
+      if (savedToken) {
+        if (Capacitor.isNativePlatform()) {
+          notificationService.deactivatePushToken(savedToken)
+            .catch((err) => logger.error("Error deactivating native push token on logout", err));
+        } else {
+          notificationService.unregisterFCMToken(savedToken)
+            .catch((err) => logger.error("Error unregistering FCM token on logout", err));
+        }
+        localStorage.removeItem("casaclick_push_token");
+        setFcmToken(null);
       }
       setShowPermissionPrompt(false);
       return;
     }
 
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/firebase-messaging-sw.js")
-        .then((reg) => {
-          logger.info("FCM Service Worker registered successfully:", { scope: reg.scope });
-        })
-        .catch((err) => {
-          logger.error("FCM Service Worker registration failed:", err);
+    if (Capacitor.isNativePlatform()) {
+      // Native push flow
+      const addListeners = async () => {
+        await PushNotifications.removeAllListeners();
+
+        await PushNotifications.addListener('registration', (token) => {
+          logger.info("Obtained Native FCM token:", token.value);
+          setFcmToken(token.value);
+          localStorage.setItem("casaclick_push_token", token.value);
+          notificationService.registerPushToken(token.value, {
+            platform: "android",
+            permission_status: "granted"
+          }).catch((err) => logger.error("Error registering native token on backend:", err));
         });
-    }
 
-    if (typeof Notification === "undefined") return;
+        await PushNotifications.addListener('registrationError', (err) => {
+          logger.error("Native push registration error:", err);
+        });
 
-    if (Notification.permission === "default") {
-      const timer = setTimeout(() => setShowPermissionPrompt(true), 3000);
-      return () => clearTimeout(timer);
-    } else if (Notification.permission === "granted") {
-      void setupFCMToken();
+        await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          logger.info("Foreground native notification received:", notification);
+          setToastMessage({
+            title: notification.title || "Casa Click",
+            body: notification.body || "Nueva notificación recibida"
+          });
+          setTimeout(() => setToastMessage(null), 5000);
+          void fetchNotifications();
+        });
+
+        await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+          const data = action.notification.data;
+          logger.info("Tapped native notification payload:", data);
+          let targetRoute = "/actividad";
+          if (data?.related_entity_type === "request" && data?.related_entity_id) {
+            targetRoute = `/solicitud/${data.related_entity_id}`;
+          }
+          if (user && usuario) {
+            navigate(targetRoute);
+          } else {
+            localStorage.setItem("pending_push_route", targetRoute);
+          }
+        });
+      };
+
+      const checkPermissions = async () => {
+        try {
+          const permission = await PushNotifications.checkPermissions();
+          if (permission.receive === "prompt") {
+            const timer = setTimeout(() => setShowPermissionPrompt(true), 3000);
+            return () => clearTimeout(timer);
+          } else if (permission.receive === "granted") {
+            await PushNotifications.register();
+          }
+        } catch (err) {
+          logger.error("Error checking native push permissions:", err);
+        }
+      };
+
+      void addListeners();
+      void checkPermissions();
+
+      return () => {
+        void PushNotifications.removeAllListeners();
+      };
+    } else {
+      // Web only flow
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+          .register("/firebase-messaging-sw.js")
+          .then((reg) => {
+            logger.info("FCM Service Worker registered successfully:", { scope: reg.scope });
+          })
+          .catch((err) => {
+            logger.error("FCM Service Worker registration failed:", err);
+          });
+      }
+
+      if (typeof Notification === "undefined") return;
+
+      if (Notification.permission === "default") {
+        const timer = setTimeout(() => setShowPermissionPrompt(true), 3000);
+        return () => clearTimeout(timer);
+      } else if (Notification.permission === "granted") {
+        void setupFCMToken();
+      }
     }
   }, [user, usuario]);
 
-  // 3) Listen for foreground notifications (skipped on native platforms)
+  // 3) Listen for foreground notifications (Web only)
   useEffect(() => {
     if (Capacitor.isNativePlatform()) return;
-    let unsubscribe: (() => void) | undefined;
 
+    let unsubscribe: (() => void) | undefined;
     const setupForegroundListener = async () => {
       try {
         const messaging = await messagingPromise;
@@ -142,8 +228,9 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
     };
   }, [user]);
 
-  // Token setup helper
+  // Token setup helper (Web only)
   const setupFCMToken = async () => {
+    if (Capacitor.isNativePlatform()) return;
     try {
       const messaging = await messagingPromise;
       if (!messaging) {
@@ -159,9 +246,10 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
       const token = await getToken(messaging, { vapidKey });
       if (token) {
-        logger.info("Obtained FCM token:", { token });
+        logger.info("Obtained Web FCM token:", { token });
         await notificationService.registerFCMToken(token);
         setFcmToken(token);
+        localStorage.setItem("casaclick_push_token", token);
       } else {
         logger.warn("No FCM registration token available. Request permission first.");
       }
@@ -173,14 +261,25 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   // 4) Request notification permissions contextually
   const requestPushPermission = async () => {
     setShowPermissionPrompt(false);
-    if (typeof Notification === "undefined") return;
-    try {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        await setupFCMToken();
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const permission = await PushNotifications.requestPermissions();
+        if (permission.receive === "granted") {
+          await PushNotifications.register();
+        }
+      } catch (err) {
+        logger.error("Error requesting native push permission:", err);
       }
-    } catch (err) {
-      logger.error("Error requesting notification permission:", err);
+    } else {
+      if (typeof Notification === "undefined") return;
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          await setupFCMToken();
+        }
+      } catch (err) {
+        logger.error("Error requesting notification permission:", err);
+      }
     }
   };
 

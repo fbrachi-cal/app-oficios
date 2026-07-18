@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
+import { notificationService } from "./notificationService";
 
 /**
  * Handles Google Sign-In across web and native mobile wrappers.
@@ -42,6 +43,21 @@ export const iniciarSesionConGoogle = async (): Promise<UserCredential> => {
  */
 export const cerrarSesion = async (): Promise<void> => {
   logger.info("Executing global sign out");
+
+  const savedToken = localStorage.getItem("casaclick_push_token");
+  if (savedToken) {
+    try {
+      if (Capacitor.isNativePlatform()) {
+        await notificationService.deactivatePushToken(savedToken);
+      } else {
+        await notificationService.unregisterFCMToken(savedToken);
+      }
+      logger.info("Token deactivated/unregistered successfully on logout");
+    } catch (err) {
+      logger.error("Error deactivating push token on logout (continuing anyway)", err);
+    }
+  }
+
   if (Capacitor.isNativePlatform()) {
     try {
       await FirebaseAuthentication.signOut();
@@ -52,4 +68,6 @@ export const cerrarSesion = async (): Promise<void> => {
   }
   await firebaseSignOut(auth);
   logger.info("Firebase JS SDK sign out successful");
+
+  localStorage.removeItem("casaclick_push_token");
 };

@@ -36,3 +36,27 @@ class NotificationRepository(ABC):
     def get_fcm_tokens_by_uid(self, uid: str) -> List[str]:
         """Retrieves all FCM tokens for a user UID."""
         pass
+
+    @abstractmethod
+    def save_device_token(
+        self,
+        uid: str,
+        token: str,
+        platform: str,
+        app_version: Optional[str] = None,
+        device_id: Optional[str] = None,
+        permission_status: Optional[str] = None,
+    ) -> None:
+        """Stores or updates device details associated with a user UID."""
+        pass
+
+    @abstractmethod
+    def delete_device_token(self, uid: str, token: str) -> None:
+        """Deletes/deactivates a device token for a user UID."""
+        pass
+
+    @abstractmethod
+    def get_device_tokens_by_uid(self, uid: str) -> List[str]:
+        """Retrieves active device tokens for a user UID."""
+        pass
+
