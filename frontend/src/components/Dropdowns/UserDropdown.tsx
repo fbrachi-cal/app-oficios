@@ -30,7 +30,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({usuario}) => {
     const openDropdown = () => {
         if (btnDropdownRef.current && popoverDropdownRef.current) {
             createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
-                placement: "bottom-start",
+                placement: "bottom-end",
             });
         }
         setOpen(true);
