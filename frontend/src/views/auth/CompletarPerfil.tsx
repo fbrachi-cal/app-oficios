@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { auth } from "../../firebase";
+import { cerrarSesion } from "../../services/authService";
 import VerificacionTelefono from "../../components/Screens/VerificacionTelefono";
 import config from "../../config";
 import { subirImagenPerfil } from "../../utils/subirImagenPerfil";
@@ -488,7 +489,7 @@ const CompletarPerfil: React.FC = () => {
 
           {/* Footer Navigation */}
           <div className="mt-8 flex gap-3 pt-6 border-t border-slate-100">
-            {step > 1 && (
+            {step > 1 ? (
               <button
                 type="button"
                 onClick={prevStep}
@@ -496,6 +497,15 @@ const CompletarPerfil: React.FC = () => {
                 disabled={isSubmitting}
               >
                 <FiChevronLeft size={20} />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => cerrarSesion()}
+                className="btn-secondary px-4 py-3 !text-rose-600 hover:!bg-rose-50 active:!bg-rose-100 transition-colors"
+                disabled={isSubmitting}
+              >
+                Cancelar
               </button>
             )}
             

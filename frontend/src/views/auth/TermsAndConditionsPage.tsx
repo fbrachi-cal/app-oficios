@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../../firebase";
+import { cerrarSesion } from "../../services/authService";
 import config from "../../config";
 import { useUser } from "../../context/UserContext";
 import { useLoading } from "../../context/LoadingContext";
@@ -80,15 +80,21 @@ const TermsAndConditionsPage = () => {
             {terms?.text || t("error_cargar_terminos")}
           </div>
 
-          <div className="flex items-center justify-end">
+          <div className="flex flex-col gap-3 mt-4">
             <button
               onClick={handleAccept}
               disabled={accepting || !terms}
-              className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+              className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
                 (accepting || !terms) ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
               {accepting ? t("aceptando") : t("aceptar_terminos")}
+            </button>
+            <button
+              onClick={() => cerrarSesion()}
+              className="w-full flex justify-center py-3 px-4 border border-slate-200 rounded-xl text-sm font-medium text-rose-600 hover:bg-rose-50 active:bg-rose-100 transition-colors focus:outline-none"
+            >
+              Cancelar / Cerrar Sesión
             </button>
           </div>
         </div>

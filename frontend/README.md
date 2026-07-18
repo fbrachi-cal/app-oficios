@@ -18,6 +18,7 @@ Desarrollado con **React + TypeScript + Vite** sobre **Tailwind CSS**.
 8. [Módulo de administración](#-módulo-de-administración)
 9. [Módulo de recruiter](#-módulo-de-recruiter)
 10. [Estructura del proyecto](#-estructura-del-proyecto)
+11. [Build móvil (Android)](#-build-móvil-android)
 
 ---
 
@@ -289,6 +290,63 @@ src/
 │
 └── App.tsx             ← Árbol de rutas principal
 ```
+
+---
+
+## 📱 Build móvil (Android)
+
+La aplicación web puede compilarse y ejecutarse como una aplicación nativa de Android usando **Capacitor**.
+
+> [!NOTE]
+> **Compatibilidad de versiones**: Este proyecto utiliza **Capacitor v6** para mantener compatibilidad con entornos de desarrollo basados en **NodeJS v20**. Las versiones más recientes de Capacitor (v7+) requieren obligatoriamente NodeJS v22 o superior.
+
+### Prerrequisitos
+
+- Android Studio.
+- Android SDK instalado y configurado.
+
+### Configuración inicial (Solo la primera vez)
+
+Si la carpeta `android/` no existe en el proyecto frontend, inicializala corriendo:
+
+```bash
+pnpm cap add android
+```
+
+### Compilar y Sincronizar
+
+Cada vez que realices cambios en el código frontend y desees probarlos en Android:
+
+1. Generar la compilación del frontend:
+   ```bash
+   pnpm build
+   ```
+
+2. Sincronizar los archivos compilados con el proyecto nativo de Android:
+   ```bash
+   pnpm cap:sync:android
+   ```
+
+3. Abrir el proyecto en Android Studio para ejecutarlo en un emulador o dispositivo real:
+   ```bash
+   pnpm cap:open:android
+   ```
+
+### Compilar APK de depuración directamente
+
+Para compilar un APK debug directamente desde la terminal, utiliza el script correspondiente a tu sistema operativo:
+
+- **Windows**:
+  ```bash
+  pnpm android:build
+  ```
+
+- **Linux / macOS / WSL**:
+  ```bash
+  pnpm android:build:unix
+  ```
+
+*Nota: Requiere tener configurada la variable `ANDROID_HOME` o un archivo `android/local.properties` (no commiteado al repositorio) que apunte a la ubicación de tu Android SDK.*
 
 ---
 

@@ -2,6 +2,7 @@ import { logger } from "../../utils/logger";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Capacitor } from "@capacitor/core";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
@@ -10,6 +11,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../../firebase";
+import { iniciarSesionConGoogle, cerrarSesion } from "../../services/authService";
 
 import facebookIcon from "../../assets/img/facebook.svg";
 import googleIcon from "../../assets/img/google.svg";
@@ -32,7 +34,7 @@ const Register = (): JSX.Element => {
   const { refrescarUsuario, profileStatus, profileLoading, user: backendUser } = useUser();
 
   useEffect(() => {
-    auth.signOut().then(() => {
+    cerrarSesion().then(() => {
       logger.info("Sesión cerrada");
     });
   }, []);
@@ -51,7 +53,7 @@ const Register = (): JSX.Element => {
         navigate("/completar-perfil", { replace: true });
       } else if (profileStatus === "error") {
         setError(t("error_verificar_usuario"));
-        auth.signOut();
+        cerrarSesion();
       }
     }
   }, [usuario, profileStatus, profileLoading, backendUser, navigate]);
@@ -81,6 +83,29 @@ const Register = (): JSX.Element => {
       setGlobalLoading(false);
     }
   };
+  const handleGoogleSignup = async () => {
+    setError("");
+    setIsSubmitting(true);
+    setGlobalLoading(true);
+    try {
+      await iniciarSesionConGoogle();
+    } catch (err: any) {
+      logger.error("Error en registro con Google", err);
+      const msg = err?.message || String(err);
+      if (
+        msg.toLowerCase().includes("cancel") || 
+        msg.toLowerCase().includes("popup_closed_by_user") || 
+        msg.toLowerCase().includes("user-cancelled")
+      ) {
+        setIsSubmitting(false);
+        setGlobalLoading(false);
+      } else {
+        setError(t("error_registro_red_social"));
+        setIsSubmitting(false);
+        setGlobalLoading(false);
+      }
+    }
+  };
 
   const handleSocialSignup = async (provider: any) => {
     setError("");
@@ -88,7 +113,6 @@ const Register = (): JSX.Element => {
     setGlobalLoading(true);
     try {
       await signInWithPopup(auth, provider);
-      // Centralized useEffect handles redirect
     } catch (err) {
       logger.error("Error en registro social", err);
       setError(t("error_registro_red_social"));
@@ -103,29 +127,38 @@ const Register = (): JSX.Element => {
         <div className="w-full lg:w-6/12 px-4">
           <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
             <div className="rounded-t mb-0 px-6 py-6">
-              <div className="text-center mb-3">
-                <h6 className="text-blueGray-500 text-sm font-bold">
-                  {t("registrarse_con")}
-                </h6>
-              </div>
-              <div className="btn-wrapper text-center">
-                <button
-                  onClick={() => handleSocialSignup(new FacebookAuthProvider())}
-                  className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                  type="button"
-                >
-                  <img alt="Facebook" className="w-5 mr-1" src={facebookIcon} />
-                  Facebook
-                </button>
-                <button
-                  onClick={() => handleSocialSignup(new GoogleAuthProvider())}
-                  className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                  type="button"
-                >
-                  <img alt="Google" className="w-5 mr-1" src={googleIcon} />
-                  Google
-                </button>
-              </div>
+              <>
+                <div className="text-center mb-3">
+                  <h6 className="text-blueGray-500 text-sm font-bold">
+                    {t("registrarse_con")}
+                  </h6>
+                </div>
+                <div className="btn-wrapper text-center flex flex-wrap justify-center items-center gap-2">
+                  <button
+                    onClick={handleGoogleSignup}
+                    className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
+                    type="button"
+                  >
+                    <img alt="Google" className="w-5 mr-1" src={googleIcon} />
+                    Google
+                  </button>
+
+                  {Capacitor.isNativePlatform() ? (
+                    <div className="w-full text-center text-xs text-blueGray-500 font-semibold mt-1">
+                      El registro con Facebook no está disponible en la app móvil.
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleSocialSignup(new FacebookAuthProvider())}
+                      className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
+                      type="button"
+                    >
+                      <img alt="Facebook" className="w-5 mr-1" src={facebookIcon} />
+                      Facebook
+                    </button>
+                  )}
+                </div>
+              </>
               <hr className="mt-6 border-b-1 border-blueGray-300" />
             </div>
             <div className="flex-auto px-4 lg:px-10 py-10 pt-0">

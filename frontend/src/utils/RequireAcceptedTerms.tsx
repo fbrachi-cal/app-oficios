@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useUser } from "../context/UserContext";
+import { cerrarSesion } from "../services/authService";
 
 const RequireAcceptedTerms = () => {
   const { loading: authLoading, usuario } = useAuth();
@@ -54,12 +55,20 @@ const RequireAcceptedTerms = () => {
           <p className="text-neutral-600 mb-6">
             No pudimos conectar con el servidor para verificar tu perfil. Por favor, intenta de nuevo más tarde.
           </p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm"
-          >
-            Reintentar
-          </button>
+          <div className="flex flex-col gap-3">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-xl transition-colors shadow-sm"
+            >
+              Reintentar
+            </button>
+            <button 
+              onClick={() => cerrarSesion()} 
+              className="w-full bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold py-3 px-4 rounded-xl transition-colors"
+            >
+              Volver al Login
+            </button>
+          </div>
         </div>
       </div>
     );
