@@ -24,13 +24,13 @@ const UserContext = createContext<{
     setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
     profileStatus: ProfileStatus;
     profileLoading: boolean;
-    refrescarUsuario: (fUser?: any) => Promise<void>;
+    refrescarUsuario: (fUser?: any) => Promise<ProfileStatus>;
 }>({
     user: null,
     setUser: () => { },
     profileStatus: "loading",
     profileLoading: true,
-    refrescarUsuario: async (fUser?: any) => { },
+    refrescarUsuario: async (fUser?: any) => "loading" as ProfileStatus,
 });
 
 export const useUser = () => useContext(UserContext);
@@ -40,7 +40,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [profileStatus, setProfileStatus] = useState<ProfileStatus>("loading");
     const [loadedUid, setLoadedUid] = useState<string>("");
 
-    const refrescarUsuario = async (fUser?: any) => {
+    const refrescarUsuario = async (fUser?: any): Promise<ProfileStatus> => {
         const firebaseUser = fUser || auth.currentUser;
         if (firebaseUser) {
             setProfileStatus("loading");
@@ -50,9 +50,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     const data = await res.json();
                     setUser(data);
                     setProfileStatus("ready");
+                    return "ready";
                 } else if (res.status === 404) {
                     setUser(null);
                     setProfileStatus("missing");
+                    return "missing";
                 } else if (res.status === 403) {
                     setUser(null);
                     setProfileStatus("error");
@@ -66,14 +68,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     } catch (e) {
                         window.location.href = "/bloqueado";
                     }
+                    return "error";
                 } else {
                     setUser(null);
                     setProfileStatus("error");
+                    return "error";
                 }
             } catch (err) {
                 console.error("Error al refrescar usuario:", err);
                 setUser(null);
                 setProfileStatus("error");
+                return "error";
             } finally {
                 setLoadedUid(firebaseUser.uid);
             }
@@ -81,6 +86,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
             setProfileStatus("missing");
             setLoadedUid("");
+            return "missing";
         }
     };
 

@@ -199,9 +199,7 @@ const VerificacionTelefono: React.FC<Props> = ({ onVerified, t }) => {
       {error && <p className="text-red-500 text-sm mt-2 font-medium">{error}</p>}
       
       {/* The recaptcha container must always be present in the DOM for firebase. */}
-      <div className="mt-4">
-        <div id="recaptcha-container"></div>
-      </div>
+      <div id="recaptcha-container"></div>
     </div>
   );
 };

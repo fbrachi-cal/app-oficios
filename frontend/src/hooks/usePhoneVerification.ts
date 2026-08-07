@@ -74,7 +74,7 @@ export const usePhoneVerification = () => {
         auth,
         "recaptcha-container",
         {
-          size: "normal",
+          size: "invisible",
           callback: () => {
             logger.info("reCAPTCHA solved successfully");
           },

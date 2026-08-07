@@ -56,6 +56,37 @@ describe("usePhoneVerification hook", () => {
     expect(result.current.loading).toBe(false);
   });
 
+  it("should initialize RecaptchaVerifier with invisible size and clean it up", async () => {
+    const { result, unmount } = renderHook(() => usePhoneVerification());
+
+    const container = document.createElement("div");
+    container.id = "recaptcha-container";
+    document.body.appendChild(container);
+
+    const mockConfirmationResult = {
+      verificationId: "mock-v-id",
+      confirm: vi.fn(),
+    };
+    vi.mocked(signInWithPhoneNumber).mockResolvedValue(mockConfirmationResult as any);
+
+    await act(async () => {
+      await result.current.enviarSMS("+5491112345678");
+    });
+
+    const { RecaptchaVerifier } = await import("firebase/auth");
+    expect(RecaptchaVerifier).toHaveBeenCalledWith(
+      expect.anything(),
+      "recaptcha-container",
+      expect.objectContaining({ size: "invisible" })
+    );
+
+    // Verify cleanup
+    unmount();
+    expect(window.recaptchaVerifier).toBeUndefined();
+
+    document.body.removeChild(container);
+  });
+
   it("should successfully link credential and update centralized auth state", async () => {
     const mockConfirmationResult = {
       verificationId: "mock-v-id",

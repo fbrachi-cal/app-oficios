@@ -16,9 +16,13 @@ const VerificacionTelefonoPage: React.FC = () => {
 
   const handleVerified = async (phone: string) => {
     if (phone) {
-      await refrescarUsuario();
-      const fromPath = location.state?.from?.pathname || "/";
-      navigate(fromPath, { replace: true });
+      const status = await refrescarUsuario();
+      if (status === "missing") {
+        navigate("/completar-perfil", { replace: true });
+      } else {
+        const fromPath = location.state?.from?.pathname || "/";
+        navigate(fromPath, { replace: true });
+      }
     }
   };
 

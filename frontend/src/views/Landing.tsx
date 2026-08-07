@@ -3,27 +3,42 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, Link } from "react-router-dom";
 import { FiUsers, FiStar, FiCheckCircle } from "react-icons/fi";
 import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/AuthContext";
 import AuthNavbar from "../components/Navbars/AuthNavbar";
 import Footer from "../components/Footers/Footer";
 
 const Landing: React.FC = () => {
   const { t } = useTranslation();
-  const { user } = useUser();
+  const { usuario, loading: authLoading } = useAuth();
+  const { user, profileStatus, profileLoading } = useUser();
   const navigate = useNavigate();
 
   // Role-based redirect for authenticated users
   useEffect(() => {
-    if (user) {
-      if (user.tipo === "profesional") {
-        navigate("/actividad", { replace: true });
-      } else {
-        navigate("/buscar", { replace: true });
+    if (authLoading || profileLoading) return;
+
+    if (usuario) {
+      if (!usuario.phoneNumber) {
+        navigate("/auth/verificar-telefono", { replace: true });
+        return;
+      }
+
+      if (profileStatus === "missing") {
+        navigate("/completar-perfil", { replace: true });
+      } else if (profileStatus === "ready" && user) {
+        if (user.requires_tyc_acceptance) {
+          navigate("/terminos-y-condiciones", { replace: true });
+        } else if (user.tipo === "profesional") {
+          navigate("/actividad", { replace: true });
+        } else {
+          navigate("/buscar", { replace: true });
+        }
       }
     }
-  }, [user, navigate]);
+  }, [usuario, user, profileStatus, authLoading, profileLoading, navigate]);
 
-  // If user is loading or we are redirecting, render nothing to prevent flicker
-  if (user) return null;
+  // If user is loading or we are authenticated and redirecting, render nothing to prevent flicker
+  if (authLoading || (usuario && profileLoading) || (usuario && profileStatus !== "error")) return null;
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
