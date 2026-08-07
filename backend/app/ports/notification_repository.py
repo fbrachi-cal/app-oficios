@@ -46,6 +46,9 @@ class NotificationRepository(ABC):
         app_version: Optional[str] = None,
         device_id: Optional[str] = None,
         permission_status: Optional[str] = None,
+        auth_time: Optional[int] = None,
+        client_sequence: Optional[int] = None,
+        installation_id: Optional[str] = None,
     ) -> None:
         """Stores or updates device details associated with a user UID."""
         pass

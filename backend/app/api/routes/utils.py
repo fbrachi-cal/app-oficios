@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from firebase_admin import firestore
-from app.api.dependencies import get_current_user_id
+from app.api.dependencies import get_current_verified_user_id
 
 
 router = APIRouter(prefix="/utils", tags=["utils"])
@@ -28,7 +28,7 @@ async def listar_categorias():
     return categorias
 
 @router.get("/motivos_cancelacion")
-async def listar_motivos_cancelacion(user_id: str = Depends(get_current_user_id)):
+async def listar_motivos_cancelacion(user_id: str = Depends(get_current_verified_user_id)):
     db = firestore.client()
     snapshot = db.collection("motivos_cancelacion").stream()
     motivos = []

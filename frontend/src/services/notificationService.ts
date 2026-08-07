@@ -26,13 +26,15 @@ export const notificationService = {
     return res.data;
   },
 
-  async registerPushToken(token: string, metadata?: { platform?: string, app_version?: string, device_id?: string, permission_status?: string }) {
+  async registerPushToken(token: string, metadata?: { platform?: string, app_version?: string, device_id?: string, permission_status?: string, client_sequence?: number, installation_id?: string }) {
     const res = await axios.post("/notifications/devices", {
       token,
       platform: metadata?.platform || "android",
       app_version: metadata?.app_version,
       device_id: metadata?.device_id,
-      permission_status: metadata?.permission_status
+      permission_status: metadata?.permission_status,
+      client_sequence: metadata?.client_sequence,
+      installation_id: metadata?.installation_id
     });
     return res.data;
   },

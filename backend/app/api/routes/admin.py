@@ -11,7 +11,7 @@ from app.api.dependencies import (
     get_admin_service,
     get_report_service,
     get_admin_rating_service,
-    get_current_user_id,
+    get_current_verified_user_id,
 )
 from app.domain.services.admin_service import AdminService
 from app.domain.services.report_service import ReportService
@@ -247,7 +247,7 @@ reports_router = APIRouter(tags=["Reports"])
 @reports_router.post("/reports", status_code=201, summary="File a report (any authenticated user)")
 async def create_report(
     datos: ReportCreate,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     service: ReportService = Depends(get_report_service),
 ):
     report_id = service.create_report(datos.dict(), reporter_uid=user_id)

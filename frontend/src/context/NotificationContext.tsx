@@ -39,8 +39,8 @@ interface NotificationContextProps {
 const NotificationContext = createContext<NotificationContextProps | undefined>(undefined);
 
 export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user } = useUser();
-  const { usuario } = useAuth();
+  const { user, profileStatus } = useUser();
+  const { usuario, loading: authLoading } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
@@ -49,6 +49,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [showPermissionPrompt, setShowPermissionPrompt] = useState(false);
   const [fcmToken, setFcmToken] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<{ title: string; body: string } | null>(null);
+  const [reconciledKey, setReconciledKey] = useState<string | null>(null);
 
   // 1) Load notification history on login
   const fetchNotifications = async () => {
@@ -90,22 +91,77 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
   // 2) Service Worker and FCM token setup (guarded for native vs web)
   useEffect(() => {
+    // Return early if authentication or user profile is still loading.
+    // This prevents temporary null states during startup/refresh/resume
+    // from being incorrectly treated as logouts.
+    if (authLoading || profileStatus === "loading") {
+      return;
+    }
+
     if (!user || !usuario) {
-      const savedToken = fcmToken || localStorage.getItem("casaclick_push_token");
-      if (savedToken) {
-        if (Capacitor.isNativePlatform()) {
-          notificationService.deactivatePushToken(savedToken)
-            .catch((err) => logger.error("Error deactivating native push token on logout", err));
-        } else {
-          notificationService.unregisterFCMToken(savedToken)
-            .catch((err) => logger.error("Error unregistering FCM token on logout", err));
-        }
-        localStorage.removeItem("casaclick_push_token");
-        setFcmToken(null);
-      }
+      // Confirmed unauthenticated / logout state.
+      // Clean up local React states but do NOT proactively deactivate the token
+      // or delete from localStorage here. Explicit logout (cerrarSesion) handles that.
+      if (fcmToken) setFcmToken(null);
+      if (reconciledKey) setReconciledKey(null);
       setShowPermissionPrompt(false);
       return;
     }
+
+    const currentUid = user.id;
+    let active = true;
+
+    const getOrCreateInstallationId = () => {
+      let instId = localStorage.getItem("casaclick_installation_id");
+      if (!instId) {
+        instId = Array.from({ length: 4 }, () => Math.random().toString(36).substring(2, 15)).join("-");
+        localStorage.setItem("casaclick_installation_id", instId);
+      }
+      return instId;
+    };
+
+    const prepareRegistrationPayload = (uid: string, token: string) => {
+      const installationId = getOrCreateInstallationId();
+      const pendingStr = localStorage.getItem("casaclick_pending_registration");
+      let pending = null;
+      try {
+        pending = pendingStr ? JSON.parse(pendingStr) : null;
+      } catch (e) {
+        // ignore malformed local storage
+      }
+      
+      if (pending && pending.uid === uid && pending.token === token && pending.platform === "android") {
+        return {
+          installation_id: installationId,
+          client_sequence: pending.sequence,
+          markSuccess: () => {
+            pending.status = "success";
+            localStorage.setItem("casaclick_pending_registration", JSON.stringify(pending));
+          }
+        };
+      }
+      
+      const currentSeq = parseInt(localStorage.getItem("casaclick_client_sequence") || "0", 10) + 1;
+      localStorage.setItem("casaclick_client_sequence", currentSeq.toString());
+      
+      const newPending = {
+        uid,
+        token,
+        platform: "android",
+        sequence: currentSeq,
+        status: "pending"
+      };
+      localStorage.setItem("casaclick_pending_registration", JSON.stringify(newPending));
+      
+      return {
+        installation_id: installationId,
+        client_sequence: currentSeq,
+        markSuccess: () => {
+          newPending.status = "success";
+          localStorage.setItem("casaclick_pending_registration", JSON.stringify(newPending));
+        }
+      };
+    };
 
     if (Capacitor.isNativePlatform()) {
       // Native push flow
@@ -113,20 +169,41 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         await PushNotifications.removeAllListeners();
 
         await PushNotifications.addListener('registration', (token) => {
+          if (!active) return;
           logger.info("Obtained Native FCM token", { token: token.value ? token.value.substring(0, 10) + "..." : "null" });
+          
+          const newestUid = user?.id;
+          if (!newestUid) return;
+
           setFcmToken(token.value);
           localStorage.setItem("casaclick_push_token", token.value);
+          
+          const payloadInfo = prepareRegistrationPayload(newestUid, token.value);
+          
           notificationService.registerPushToken(token.value, {
             platform: "android",
-            permission_status: "granted"
-          }).catch((err) => logger.error("Error registering native token on backend:", err));
+            permission_status: "granted",
+            client_sequence: payloadInfo.client_sequence,
+            installation_id: payloadInfo.installation_id
+          })
+          .then(() => {
+            payloadInfo.markSuccess();
+            if (active && user?.id === newestUid) {
+              const targetKey = `${newestUid}:${token.value}:android`;
+              setReconciledKey(targetKey);
+            }
+          })
+          .catch((err) => {
+            if (active) logger.error("Error registering native token on backend:", err);
+          });
         });
 
         await PushNotifications.addListener('registrationError', (err) => {
-          logger.error("Native push registration error:", err);
+          if (active) logger.error("Native push registration error:", err);
         });
 
         await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          if (!active) return;
           logger.info("Foreground native notification received", { notification });
           
           const data = notification.data;
@@ -150,6 +227,7 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         });
 
         await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+          if (!active) return;
           const data = action.notification.data;
           logger.info("Tapped native notification payload", { data });
           let targetRoute = "/actividad";
@@ -164,24 +242,57 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         });
       };
 
-      const checkPermissions = async () => {
+      const checkPermissionsAndRegister = async () => {
+        // Reconcile/Reactivate existing token if present
+        const savedToken = localStorage.getItem("casaclick_push_token");
+        if (savedToken) {
+          const targetKey = `${currentUid}:${savedToken}:android`;
+          if (reconciledKey !== targetKey) {
+            logger.info("Reconciling native push token for UID", {
+              uid: currentUid,
+              tokenPrefix: savedToken.substring(0, 10) + "..."
+            });
+            const payloadInfo = prepareRegistrationPayload(currentUid, savedToken);
+            
+            notificationService.registerPushToken(savedToken, {
+              platform: "android",
+              permission_status: "granted",
+              client_sequence: payloadInfo.client_sequence,
+              installation_id: payloadInfo.installation_id
+            })
+            .then(() => {
+              payloadInfo.markSuccess();
+              if (active && user?.id === currentUid) {
+                setFcmToken(savedToken);
+                setReconciledKey(targetKey);
+              }
+            })
+            .catch((err) => {
+              if (active) logger.error("Error reconciling native token on backend:", err);
+            });
+          }
+        }
+
         try {
           const permission = await PushNotifications.checkPermissions();
           if (permission.receive === "prompt") {
-            const timer = setTimeout(() => setShowPermissionPrompt(true), 3000);
+            const timer = setTimeout(() => {
+              if (active) setShowPermissionPrompt(true);
+            }, 3000);
             return () => clearTimeout(timer);
           } else if (permission.receive === "granted") {
             await PushNotifications.register();
           }
         } catch (err) {
-          logger.error("Error checking native push permissions:", err);
+          if (active) logger.error("Error checking native push permissions:", err);
         }
       };
 
       void addListeners();
-      void checkPermissions();
+      void checkPermissionsAndRegister();
 
       return () => {
+        active = false;
         void PushNotifications.removeAllListeners();
       };
     } else {
@@ -190,23 +301,54 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
         navigator.serviceWorker
           .register("/firebase-messaging-sw.js")
           .then((reg) => {
-            logger.info("FCM Service Worker registered successfully:", { scope: reg.scope });
+            if (active) logger.info("FCM Service Worker registered successfully:", { scope: reg.scope });
           })
           .catch((err) => {
-            logger.error("FCM Service Worker registration failed:", err);
+            if (active) logger.error("FCM Service Worker registration failed:", err);
           });
+      }
+
+      // Reconcile/Reactivate existing web token
+      const savedToken = localStorage.getItem("casaclick_push_token");
+      if (savedToken) {
+        const targetKey = `${currentUid}:${savedToken}:web`;
+        if (reconciledKey !== targetKey) {
+          logger.info("Reconciling web push token for UID", {
+            uid: currentUid,
+            tokenPrefix: savedToken.substring(0, 10) + "..."
+          });
+          notificationService.registerFCMToken(savedToken)
+          .then(() => {
+            if (active && user?.id === currentUid) {
+              setFcmToken(savedToken);
+              setReconciledKey(targetKey);
+            }
+          })
+          .catch((err) => {
+            if (active) logger.error("Error reconciling web token on backend:", err);
+          });
+        }
       }
 
       if (typeof Notification === "undefined") return;
 
       if (Notification.permission === "default") {
-        const timer = setTimeout(() => setShowPermissionPrompt(true), 3000);
-        return () => clearTimeout(timer);
+        const timer = setTimeout(() => {
+          if (active) setShowPermissionPrompt(true);
+        }, 3000);
+        return () => {
+          active = false;
+          clearTimeout(timer);
+        };
       } else if (Notification.permission === "granted") {
         void setupFCMToken();
       }
+
+      return () => {
+        active = false;
+      };
     }
-  }, [user, usuario]);
+  }, [user, usuario, authLoading, profileStatus, reconciledKey]);
 
   // 3) Listen for foreground notifications (Web only)
   useEffect(() => {
@@ -257,6 +399,8 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
   // Token setup helper (Web only)
   const setupFCMToken = async () => {
     if (Capacitor.isNativePlatform()) return;
+    const currentUid = user?.id;
+    if (!currentUid) return;
     try {
       const messaging = await messagingPromise;
       if (!messaging) {
@@ -272,10 +416,20 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
       const token = await getToken(messaging, { vapidKey });
       if (token) {
-        logger.info("Obtained Web FCM token:", { token });
+        logger.info("Obtained Web FCM token", { token: token.substring(0, 10) + "..." });
+        
+        // Concurrency check: Ensure user hasn't logged out or switched accounts during token acquisition
+        if (user?.id !== currentUid) {
+          logger.info("Discarding stale token registration: UID changed during token acquisition.");
+          return;
+        }
+
         await notificationService.registerFCMToken(token);
         setFcmToken(token);
         localStorage.setItem("casaclick_push_token", token);
+        
+        const targetKey = `${currentUid}:${token}:web`;
+        setReconciledKey(targetKey);
       } else {
         logger.warn("No FCM registration token available. Request permission first.");
       }

@@ -1,5 +1,5 @@
 from fastapi import Depends, HTTPException
-from app.shared.firebase_auth import verify_token
+from app.shared.firebase_auth import verify_verified_phone
 from app.shared.auth_utils import obtener_tipo
 from typing import Union, List
 
@@ -14,7 +14,7 @@ def require_role(required_roles: Union[str, List[str]]):
     if isinstance(required_roles, str):
         required_roles = [required_roles]
 
-    def role_checker(user_data: dict = Depends(verify_token)):
+    def role_checker(user_data: dict = Depends(verify_verified_phone)):
         tipo = obtener_tipo(user_data["uid"])
         if tipo not in required_roles:
             roles_str = ", ".join(required_roles)
@@ -25,3 +25,4 @@ def require_role(required_roles: Union[str, List[str]]):
         return user_data
 
     return role_checker
+

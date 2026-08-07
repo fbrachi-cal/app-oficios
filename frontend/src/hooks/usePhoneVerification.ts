@@ -2,6 +2,7 @@ import { logger } from "../utils/logger";
 import { useState, useEffect } from "react";
 import { RecaptchaVerifier, signInWithPhoneNumber, PhoneAuthProvider, linkWithCredential } from "firebase/auth";
 import { auth } from "../firebase";
+import { useAuth } from "../context/AuthContext";
 
 declare global {
   interface Window {
@@ -17,6 +18,7 @@ const maskPhone = (phone: string): string => {
 };
 
 export const usePhoneVerification = () => {
+  const { setUsuario } = useAuth();
   const [confirmacion, setConfirmacion] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [verificado, setVerificado] = useState(false);
@@ -157,6 +159,16 @@ export const usePhoneVerification = () => {
       // Force reload the user and refresh token to guarantee claims/tokens are updated in the local client session
       await currentUser.reload();
       await currentUser.getIdToken(true);
+
+      // Trigger centralized auth state update to propagate phoneNumber immediately
+      const reloadedUser = auth.currentUser;
+      if (reloadedUser) {
+        const userClone = Object.create(
+          Object.getPrototypeOf(reloadedUser),
+          Object.getOwnPropertyDescriptors(reloadedUser)
+        );
+        setUsuario(userClone);
+      }
 
       setVerificado(true);
       logger.info("Code confirmed and phone linked successfully", { hostname });

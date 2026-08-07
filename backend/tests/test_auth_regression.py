@@ -116,15 +116,20 @@ def test_registrar_usuario_without_phone_rejected():
     # Mock verify_token to return user info without phone_number
     app.dependency_overrides[verify_token] = lambda: {"uid": "new_user_123"}
     
-    with TestClient(app) as client:
-        payload = {
-            "id": "new_user_123",
-            "nombre": "Nico",
-            "tipo": "cliente"
-        }
-        res = client.post("/usuarios/", json=payload)
-        assert res.status_code == 400
-        assert "Se requiere un número de teléfono verificado" in res.json()["detail"]
+    with patch("firebase_admin.auth.get_user") as mock_get_user:
+        dummy_user = MagicMock()
+        dummy_user.phone_number = None
+        mock_get_user.return_value = dummy_user
+        
+        with TestClient(app) as client:
+            payload = {
+                "id": "new_user_123",
+                "nombre": "Nico",
+                "tipo": "cliente"
+            }
+            res = client.post("/usuarios/", json=payload)
+            assert res.status_code == 403
+            assert res.json()["detail"]["code"] == "PHONE_VERIFICATION_REQUIRED"
         
     app.dependency_overrides.clear()
 
@@ -141,19 +146,24 @@ def test_registrar_usuario_with_phone_success():
     app.dependency_overrides[verify_token] = lambda: {"uid": "new_user_123", "phone_number": "+5491112345678"}
     app.dependency_overrides[get_user_repo] = lambda: mock_repo
     
-    with TestClient(app) as client:
-        payload = {
-            "id": "new_user_123",
-            "nombre": "Nico",
-            "tipo": "cliente"
-        }
-        res = client.post("/usuarios/", json=payload)
-        assert res.status_code == 200
-        assert res.json()["mensaje"] == "Usuario registrado con éxito"
+    with patch("firebase_admin.auth.get_user") as mock_get_user:
+        dummy_user = MagicMock()
+        dummy_user.phone_number = "+5491112345678"
+        mock_get_user.return_value = dummy_user
         
-        # Verify that save_user was called and telefono was securely populated from token
-        saved_arg = mock_repo.save_user.call_args[0][0]
-        assert saved_arg["telefono"] == "+5491112345678"
+        with TestClient(app) as client:
+            payload = {
+                "id": "new_user_123",
+                "nombre": "Nico",
+                "tipo": "cliente"
+            }
+            res = client.post("/usuarios/", json=payload)
+            assert res.status_code == 200
+            assert res.json()["mensaje"] == "Usuario registrado con éxito"
+            
+            # Verify that save_user was called and telefono was securely populated from token
+            saved_arg = mock_repo.save_user.call_args[0][0]
+            assert saved_arg["telefono"] == "+5491112345678"
         
     app.dependency_overrides.clear()
 
@@ -171,15 +181,20 @@ def test_actualizar_usuario_without_phone_rejected():
     app.dependency_overrides[verify_token] = lambda: {"uid": "user_123"}
     app.dependency_overrides[get_user_repo] = lambda: mock_repo
     
-    with TestClient(app) as client:
-        payload = {
-            "id": "user_123",
-            "nombre": "Federico Editado",
-            "tipo": "cliente"
-        }
-        res = client.put("/usuarios/me", json=payload)
-        assert res.status_code == 400
-        assert "Se requiere un número de teléfono verificado" in res.json()["detail"]
+    with patch("firebase_admin.auth.get_user") as mock_get_user:
+        dummy_user = MagicMock()
+        dummy_user.phone_number = None
+        mock_get_user.return_value = dummy_user
+        
+        with TestClient(app) as client:
+            payload = {
+                "id": "user_123",
+                "nombre": "Federico Editado",
+                "tipo": "cliente"
+            }
+            res = client.put("/usuarios/me", json=payload)
+            assert res.status_code == 403
+            assert res.json()["detail"]["code"] == "PHONE_VERIFICATION_REQUIRED"
         
     app.dependency_overrides.clear()
 
@@ -197,14 +212,128 @@ def test_actualizar_usuario_legacy_retains_phone_success():
     app.dependency_overrides[verify_token] = lambda: {"uid": "user_123"}
     app.dependency_overrides[get_user_repo] = lambda: mock_repo
     
-    with TestClient(app) as client:
-        payload = {
-            "id": "user_123",
-            "nombre": "Federico Editado",
-            "tipo": "cliente"
-        }
-        res = client.put("/usuarios/me", json=payload)
-        assert res.status_code == 200
-        assert res.json()["mensaje"] == "Usuario actualizado con éxito"
+    with patch("firebase_admin.auth.get_user") as mock_get_user:
+        dummy_user = MagicMock()
+        dummy_user.phone_number = "+5491155555555"
+        mock_get_user.return_value = dummy_user
+        
+        with TestClient(app) as client:
+            payload = {
+                "id": "user_123",
+                "nombre": "Federico Editado",
+                "tipo": "cliente"
+            }
+            res = client.put("/usuarios/me", json=payload)
+            assert res.status_code == 200
+            assert res.json()["mensaje"] == "Usuario actualizado con éxito"
         
     app.dependency_overrides.clear()
+
+
+def test_firebase_user_not_found_raises_401():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    from firebase_admin.auth import UserNotFoundError
+    
+    app.dependency_overrides[verify_token] = lambda: {"uid": "unknown_user_123"}
+    
+    with patch("firebase_admin.auth.get_user", side_effect=UserNotFoundError("User not found", None)):
+        with TestClient(app) as client:
+            payload = {
+                "id": "unknown_user_123",
+                "nombre": "Nico",
+                "tipo": "cliente"
+            }
+            res = client.post("/usuarios/", json=payload)
+            assert res.status_code == 401
+            assert "Invalid credentials or user not found." in res.json()["detail"]
+            
+    app.dependency_overrides.clear()
+
+
+def test_firebase_service_error_raises_502():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    from firebase_admin.exceptions import FirebaseError
+    
+    app.dependency_overrides[verify_token] = lambda: {"uid": "unknown_user_123"}
+    
+    with patch("firebase_admin.auth.get_user", side_effect=FirebaseError(500, "Service unavailable")):
+        with TestClient(app) as client:
+            payload = {
+                "id": "unknown_user_123",
+                "nombre": "Nico",
+                "tipo": "cliente"
+            }
+            res = client.post("/usuarios/", json=payload)
+            assert res.status_code == 502
+            assert "External authentication service failure." in res.json()["detail"]
+            
+    app.dependency_overrides.clear()
+
+
+def test_firebase_unexpected_error_raises_500():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    
+    app.dependency_overrides[verify_token] = lambda: {"uid": "unknown_user_123"}
+    
+    with patch("firebase_admin.auth.get_user", side_effect=Exception("Internal error")):
+        with TestClient(app) as client:
+            payload = {
+                "id": "unknown_user_123",
+                "nombre": "Nico",
+                "tipo": "cliente"
+            }
+            res = client.post("/usuarios/", json=payload)
+            assert res.status_code == 500
+            assert "Internal validation failure." in res.json()["detail"]
+            
+    app.dependency_overrides.clear()
+
+
+
+def test_mismatched_phone_during_profile_update():
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.shared.firebase_auth import verify_token
+    from app.api.dependencies import get_user_repo
+    
+    mock_repo = MagicMock()
+    # Existing user with phone +5491111111111
+    mock_repo.get_user_by_id.return_value = {
+        "id": "user_123",
+        "nombre": "Federico",
+        "tipo": "cliente",
+        "telefono": "+5491111111111"
+    }
+    
+    app.dependency_overrides[verify_token] = lambda: {"uid": "user_123"}
+    app.dependency_overrides[get_user_repo] = lambda: mock_repo
+    
+    # Firebase Auth has phone +5491122222222
+    with patch("firebase_admin.auth.get_user") as mock_get_user:
+        dummy_user = MagicMock()
+        dummy_user.phone_number = "+5491122222222"
+        mock_get_user.return_value = dummy_user
+        
+        with TestClient(app) as client:
+            payload = {
+                "id": "user_123",
+                "nombre": "Federico Editado",
+                "tipo": "cliente",
+                "telefono": "+5491133333333" # User tries to send a different number
+            }
+            res = client.put("/usuarios/me", json=payload)
+            assert res.status_code == 200
+            
+            # Verify that save_user was called and the phone was overwritten with Auth phone (+5491122222222), ignoring the payload number (+5491133333333)
+            saved_arg = mock_repo.save_user.call_args[0][0]
+            assert saved_arg["telefono"] == "+5491122222222"
+            
+    app.dependency_overrides.clear()
+
+

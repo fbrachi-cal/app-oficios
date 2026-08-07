@@ -19,6 +19,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useLoading } from "../../context/LoadingContext";
 import { useUser } from "../../context/UserContext";
 import { JSX } from "react/jsx-runtime";
+import VersionDisplay from "../../components/VersionDisplay";
 
 const Register = (): JSX.Element => {
   const { t } = useTranslation();
@@ -43,6 +44,10 @@ const Register = (): JSX.Element => {
   useEffect(() => {
     if (usuario && !profileLoading) {
       setGlobalLoading(false);
+      if (!usuario.phoneNumber) {
+        navigate("/auth/verificar-telefono", { replace: true });
+        return;
+      }
       if (profileStatus === "ready" && backendUser) {
         if (backendUser.requires_tyc_acceptance) {
           navigate("/terminos-y-condiciones", { replace: true });
@@ -235,6 +240,7 @@ const Register = (): JSX.Element => {
               </form>
             </div>
           </div>
+          <VersionDisplay className="mt-4" />
         </div>
       </div>
     </div>

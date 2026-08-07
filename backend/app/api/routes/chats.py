@@ -1,6 +1,6 @@
 from http.client import HTTPException
 from fastapi import Body, APIRouter, Depends
-from app.api.dependencies import get_current_user_id, get_chat_repo, get_user_repo, get_notification_service
+from app.api.dependencies import get_current_verified_user_id, get_chat_repo, get_user_repo, get_notification_service
 from app.domain.services.notification_service import NotificationService
 from app.ports.chat_repository import ChatRepository
 from app.ports.user_repository import UserRepository
@@ -12,7 +12,7 @@ router = APIRouter(prefix="/chats", tags=["chats"])
 
 @router.get("/")
 async def list_user_chats(
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     chat_repo: ChatRepository = Depends(get_chat_repo),
     user_repo: UserRepository = Depends(get_user_repo),
 ):
@@ -27,7 +27,7 @@ async def list_user_chats(
 @router.get("/{chat_id}/mensajes")
 async def get_chat_messages(
     chat_id: str,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     chat_repo: ChatRepository = Depends(get_chat_repo),
 ):
     # Opcional: verificar que el usuario sea parte del chat
@@ -41,7 +41,7 @@ async def get_chat_messages(
 async def post_chat_message(
     chat_id: str,
     body: str = Body(..., embed=True),
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     chat_repo: ChatRepository = Depends(get_chat_repo),
     user_repo: UserRepository = Depends(get_user_repo),
     notification_service: NotificationService = Depends(get_notification_service),

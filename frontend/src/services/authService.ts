@@ -70,4 +70,5 @@ export const cerrarSesion = async (): Promise<void> => {
   logger.info("Firebase JS SDK sign out successful");
 
   localStorage.removeItem("casaclick_push_token");
+  localStorage.removeItem("casaclick_pending_registration");
 };

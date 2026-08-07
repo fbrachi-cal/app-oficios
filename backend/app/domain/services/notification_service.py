@@ -104,8 +104,11 @@ class NotificationService:
         app_version: Optional[str] = None,
         device_id: Optional[str] = None,
         permission_status: Optional[str] = None,
+        auth_time: Optional[int] = None,
+        client_sequence: Optional[int] = None,
+        installation_id: Optional[str] = None,
     ) -> None:
-        self.repo.save_device_token(uid, token, platform, app_version, device_id, permission_status)
+        self.repo.save_device_token(uid, token, platform, app_version, device_id, permission_status, auth_time, client_sequence, installation_id)
 
     def unregister_device_token(self, uid: str, token: str) -> None:
         self.repo.delete_device_token(uid, token)

@@ -70,6 +70,14 @@ def get_professional_referrals_service():
     
     return ProfessionalReferralsService(repo, user_repo, gamification_service)
 
+from app.shared.firebase_auth import verify_verified_phone
+
+async def get_current_verified_user_id(user_data: dict = Depends(verify_verified_phone)) -> str:
+    return user_data["uid"]
+
+async def get_current_verified_user_claims(user_data: dict = Depends(verify_verified_phone)) -> dict:
+    return user_data
+
 #async def get_current_user_id(authorization: str = Header(...)) -> str:    
 async def get_current_user_id(authorization: Optional[str] = Header(None)) -> str:
 

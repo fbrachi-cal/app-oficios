@@ -6,8 +6,8 @@ from app.adapters.firebase.firebase_config import get_firestore
 from app.shared.logger import log
 
 class FirebaseNotificationRepository(NotificationRepository):
-    def __init__(self):
-        self.db = get_firestore()
+    def __init__(self, db=None):
+        self.db = db if db is not None else get_firestore()
         self.collection = self.db.collection("notificaciones")
 
     def save_notification(self, notification_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -88,34 +88,96 @@ class FirebaseNotificationRepository(NotificationRepository):
         app_version: Optional[str] = None,
         device_id: Optional[str] = None,
         permission_status: Optional[str] = None,
+        auth_time: Optional[int] = None,
+        client_sequence: Optional[int] = None,
+        installation_id: Optional[str] = None,
     ) -> None:
         import hashlib
         token_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
         doc_ref = self.db.collection("push_tokens").document(token_hash)
-        doc = doc_ref.get()
+        
+        transaction = self.db.transaction()
         now = datetime.utcnow()
         
-        data = {
-            "uid": uid,
-            "token": token,
-            "platform": platform,
-            "active": True,
-            "updated_at": now,
-            "last_seen_at": now,
-        }
-        if app_version is not None:
-            data["app_version"] = app_version
-        if device_id is not None:
-            data["device_id"] = device_id
-        if permission_status is not None:
-            data["permission_status"] = permission_status
+        @firestore.transactional
+        def _run(txn, doc_ref):
+            doc = doc_ref.get(transaction=txn)
+            should_write = True
             
-        if not doc.exists:
-            data["created_at"] = now
-            doc_ref.set(data)
-        else:
-            doc_ref.update(data)
-        log.info(f"Registered device push token for user {uid}")
+            if doc.exists:
+                existing = doc.to_dict()
+                existing_uid = existing.get("uid")
+                existing_auth_time = existing.get("auth_time")
+                existing_client_sequence = existing.get("client_sequence")
+                existing_installation_id = existing.get("installation_id")
+                
+                # 1. Missing auth_time guard
+                if auth_time is None:
+                    if existing_uid != uid:
+                        log.warning(
+                            f"Missing auth_time claim in registration request for user {uid} (token owned by {existing_uid}). Ignoring request."
+                        )
+                        should_write = False
+                else:
+                    # 2. Compare auth_time
+                    if existing_auth_time is not None:
+                        if auth_time < existing_auth_time:
+                            log.info(
+                                f"Ignoring stale token registration request for user {uid}. Incoming auth_time {auth_time} is older than stored auth_time {existing_auth_time}"
+                            )
+                            should_write = False
+                        elif auth_time == existing_auth_time and existing_uid != uid:
+                            # 3. Equal auth_time tie-breaker: check installation_id and client_sequence
+                            if (
+                                installation_id is not None 
+                                and existing_installation_id is not None 
+                                and installation_id == existing_installation_id
+                            ):
+                                if client_sequence is not None and existing_client_sequence is not None:
+                                    if client_sequence <= existing_client_sequence:
+                                        log.info(
+                                            f"Ignoring duplicate/equal auth_time token registration request for user {uid}. Same installation, sequence {client_sequence} is <= stored sequence {existing_client_sequence}."
+                                        )
+                                        should_write = False
+                                else:
+                                    should_write = False
+                            else:
+                                # Different or missing installation_id: reject cross-UID reassignment if auth_time is equal
+                                log.info(
+                                    f"Ignoring duplicate/equal auth_time token registration request for user {uid}. Different or missing installation_id (incoming: {installation_id}, stored: {existing_installation_id})."
+                                )
+                                should_write = False
+
+            if should_write:
+                data = {
+                    "uid": uid,
+                    "token": token,
+                    "platform": platform,
+                    "active": True,
+                    "updated_at": now,
+                    "last_seen_at": now,
+                    "auth_time": auth_time,
+                    "client_sequence": client_sequence,
+                    "installation_id": installation_id,
+                }
+                if app_version is not None:
+                    data["app_version"] = app_version
+                if device_id is not None:
+                    data["device_id"] = device_id
+                if permission_status is not None:
+                    data["permission_status"] = permission_status
+                
+                if not doc.exists:
+                    data["created_at"] = now
+                    txn.set(doc_ref, data)
+                else:
+                    txn.update(doc_ref, data)
+                return True
+            return False
+
+        success = _run(transaction, doc_ref)
+        if success:
+            log.info(f"Registered device push token for user {uid}")
 
     def delete_device_token(self, uid: str, token: str) -> None:
         import hashlib

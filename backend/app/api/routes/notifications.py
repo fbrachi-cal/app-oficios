@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from typing import List, Dict, Any
-from app.api.dependencies import get_current_user_id, get_notification_service
+from app.api.dependencies import get_current_verified_user_id, get_notification_service, get_current_verified_user_claims
 from app.domain.services.notification_service import NotificationService
 from app.shared.logger import log
 
@@ -12,7 +12,7 @@ class FCMTokenPayload(BaseModel):
 
 @router.get("/me", response_model=List[Dict[str, Any]])
 async def get_my_notifications(
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     service: NotificationService = Depends(get_notification_service)
 ):
     try:
@@ -27,7 +27,7 @@ async def get_my_notifications(
 @router.post("/{id}/read", response_model=Dict[str, Any])
 async def read_notification(
     id: str,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     service: NotificationService = Depends(get_notification_service)
 ):
     try:
@@ -49,7 +49,7 @@ async def read_notification(
 
 @router.post("/read-all", response_model=List[Dict[str, Any]])
 async def read_all_notifications(
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     service: NotificationService = Depends(get_notification_service)
 ):
     try:
@@ -64,7 +64,7 @@ async def read_all_notifications(
 @router.post("/fcm-token", status_code=status.HTTP_201_CREATED)
 async def register_token(
     payload: FCMTokenPayload,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     service: NotificationService = Depends(get_notification_service)
 ):
     try:
@@ -80,7 +80,7 @@ async def register_token(
 @router.delete("/fcm-token", status_code=status.HTTP_200_OK)
 async def unregister_token(
     token: str = Query(..., description="FCM token to unregister"),
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     service: NotificationService = Depends(get_notification_service)
 ):
     try:
@@ -94,6 +94,8 @@ async def unregister_token(
         )
 
 from typing import Optional
+from pydantic import Field, model_validator
+import uuid
 
 class DeviceRegistrationPayload(BaseModel):
     token: str
@@ -101,13 +103,30 @@ class DeviceRegistrationPayload(BaseModel):
     app_version: Optional[str] = None
     device_id: Optional[str] = None
     permission_status: Optional[str] = None
+    client_sequence: Optional[int] = Field(None, ge=0, lt=2147483647)
+    installation_id: Optional[str] = None
+
+    @model_validator(mode="after")
+    def validate_installation_and_sequence(self) -> "DeviceRegistrationPayload":
+        if self.installation_id is not None:
+            try:
+                uuid.UUID(self.installation_id)
+            except ValueError:
+                raise ValueError("installation_id must be a valid UUID")
+        
+        if self.client_sequence is not None and self.installation_id is None:
+            raise ValueError("installation_id is required when client_sequence is provided")
+            
+        return self
 
 @router.post("/devices", status_code=status.HTTP_201_CREATED)
 async def register_device(
     payload: DeviceRegistrationPayload,
-    user_id: str = Depends(get_current_user_id),
+    user_data: dict = Depends(get_current_verified_user_claims),
     service: NotificationService = Depends(get_notification_service)
 ):
+    user_id = user_data["uid"]
+    auth_time = user_data.get("auth_time")
     try:
         service.register_device_token(
             uid=user_id,
@@ -115,7 +134,10 @@ async def register_device(
             platform=payload.platform,
             app_version=payload.app_version,
             device_id=payload.device_id,
-            permission_status=payload.permission_status
+            permission_status=payload.permission_status,
+            auth_time=auth_time,
+            client_sequence=payload.client_sequence,
+            installation_id=payload.installation_id
         )
         return {"status": "registered"}
     except Exception as e:
@@ -128,7 +150,7 @@ async def register_device(
 @router.post("/devices/deactivate", status_code=status.HTTP_200_OK)
 async def deactivate_device(
     payload: FCMTokenPayload,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     service: NotificationService = Depends(get_notification_service)
 ):
     try:

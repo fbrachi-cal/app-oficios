@@ -20,6 +20,7 @@ import { FiMail, FiLock } from "react-icons/fi";
 import googleIcon from "../../assets/img/google.svg";
 import facebookIcon from "../../assets/img/facebook.svg";
 import logoOficiosImg from "../../assets/img/logo.png";
+import VersionDisplay from "../../components/VersionDisplay";
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
@@ -36,6 +37,10 @@ const Login: React.FC = () => {
   useEffect(() => {
     if (usuario && !profileLoading) {
       setLoading(false);
+      if (!usuario.phoneNumber) {
+        navigate("/auth/verificar-telefono", { replace: true });
+        return;
+      }
       if (profileStatus === "ready" && backendUser) {
         if (backendUser.requires_tyc_acceptance) {
           navigate("/terminos-y-condiciones", { replace: true });
@@ -244,6 +249,7 @@ const Login: React.FC = () => {
           </p>
         </div>
 
+        <VersionDisplay className="mt-8" />
       </div>
     </div>
   );

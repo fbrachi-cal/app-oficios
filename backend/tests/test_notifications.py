@@ -8,12 +8,16 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app.main import app
-from app.api.dependencies import get_notification_service, get_current_user_id
+from app.api.dependencies import get_notification_service, get_current_user_id, get_current_verified_user_id, get_current_verified_user_claims
 from app.domain.services.notification_service import NotificationService
 
 # Mock user id dependency for test client
 async def mock_get_current_user_id():
     return "test-user-123"
+
+# Mock get_current_verified_user_claims dependency
+async def mock_get_current_verified_user_claims():
+    return {"uid": "test-user-123", "auth_time": 1700000000}
 
 @pytest.fixture
 def mock_repo():
@@ -57,6 +61,8 @@ def client(mock_repo):
     
     # Override FastAPI app dependencies
     app.dependency_overrides[get_current_user_id] = mock_get_current_user_id
+    app.dependency_overrides[get_current_verified_user_id] = mock_get_current_user_id
+    app.dependency_overrides[get_current_verified_user_claims] = mock_get_current_verified_user_claims
     app.dependency_overrides[get_notification_service] = lambda: service
     
     with TestClient(app) as test_client:
@@ -183,7 +189,10 @@ def test_register_device(client, mock_repo):
         "android",
         "1.0.0",
         "device-id-xyz",
-        "granted"
+        "granted",
+        1700000000,
+        None,
+        None
     )
 
 def test_deactivate_device(client, mock_repo):
@@ -205,4 +214,45 @@ def test_send_test_push_production_forbidden(mock_send, client):
     with patch.dict('os.environ', {'ENV': 'production'}):
         response = client.post("/notifications/test-push", json={"token": "test-token-456"})
         assert response.status_code == 403
+
+def test_register_device_invalid_uuid(client):
+    payload = {
+        "token": "device-token-123",
+        "platform": "android",
+        "installation_id": "not-a-valid-uuid"
+    }
+    response = client.post("/notifications/devices", json=payload)
+    assert response.status_code == 422
+    assert "installation_id" in response.text
+
+def test_register_device_negative_sequence(client):
+    payload = {
+        "token": "device-token-123",
+        "platform": "android",
+        "client_sequence": -5,
+        "installation_id": "123e4567-e89b-12d3-a456-426614174000"
+    }
+    response = client.post("/notifications/devices", json=payload)
+    assert response.status_code == 422
+
+def test_register_device_oversized_sequence(client):
+    payload = {
+        "token": "device-token-123",
+        "platform": "android",
+        "client_sequence": 9999999999,
+        "installation_id": "123e4567-e89b-12d3-a456-426614174000"
+    }
+    response = client.post("/notifications/devices", json=payload)
+    assert response.status_code == 422
+
+def test_register_device_partial_payload(client):
+    payload = {
+        "token": "device-token-123",
+        "platform": "android",
+        "client_sequence": 5
+        # missing installation_id should be rejected
+    }
+    response = client.post("/notifications/devices", json=payload)
+    assert response.status_code == 422
+    assert "installation_id is required" in response.text
 

@@ -1,4 +1,22 @@
+import groovy.json.JsonSlurper
+
 apply plugin: 'com.android.application'
+
+def getAppVersionName() {
+    def packageJsonFile = file("../../package.json")
+    if (!packageJsonFile.exists()) {
+        throw new GradleException("package.json file not found at " + packageJsonFile.absolutePath + ". Cannot determine app version.")
+    }
+    try {
+        def packageJson = new JsonSlurper().parseText(packageJsonFile.text)
+        if (packageJson.version == null || packageJson.version.trim().isEmpty()) {
+            throw new GradleException("package.json does not contain a valid version.")
+        }
+        return packageJson.version
+    } catch (Exception e) {
+        throw new GradleException("Failed to parse package.json: " + e.getMessage(), e)
+    }
+}
 
 android {
     namespace "ar.casaclick.app"
@@ -8,7 +26,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName getAppVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.

@@ -3,7 +3,7 @@ from app.ports.rating_repository import RatingRepository
 from app.ports.user_repository import UserRepository
 from app.domain.services.rating_service import RatingService
 from app.api.schemas.rating_schema import RatingRequest
-from app.api.dependencies import get_current_user_id, get_calificacion_repo, get_request_repo, get_user_repo, get_notification_service
+from app.api.dependencies import get_current_verified_user_id, get_calificacion_repo, get_request_repo, get_user_repo, get_notification_service
 from app.ports.request_repository import RequestRepository
 from app.shared.logger import log
 from app.domain.services.notification_service import NotificationService
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/calificaciones", tags=["calificaciones"])
 @router.post("/")
 async def calificar_usuario(
     payload: RatingRequest,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     repo: RatingRepository = Depends(get_calificacion_repo),
     request_repo: RequestRepository = Depends(get_request_repo),
     user_repo: UserRepository = Depends(get_user_repo),

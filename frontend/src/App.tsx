@@ -27,6 +27,8 @@ import RequireAcceptedTerms from './utils/RequireAcceptedTerms';
 import TermsAndConditionsPage from './views/auth/TermsAndConditionsPage';
 import RecomendarProfesional from './views/RecomendarProfesional';
 import { GamificationProvider } from './context/GamificationContext';
+import RequireVerifiedPhone from './utils/RequireVerifiedPhone';
+import VerificacionTelefonoPage from './views/auth/VerificacionTelefonoPage';
 
 function App() {
   return (
@@ -38,11 +40,14 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="registro" element={<Register />} />
           
-          <Route element={<RequireAcceptedTerms />}>
-            <Route path="completar-perfil" element={<CompletarPerfil />} />
-            <Route path="actualizar-perfil" element={<UpdateProfile />} />
-            <Route path="profesionales/:id" element={<PerfilProfesional />} />
-            <Route path="solicitudes/:id" element={<DetalleSolicitud />} />
+          <Route element={<RequireVerifiedPhone />}>
+            <Route path="verificar-telefono" element={<VerificacionTelefonoPage />} />
+            <Route element={<RequireAcceptedTerms />}>
+              <Route path="completar-perfil" element={<CompletarPerfil />} />
+              <Route path="actualizar-perfil" element={<UpdateProfile />} />
+              <Route path="profesionales/:id" element={<PerfilProfesional />} />
+              <Route path="solicitudes/:id" element={<DetalleSolicitud />} />
+            </Route>
           </Route>
 
           <Route path="*" element={<Navigate to="/auth/login" replace />} />
@@ -57,47 +62,48 @@ function App() {
         <Route path="/bloqueado" element={<BlockedPage />} />
         <Route path="/terminos-y-condiciones" element={<TermsAndConditionsPage />} />
 
-        {/* Rutas protegidas por T&C */}
-        <Route element={<RequireAcceptedTerms />}>
-          <Route path="/home" element={<Home />} />
+        {/* Rutas protegidas por teléfono y T&C */}
+        <Route element={<RequireVerifiedPhone />}>
+          <Route element={<RequireAcceptedTerms />}>
+            <Route path="/home" element={<Home />} />
 
-        {/* Consumer authenticated routes with AppShell (TopNav/BottomTabBar) */}
-        <Route element={
-          <GamificationProvider>
-            <AppShell />
-          </GamificationProvider>
-        }>
-          <Route path="/buscar" element={<BuscarView />} />
-          <Route path="/actividad" element={<ActividadView />} />
-          <Route path="/perfil" element={<UpdateProfile />} />
-          <Route path="/completar-perfil" element={<CompletarPerfil />} />
-          <Route path="/profesional/:id" element={<PerfilProfesional />} />
-          <Route path="/solicitud/:id" element={<DetalleSolicitud />} />
-          <Route path="/recomendar-profesional" element={<RecomendarProfesional />} />
-        </Route>
+            {/* Consumer authenticated routes with AppShell (TopNav/BottomTabBar) */}
+            <Route element={
+              <GamificationProvider>
+                <AppShell />
+              </GamificationProvider>
+            }>
+              <Route path="/buscar" element={<BuscarView />} />
+              <Route path="/actividad" element={<ActividadView />} />
+              <Route path="/perfil" element={<UpdateProfile />} />
+              <Route path="/completar-perfil" element={<CompletarPerfil />} />
+              <Route path="/profesional/:id" element={<PerfilProfesional />} />
+              <Route path="/solicitud/:id" element={<DetalleSolicitud />} />
+              <Route path="/recomendar-profesional" element={<RecomendarProfesional />} />
+            </Route>
 
-        {/* Admin panel — protected by role guard */}
-        <Route element={<RequireAdmin />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="usuarios" replace />} />
-            <Route path="usuarios" element={<UsersPage />} />
-            <Route path="chats" element={<ChatsPage />} />
-            <Route path="reportes" element={<ReportsPage />} />
-            <Route path="calificaciones" element={<RatingsPage />} />
-            <Route path="solicitudes-interacciones" element={<SolicitudesInteraccionesPage />} />
+            {/* Admin panel — protected by role guard */}
+            <Route element={<RequireAdmin />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Navigate to="usuarios" replace />} />
+                <Route path="usuarios" element={<UsersPage />} />
+                <Route path="chats" element={<ChatsPage />} />
+                <Route path="reportes" element={<ReportsPage />} />
+                <Route path="calificaciones" element={<RatingsPage />} />
+                <Route path="solicitudes-interacciones" element={<SolicitudesInteraccionesPage />} />
+              </Route>
+            </Route>
+
+            {/* Recruiter panel — protected by recruiter + admin role guard */}
+            <Route element={<RequireRecruiter />}>
+              <Route path="/recruiter" element={<RecruiterLayout />}>
+                <Route index element={<Navigate to="cvs" replace />} />
+                <Route path="cvs" element={<CvDashboard />} />
+              </Route>
+            </Route>
           </Route>
-        </Route>
-
-        {/* Recruiter panel — protected by recruiter + admin role guard */}
-        <Route element={<RequireRecruiter />}>
-          <Route path="/recruiter" element={<RecruiterLayout />}>
-            <Route index element={<Navigate to="cvs" replace />} />
-            <Route path="cvs" element={<CvDashboard />} />
-          </Route>
-        </Route>
         </Route>
       </Routes>
-
     </>
   );
 }

@@ -208,6 +208,18 @@ const UpdateProfile = (): JSX.Element => {
 
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                    Teléfono (Verificado)
+                  </label>
+                  <input
+                    type="text"
+                    value={auth.currentUser?.phoneNumber || user?.telefono || ""}
+                    disabled
+                    className="border-0 px-3 py-3 text-blueGray-600 bg-slate-50 border border-slate-100 rounded text-sm shadow w-full cursor-not-allowed font-medium"
+                  />
+                </div>
+
+                <div className="relative w-full mb-3">
+                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                     {t("foto_perfil")}
                   </label>
                   {preview && (

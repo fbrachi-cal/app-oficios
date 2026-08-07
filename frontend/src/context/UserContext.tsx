@@ -14,6 +14,7 @@ type UserData = {
     descripcion: string;
     disponibilidad: string;    
     requires_tyc_acceptance?: boolean;
+    telefono?: string;
 };
 
 export type ProfileStatus = "loading" | "ready" | "missing" | "error";

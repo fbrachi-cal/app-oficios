@@ -1,7 +1,7 @@
 {
   "name": "app-oficios-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,11 +19,15 @@
     "android:install:wsl": "cd android && cp app/build/outputs/apk/debug/app-debug.apk /mnt/c/Users/Federico/Downloads/app-debug.apk && /mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe uninstall ar.casaclick.app || true && /mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe install 'C:\\Users\\Federico\\Downloads\\app-debug.apk'",
     "android:launch:wsl": "/mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe shell monkey -p ar.casaclick.app 1",
     "android:reinstall:prod": "pnpm android:build:prod && pnpm android:install:wsl && pnpm android:launch:wsl",
-    "android:verify-api-url": "grep -Roh 'oficios-web-back.onrender.com\\|192\\.168\\.[0-9.]*\\|127\\.0\\.0\\.1\\|localhost:8000' dist/assets/*.js android/app/src/main/assets/public/assets/*.js | sort -u"
+    "android:verify-api-url": "grep -Roh 'oficios-web-back.onrender.com\\|192\\.168\\.[0-9.]*\\|127\\.0\\.0\\.1\\|localhost:8000' dist/assets/*.js android/app/src/main/assets/public/assets/*.js | sort -u",
+    "version:patch": "pnpm version patch --no-git-tag-version",
+    "version:minor": "pnpm version minor --no-git-tag-version",
+    "version:major": "pnpm version major --no-git-tag-version"
   },
   "dependencies": {
     "@capacitor-firebase/authentication": "6.3.1",
     "@capacitor/android": "^6.2.1",
+    "@capacitor/app": "^6.0.0",
     "@capacitor/core": "^6.2.1",
     "@capacitor/push-notifications": "^6.0.5",
     "@popperjs/core": "^2.11.8",
@@ -43,6 +47,9 @@
   "devDependencies": {
     "@capacitor/cli": "^6.2.1",
     "@eslint/js": "^9.21.0",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.0",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
@@ -51,10 +58,13 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "happy-dom": "^20.11.1",
+    "jsdom": "^30.0.0",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.4.1",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^4.1.10"
   }
 }

@@ -1,7 +1,9 @@
 import os
 import firebase_admin
 from firebase_admin import credentials, auth
-from fastapi import HTTPException, Security
+from firebase_admin.auth import UserNotFoundError
+from firebase_admin.exceptions import FirebaseError
+from fastapi import HTTPException, Security, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from dotenv import load_dotenv
 from app.shared.logger import log
@@ -138,3 +140,44 @@ def verify_token(auth_credentials: HTTPAuthorizationCredentials = Security(secur
         log.error(f"Error inesperado procesando token: {e}")
         # Internal exceptions should bubble up as 500, not 401
         raise HTTPException(status_code=500, detail="Error de validación del lado de backend")
+
+def get_firebase_user_record(decoded_token: dict = Depends(verify_token)):
+    uid = decoded_token.get("uid")
+    try:
+        user_record = auth.get_user(uid)
+        return user_record
+    except UserNotFoundError as e:
+        log.error(f"User not found in Firebase Auth: {e}")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials or user not found."
+        )
+    except FirebaseError as e:
+        log.error(f"Firebase service error: {e}")
+        raise HTTPException(
+            status_code=502,
+            detail="External authentication service failure."
+        )
+    except Exception as e:
+        log.error(f"Unexpected error fetching Firebase user record: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Internal validation failure."
+        )
+
+def verify_verified_phone(
+    user_data: dict = Depends(verify_token),
+    user_record = Depends(get_firebase_user_record)
+) -> dict:
+    phone_number = user_record.phone_number
+    if not phone_number:
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "PHONE_VERIFICATION_REQUIRED",
+                "message": "A verified phone number is required."
+            }
+        )
+    user_data["phone_number"] = phone_number
+    return user_data
+

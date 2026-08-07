@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from 'react-i18next';
+import VersionDisplay from "../VersionDisplay";
 
 const Footer: React.FC = () => {
   const { t } = useTranslation();
@@ -63,6 +64,7 @@ const Footer: React.FC = () => {
               </a>
               .
             </div>
+            <VersionDisplay className="mt-1 !text-blueGray-400 !font-normal" />
           </div>
         </div>
       </div>

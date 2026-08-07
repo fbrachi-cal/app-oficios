@@ -74,6 +74,9 @@ const CompletarPerfil: React.FC = () => {
     if (user.photoURL) {
       setPreview(user.photoURL);
     }
+    if (user.phoneNumber) {
+      setTelefonoValidado(user.phoneNumber);
+    }
     user.getIdToken().then(setToken);
 
     fetch(`${config.apiBaseUrl}/utils/zonas`).then(r => r.json()).then(setZonasDisponibles);
@@ -291,9 +294,16 @@ const CompletarPerfil: React.FC = () => {
                 />
               </div>
 
-              {/* Assuming VerificacionTelefono handles its own UI, we just wrap it */}
+              {/* Derived read-only phone number from Firebase Auth */}
               <div className="pt-2">
-                <VerificacionTelefono t={t} onVerified={setTelefonoValidado} />
+                <label className="input-label" htmlFor="telefono_verificado_display">
+                  Teléfono Verificado
+                </label>
+                <div className="flex items-center mt-2 bg-green-50 border border-green-100 p-3 rounded-lg">
+                  <p className="text-green-700 text-sm font-semibold">
+                    ✓ {telefonoValidado || auth.currentUser?.phoneNumber}
+                  </p>
+                </div>
               </div>
 
               {/* Terms and conditions checkboxes */}

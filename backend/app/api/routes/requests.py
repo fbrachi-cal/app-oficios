@@ -3,7 +3,7 @@ from app.domain.services.request_service import RequestService
 from app.ports.request_repository import RequestRepository
 from fastapi import APIRouter, Depends, Form, File, UploadFile, HTTPException, Body
 from typing import List
-from app.api.dependencies import get_current_user_id, get_request_repo, get_user_repo, get_file_uploader, get_notification_service
+from app.api.dependencies import get_current_verified_user_id, get_request_repo, get_user_repo, get_file_uploader, get_notification_service
 from app.domain.services.notification_service import NotificationService
 from app.shared.logger import log
 from app.ports.user_repository import UserRepository
@@ -16,7 +16,7 @@ router = APIRouter(prefix="/solicitudes", tags=["solicitudes"])
 async def actualizar_estado_solicitud(
     id: str,
     estado_request: EstadoRequest,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
     user_repo: UserRepository = Depends(get_user_repo),
     notification_service: NotificationService = Depends(get_notification_service),
@@ -71,7 +71,7 @@ async def actualizar_estado_solicitud(
 async def agregar_consulta_a_solicitud(
     id: str,
     consulta: ConsultaRequest,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
     user_repo: UserRepository = Depends(get_user_repo),
     notification_service: NotificationService = Depends(get_notification_service),
@@ -113,7 +113,7 @@ async def agregar_consulta_a_solicitud(
 async def responder_solicitud(
     id: str,
     datos: RespuestaProfesionalRequest,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
     user_repo: UserRepository = Depends(get_user_repo),
     notification_service: NotificationService = Depends(get_notification_service),
@@ -163,7 +163,7 @@ async def responder_solicitud(
 
 @router.get("/mis")
 async def listar_mis_solicitudes(
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     user_repo: UserRepository = Depends(get_user_repo),
     request_repo: RequestRepository = Depends(get_request_repo),
 ):
@@ -195,7 +195,7 @@ async def crear_solicitud(
     subcategoria: str = Form(...),
     descripcion: str = Form(...),
     fotos: List[UploadFile] = File([]),
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
     uploader: FileUploader = Depends(get_file_uploader), 
     user_repo: UserRepository = Depends(get_user_repo),
@@ -241,7 +241,7 @@ async def crear_solicitud(
 @router.get("/{id}")
 async def obtener_solicitud_por_id(
     id: str,
-    user_id: str = Depends(get_current_user_id),
+    user_id: str = Depends(get_current_verified_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
 ):
     try:

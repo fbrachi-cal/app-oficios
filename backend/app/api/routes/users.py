@@ -3,13 +3,12 @@ from app.ports.user_repository import UserRepository
 from fastapi import APIRouter, HTTPException, Depends
 from app.adapters.firebase.firebase_user_repo import FirebaseUserRepository
 from app.domain.services.user_service import UserService
-from app.shared.firebase_auth import verify_token
+from app.shared.firebase_auth import verify_token, verify_verified_phone
 from app.api.schemas.user_schema import UsuarioRegistro, UsuarioUpdate
 from app.api.schemas.buscar_schema import FiltroBusquedaProfesionales
 from app.shared.auth_utils import obtener_tipo
 from app.shared.roles import require_role
 from app.shared.logger import log
-from app.shared.firebase_auth import verify_token
 from app.domain.services.tyc_service import TycService
 
 
@@ -24,26 +23,25 @@ def listar_todos_los_usuarios(user_data: dict = Depends(require_role("admin")),s
 
 
 @router.post("/profesionales/buscar")
-async def buscar_profesionales(filtros: FiltroBusquedaProfesionales, user=Depends(verify_token),service: UserService = Depends(get_user_service)): 
+async def buscar_profesionales(filtros: FiltroBusquedaProfesionales, user=Depends(verify_verified_phone),service: UserService = Depends(get_user_service)): 
     log.info("CATEGORIA EN ROUTER: "+filtros.categoria) 
     return service.buscar_profesionales_multifiltro(filtros.zonas, filtros.categoria, filtros.subcategorias ,limit=filtros.limit,
         start_after_id=filtros.start_after_id)
 
 @router.get("/me")
-def obtener_usuario_autenticado(user_data: dict = Depends(verify_token),user_repo: UserRepository = Depends(get_user_repo)):
-    log.info("OBTENIENDO USUARIO AUTENTICADO")
+def obtener_usuario_autenticado(
+    user_data: dict = Depends(verify_token),
+    user_repo: UserRepository = Depends(get_user_repo)
+):
     uid = user_data["uid"]
-    log.info(f"UID OBTENIDO: {uid}")
     usuario = user_repo.get_user_by_id(uid)
-    log.info("Usuario desde Firestore: {}", usuario)
-
     if usuario:
         usuario["requires_tyc_acceptance"] = TycService.requires_acceptance(usuario)
         return usuario
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
 @router.post("/me/tyc/accept")
-def accept_tyc(user_data: dict = Depends(verify_token), user_repo: UserRepository = Depends(get_user_repo)):
+def accept_tyc(user_data: dict = Depends(verify_verified_phone), user_repo: UserRepository = Depends(get_user_repo)):
     uid = user_data["uid"]
     usuario = user_repo.get_user_by_id(uid)
     if not usuario:
@@ -56,7 +54,7 @@ def accept_tyc(user_data: dict = Depends(verify_token), user_repo: UserRepositor
 @router.put("/me")
 def actualizar_usuario_autenticado(
     datos: UsuarioUpdate,
-    user_data: dict = Depends(verify_token),
+    user_data: dict = Depends(verify_verified_phone),
     service: UserService = Depends(get_user_service),
     referrals_service = Depends(get_professional_referrals_service)
 ):
@@ -102,7 +100,7 @@ def obtener_rol_usuario_legacy(user_data: dict = Depends(verify_token)):
 @router.post("/")
 def registrar_usuario(
     usuario: UsuarioRegistro, 
-    user_data: dict = Depends(verify_token),
+    user_data: dict = Depends(verify_verified_phone),
     service: UserService = Depends(get_user_service),
     referrals_service = Depends(get_professional_referrals_service)
 ):
