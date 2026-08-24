@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from "firebase/storage"; 
 import { getMessaging, isSupported } from 'firebase/messaging';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyC8gokmmf8rO3qooeP6w0P11tbQHyGCLB8",
@@ -37,4 +38,6 @@ export const storage = getStorage(app);
 export const messagingPromise = isSupported().then((supported) => {
   return supported ? getMessaging(app) : null;
 });
+
+export const db = getFirestore(app);
 

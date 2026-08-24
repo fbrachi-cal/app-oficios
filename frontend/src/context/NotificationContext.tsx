@@ -113,9 +113,26 @@ export const NotificationProvider: React.FC<{ children: React.ReactNode }> = ({ 
 
     const getOrCreateInstallationId = () => {
       let instId = localStorage.getItem("casaclick_installation_id");
-      if (!instId) {
-        instId = Array.from({ length: 4 }, () => Math.random().toString(36).substring(2, 15)).join("-");
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      
+      if (!instId || !uuidRegex.test(instId)) {
+        if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+          instId = crypto.randomUUID();
+        } else {
+          try {
+            instId = "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) =>
+              (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
+            );
+          } catch (e) {
+            instId = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+              const r = (Math.random() * 16) | 0;
+              const v = c === "x" ? r : (r & 0x3) | 0x8;
+              return v.toString(16);
+            });
+          }
+        }
         localStorage.setItem("casaclick_installation_id", instId);
+        logger.info("Generated or migrated invalid installation_id to a new valid UUID", { instId });
       }
       return instId;
     };

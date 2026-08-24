@@ -3,6 +3,8 @@
   "registrarse": "Registrarse",
   "email": "Correo electrónico",
   "password": "Contraseña",
+  "ocultar_contrasenia": "Ocultar contraseña",
+  "mostrar_contrasenia": "Mostrar contraseña",
   "nombre": "Nombre completo",
   "iniciar_sesion": "Iniciar sesión",
   "error_usuario_password": "Usuario o contraseña incorrectos",

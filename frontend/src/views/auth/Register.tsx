@@ -20,6 +20,7 @@ import { useLoading } from "../../context/LoadingContext";
 import { useUser } from "../../context/UserContext";
 import { JSX } from "react/jsx-runtime";
 import VersionDisplay from "../../components/VersionDisplay";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = (): JSX.Element => {
   const { t } = useTranslation();
@@ -28,6 +29,7 @@ const Register = (): JSX.Element => {
   const [nombre, setNombre] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setUsuario, usuario } = useAuth();
@@ -217,15 +219,25 @@ const Register = (): JSX.Element => {
                   >
                     {t("password")}
                   </label>
-                  <input
-                    id="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    placeholder="********"
-                  />
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="border-0 pl-3 pr-10 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      placeholder="********"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                      aria-label={showPassword ? t("ocultar_contrasenia") : t("mostrar_contrasenia")}
+                    >
+                      {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="text-center mt-6">

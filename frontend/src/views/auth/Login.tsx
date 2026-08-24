@@ -16,7 +16,7 @@ import { logger } from "../../utils/logger";
 import { iniciarSesionConGoogle, cerrarSesion } from "../../services/authService";
 
 // Icons
-import { FiMail, FiLock } from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff } from "react-icons/fi";
 import googleIcon from "../../assets/img/google.svg";
 import facebookIcon from "../../assets/img/facebook.svg";
 import logoOficiosImg from "../../assets/img/logo.png";
@@ -31,6 +31,7 @@ const Login: React.FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   // Centralized redirect effect
@@ -209,13 +210,21 @@ const Login: React.FC = () => {
                 </div>
                 <input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  className="input-base pl-10"
+                  className="input-base pl-10 pr-10"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+                  aria-label={showPassword ? t("ocultar_contrasenia") : t("mostrar_contrasenia")}
+                >
+                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                </button>
               </div>
             </div>
 

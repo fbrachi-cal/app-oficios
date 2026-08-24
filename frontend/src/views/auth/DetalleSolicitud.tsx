@@ -11,6 +11,8 @@ import { logger } from "../../utils/logger";
 import default_avatar from "../../assets/img/default_avatar.png";
 import ModalSolicitud from "../../components/Modal/ModalSolicitud";
 import ModalCalificacion from "../../components/Modal/ModalCalifica";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const DetalleSolicitud: React.FC = () => {
   const { t } = useTranslation();
@@ -28,6 +30,72 @@ const DetalleSolicitud: React.FC = () => {
 
   const [modalAccion, setModalAccion] = useState<any>(null);
   const [modalCalificarAbierta, setModalCalificarAbierta] = useState(false);
+
+  const lastSignatureRef = useRef<string | null>(null);
+  const lastLoadTimeRef = useRef<number>(0);
+  const fetchInProgress = useRef<boolean>(false);
+  const pendingReloadRef = useRef<boolean>(false);
+  const cooldownTimerRef = useRef<any>(null);
+
+  const getSignature = (data: any) => {
+    if (!data) return "";
+    const consultas = data.historial_consultas || [];
+    const lastMsg = consultas[consultas.length - 1];
+    const lastMsgSig = lastMsg ? `${lastMsg.usuario_id || lastMsg.autor_id || ''}_${lastMsg.mensaje || ''}` : "none";
+    return `${data.estado || ""}_${consultas.length}_${lastMsgSig}`;
+  };
+
+  const cargarSolicitud = async () => {
+    if (fetchInProgress.current) {
+      pendingReloadRef.current = true;
+      return;
+    }
+
+    const now = Date.now();
+    const timeSinceLastLoad = now - lastLoadTimeRef.current;
+    
+    if (timeSinceLastLoad < 1500) {
+      pendingReloadRef.current = true;
+      if (!cooldownTimerRef.current) {
+        const delay = 1500 - timeSinceLastLoad;
+        cooldownTimerRef.current = setTimeout(() => {
+          cooldownTimerRef.current = null;
+          if (pendingReloadRef.current) {
+            pendingReloadRef.current = false;
+            void cargarSolicitud();
+          }
+        }, delay);
+      }
+      return;
+    }
+
+    try {
+      fetchInProgress.current = true;
+      setLoading(true);
+      const data = await solicitudService.obtenerSolicitudPorId(id!);
+      setSolicitud(data);
+
+      const esCliente = user?.tipo === "cliente";
+      const otroId = esCliente ? data.profesional_id : data.solicitante_id;
+
+      const userRes = await fetchConToken(`${config.apiBaseUrl}/usuarios/${otroId}`);
+      const userData = await userRes.json();
+      setOtroUsuario(userData);
+
+      lastSignatureRef.current = getSignature(data);
+      lastLoadTimeRef.current = Date.now();
+    } catch (err) {
+      logger.error("Error al cargar detalles", err);
+    } finally {
+      fetchInProgress.current = false;
+      setLoading(false);
+      
+      if (pendingReloadRef.current) {
+        pendingReloadRef.current = false;
+        void cargarSolicitud();
+      }
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -51,24 +119,36 @@ const DetalleSolicitud: React.FC = () => {
     };
   }, [id, user]);
 
-  const cargarSolicitud = async () => {
-    try {
-      setLoading(true);
-      const data = await solicitudService.obtenerSolicitudPorId(id!);
-      setSolicitud(data);
+  useEffect(() => {
+    if (!id || !user) return;
 
-      const esCliente = user?.tipo === "cliente";
-      const otroId = esCliente ? data.profesional_id : data.solicitante_id;
+    logger.info("Setting up Firestore onSnapshot listener for request", { id });
+    const docRef = doc(db, "solicitudes", id);
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const signature = getSignature(data);
+        if (lastSignatureRef.current === null) {
+          // Initial snapshot: set signature ref to avoid unnecessary API call on mount
+          lastSignatureRef.current = signature;
+        } else if (lastSignatureRef.current !== signature) {
+          logger.info("Realtime Firestore update detected changes, refetching request via API", { id, signature, lastSignature: lastSignatureRef.current });
+          void cargarSolicitud();
+        }
+      }
+    }, (err) => {
+      logger.error("Error in Firestore onSnapshot listener for request", err);
+    });
 
-      const userRes = await fetchConToken(`${config.apiBaseUrl}/usuarios/${otroId}`);
-      const userData = await userRes.json();
-      setOtroUsuario(userData);
-    } catch (err) {
-      logger.error("Error al cargar detalles", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    return () => {
+      logger.info("Cleaning up Firestore onSnapshot listener for request", { id });
+      unsubscribe();
+      if (cooldownTimerRef.current) {
+        clearTimeout(cooldownTimerRef.current);
+        cooldownTimerRef.current = null;
+      }
+    };
+  }, [id, user]);
 
   const cambiarEstado = async (nuevo_estado: string, motivo?: string, obs?: string) => {
     try {

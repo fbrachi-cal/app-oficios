@@ -3,6 +3,8 @@
     "registrarse": "Register",
     "email": "Email",
     "password": "Password",
+    "ocultar_contrasenia": "Hide password",
+    "mostrar_contrasenia": "Show password",
     "nombre": "Full name",
     "iniciar_sesion": "Log in",
     "error_usuario_password": "Incorrect username or password",
