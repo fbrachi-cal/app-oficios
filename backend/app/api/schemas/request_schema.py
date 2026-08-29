@@ -21,3 +21,6 @@ class EstadoRequest(BaseModel):
     nuevo_estado: str
     motivo: Optional[str] = None
     observacion: Optional[str] = None
+
+class RespuestaVerificacion(BaseModel):
+    respuesta: str

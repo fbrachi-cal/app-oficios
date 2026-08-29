@@ -84,6 +84,8 @@
         "consulta": "Query sent",
         "aceptada": "Accepted",
         "confirmada": "Confirmed",
+        "verificada": "Verified job",
+        "calificada": "Rated job",
         "rechazada": "Rejected",
         "cancelada": "Cancelled",
         "finalizada": "Finished"
@@ -428,5 +430,15 @@
     "error_aceptar_terminos_privacidad_responsabilidad": "You must accept the Terms and Conditions of Use, the Privacy Policy, and the community commitment of Casa Click to register.",
     "texto_terminos_condiciones": "Welcome to Casa Click. By using our platform, you agree to comply with and be bound by the following terms and conditions of use. Please read them carefully before using the service:\n\n1. Contractual Relationship: Casa Click is a technological intermediary that facilitates contact between users and independent service providers.\n2. Legal Capacity: The user declares to be at least 18 years old and have full legal capacity to contract.\n3. Account Registration: The user is responsible for the accuracy of the registered data and for maintaining the confidentiality of their credentials.\n4. Use of the Platform: Using the platform for illegal, fraudulent purposes or violating the rights of third parties is prohibited.\n5. Modifications: We reserve the right to modify these terms at any time, which will be duly notified to users.",
     "texto_politica_privacidad": "At Casa Click we take the protection and security of your personal data very seriously:\n\n1. Data Collection: We request basic information such as full name, email address, phone number, and profile picture to enable registration and correct platform operation.\n2. Data Use: Your data is used solely to connect clients with professionals, facilitate communication via the internal chat, and manage the request flow.\n3. Confidentiality: Casa Click does not share, sell, or lease your personal data to third parties for advertising or commercial purposes without your prior consent.\n4. Security: We implement technical measures to safeguard your personal information against unauthorized access.\n5. User Rights: You can request access, correction, or deletion of your data at any time.",
-    "texto_compromiso_comunidad": "The Community Commitment of Casa Click establishes basic guidelines to ensure a safe, respectful, and reliable experience for everyone:\n\n1. Mutual Respect: We promote dignified treatment between professionals and clients. No discrimination, harassment, or offensive language is tolerated.\n2. Honesty: All information in profiles, quotes, descriptions, and ratings must be truthful and transparent.\n3. Responsibility: Both clients and professionals commit to respecting agreed schedules and job specifications.\n4. Service Quality: We invite professionals to provide the best possible service and clients to rate constructively and honestly."
+    "texto_compromiso_comunidad": "The Community Commitment of Casa Click establishes basic guidelines to ensure a safe, respectful, and reliable experience for everyone:\n\n1. Mutual Respect: We promote dignified treatment between professionals and clients. No discrimination, harassment, or offensive language is tolerated.\n2. Honesty: All information in profiles, quotes, descriptions, and ratings must be truthful and transparent.\n3. Responsibility: Both clients and professionals commit to respecting agreed schedules and job specifications.\n4. Service Quality: We invite professionals to provide the best possible service and clients to rate constructively and honestly.",
+    "pregunta_verificacion_titulo": "Was the job completed?",
+    "pregunta_verificacion_mensaje": "Please confirm if the hired service was completed correctly.",
+    "si": "Yes",
+    "no": "No",
+    "notif_profesional_verifico": "The professional confirmed that the job was completed. Would you like to rate the professional?",
+    "notif_cliente_verifico": "The client confirmed that the job was completed. Would you like to rate the client?",
+    "calificar_ahora": "Rate now",
+    "trabajos_verificados": "Verified jobs",
+    "calificaciones_cantidad": "Ratings",
+    "no_hay_acciones": "No actions available"
 }

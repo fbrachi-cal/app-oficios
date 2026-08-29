@@ -82,3 +82,73 @@ class FirebaseRequestRepository:
         doc_ref = self.collection.document(solicitud_id)
         doc_ref.update(update_data)
         return doc_ref.get().to_dict()
+
+    def responder_verificacion_si_transaccional(self, solicitud_id: str, user_id: str) -> dict:
+        transaction = self.db.transaction()
+        solicitud_ref = self.collection.document(solicitud_id)
+
+        @firestore.transactional
+        def _run(txn):
+            snap = solicitud_ref.get(transaction=txn)
+            if not snap.exists:
+                raise Exception("Solicitud no encontrada")
+            
+            solicitud = snap.to_dict()
+            solicitud["id"] = snap.id
+            
+            client_id = solicitud.get("solicitante_id")
+            pro_id = solicitud.get("profesional_id")
+            if user_id not in [client_id, pro_id]:
+                raise Exception("No tenés permiso para responder la verificación de esta solicitud")
+            
+            estado = solicitud.get("estado")
+            if estado in ["verificada", "calificada"]:
+                return {"solicitud": solicitud, "ofrecer_calificacion": True, "already_done": True}
+                
+            if estado not in ["creada", "consulta", "aceptada"]:
+                raise Exception(f"Solo se pueden verificar solicitudes activas (estado actual: {estado})")
+            
+            ahora = datetime.utcnow()
+            
+            historial_entry = {
+                "estado": "verificada",
+                "fecha": ahora
+            }
+            
+            txn.update(solicitud_ref, {
+                "estado": "verificada",
+                "fecha_cambio_estado": ahora,
+                "verificado_por": user_id,
+                "verificado_at": ahora,
+                "historial_estados": firestore.ArrayUnion([historial_entry])
+            })
+            
+            client_ref = self.db.collection("usuarios").document(client_id)
+            pro_ref = self.db.collection("usuarios").document(pro_id)
+            
+            client_snap = client_ref.get(transaction=txn)
+            if client_snap.exists:
+                client_data = client_snap.to_dict()
+                new_count = int(client_data.get("cantidadTrabajosVerificados", 0)) + 1
+                txn.update(client_ref, {"cantidadTrabajosVerificados": new_count})
+            else:
+                txn.set(client_ref, {"cantidadTrabajosVerificados": 1}, merge=True)
+                
+            pro_snap = pro_ref.get(transaction=txn)
+            if pro_snap.exists:
+                pro_data = pro_snap.to_dict()
+                new_count = int(pro_data.get("cantidadTrabajosVerificados", 0)) + 1
+                txn.update(pro_ref, {"cantidadTrabajosVerificados": new_count})
+            else:
+                txn.set(pro_ref, {"cantidadTrabajosVerificados": 1}, merge=True)
+            
+            solicitud.update({
+                "estado": "verificada",
+                "fecha_cambio_estado": ahora,
+                "verificado_por": user_id,
+                "verificado_at": ahora
+            })
+            solicitud["historial_estados"] = solicitud.get("historial_estados", []) + [historial_entry]
+            return {"solicitud": solicitud, "ofrecer_calificacion": True, "already_done": False}
+
+        return _run(transaction)

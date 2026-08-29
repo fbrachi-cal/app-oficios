@@ -163,6 +163,22 @@ const DetalleSolicitud: React.FC = () => {
     }
   };
 
+  const responderVerificacion = async (respuesta: "si" | "no") => {
+    try {
+      setLoading(true);
+      const res = await solicitudService.responderVerificacion(id!, respuesta);
+      await cargarSolicitud();
+      
+      if (respuesta === "si" && res.ofrecer_calificacion) {
+        setModalCalificarAbierta(true);
+      }
+    } catch (err) {
+      logger.error("Error al responder verificación", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const enviarConsulta = async () => {
     if (!observacion.trim() && archivosAdjuntos.length === 0) return;
     try {
@@ -209,6 +225,8 @@ const DetalleSolicitud: React.FC = () => {
   const getStatusBadge = (estado: string) => {
     const lower = estado?.toLowerCase();
     switch (lower) {
+      case "verificada": return <span className="badge text-sm px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
+      case "calificada": return <span className="badge text-sm px-3 py-1 bg-blue-100 text-blue-800 border border-blue-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
       case "confirmada": return <span className="badge badge-confirmed text-sm px-3 py-1">{t(`estado.${lower}`)}</span>;
       case "aceptada": return <span className="badge badge-accepted text-sm px-3 py-1">{t(`estado.${lower}`)}</span>;
       case "cancelada":
@@ -219,8 +237,7 @@ const DetalleSolicitud: React.FC = () => {
 
   if (!solicitud || !otroUsuario) return null;
 
-  const esConfirmada = solicitud.estado === "confirmada";
-  const faltaCalificar = esConfirmada && ((user?.tipo === "cliente" && !solicitud.calificacion_cliente) || (user?.tipo === "profesional" && !solicitud.calificacion_profesional));
+
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-[calc(4rem+6rem)] md:pb-24">
@@ -322,17 +339,53 @@ const DetalleSolicitud: React.FC = () => {
           )}
         </div>
 
+        {/* Verification Prompt Card */}
+        {["creada", "consulta", "aceptada"].includes(solicitud.estado) && solicitud.mostrar_prompt_verificacion && (
+          <div className="card p-6 bg-blue-50 border-blue-200 text-center space-y-4">
+            <FiAlertCircle className="text-blue-600 mx-auto" size={32} />
+            <h3 className="text-lg font-bold text-blue-900">
+              {t("pregunta_verificacion_titulo", "¿Se realizó el trabajo?")}
+            </h3>
+            <p className="text-sm text-blue-700">
+              {t("pregunta_verificacion_mensaje", "Por favor, confirmá si el servicio contratado fue completado correctamente.")}
+            </p>
+            <div className="flex gap-3 max-w-xs mx-auto">
+              <button
+                onClick={() => responderVerificacion("si")}
+                className="btn-primary flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold"
+              >
+                {t("si", "Sí")}
+              </button>
+              <button
+                onClick={() => responderVerificacion("no")}
+                className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold"
+              >
+                {t("no", "No")}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Rating Nudge / Form */}
-        {faltaCalificar && (
+        {((solicitud.estado === "verificada" || solicitud.estado === "confirmada") &&
+          !(user?.tipo === "cliente" ? solicitud.califico_cliente : solicitud.califico_profesional)) && (
           <div className="card p-6 bg-amber-50 border-amber-200 text-center">
             <FiStar className="text-amber-500 mx-auto mb-3" size={32} />
-            <h3 className="text-lg font-bold text-amber-900 mb-2">¡{user?.tipo === "cliente" ? t("califica_al_profesional") : t("califica_al_cliente")}!</h3>
+            <h3 className="text-lg font-bold text-amber-900 mb-2">
+              {solicitud.verificado_por && solicitud.verificado_por !== user?.id
+                ? (user?.tipo === "cliente" 
+                    ? t("notif_profesional_verifico", "El profesional confirmó que el trabajo fue realizado. ¿Querés calificar al profesional?") 
+                    : t("notif_cliente_verifico", "El cliente confirmó que el trabajo fue realizado. ¿Querés calificar al cliente?"))
+                : (user?.tipo === "cliente" ? t("califica_al_profesional", "Calificá al profesional") : t("califica_al_cliente", "Calificá al cliente"))}
+            </h3>
             <p className="text-sm text-amber-700 mb-4">
               Ayudá a la comunidad contando tu experiencia con {otroUsuario.nombre}.
             </p>
-            <button onClick={() => setModalCalificarAbierta(true)} className="btn-primary w-full bg-amber-500 hover:bg-amber-600 border-none">
-              Calificar ahora
-            </button>
+            <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 max-w-md mx-auto">
+              <button onClick={() => setModalCalificarAbierta(true)} className="btn-primary flex-1 bg-amber-500 hover:bg-amber-600 border-none py-2 px-4 rounded-xl font-semibold text-white">
+                {t("calificar_ahora", "Calificar ahora")}
+              </button>
+            </div>
           </div>
         )}
 
@@ -437,46 +490,38 @@ const DetalleSolicitud: React.FC = () => {
           
           {/* Client Actions */}
           {user?.tipo === "cliente" && ["creada", "consulta", "aceptada"].includes(solicitud.estado) && (
+            <button
+              onClick={() => setModalAccion({ estado: "cancelada", titulo: t("confirmar_cancelacion_titulo"), mensaje: t("confirmar_cancelacion_mensaje"), textoConfirmar: t("cancelar_solicitud"), confirmColor: "red", mostrarMotivos: true, mostrarObservacion: true })}
+              className="btn-secondary flex-1 py-3.5 text-rose-600 hover:bg-rose-50"
+            >
+              {t("cancelar", "Cancelar")}
+            </button>
+          )}
+
+          {/* Professional Actions */}
+          {user?.tipo === "profesional" && ["creada", "consulta", "aceptada"].includes(solicitud.estado) && (
             <>
               <button
                 onClick={() => setModalAccion({ estado: "cancelada", titulo: t("confirmar_cancelacion_titulo"), mensaje: t("confirmar_cancelacion_mensaje"), textoConfirmar: t("cancelar_solicitud"), confirmColor: "red", mostrarMotivos: true, mostrarObservacion: true })}
                 className="btn-secondary flex-1 py-3.5 text-rose-600 hover:bg-rose-50"
               >
-                Cancelar
+                {solicitud.estado === "aceptada" ? t("cancelar", "Cancelar") : t("rechazar", "Rechazar")}
               </button>
-              {solicitud.estado === "aceptada" && (
+              {["creada", "consulta"].includes(solicitud.estado) && (
                 <button
-                  onClick={() => setModalAccion({ estado: "confirmada", titulo: t("confirmar_confirmacion_titulo"), mensaje: t("confirmar_confirmacion_mensaje"), textoConfirmar: t("confirmar_solicitud"), confirmColor: "green" })}
-                  className="btn-primary flex-1 py-3.5 bg-emerald-500 hover:bg-emerald-600 border-none shadow-md"
+                  onClick={() => setModalAccion({ estado: "aceptada", titulo: t("confirmar_aceptacion_titulo"), mensaje: t("confirmar_aceptacion_mensaje"), textoConfirmar: t("aceptar_solicitud"), confirmColor: "green" })}
+                  className="btn-primary flex-1 py-3.5 shadow-md"
                 >
-                  Confirmar trabajo
+                  {t("aceptar_pedido", "Aceptar pedido")}
                 </button>
               )}
             </>
           )}
 
-          {/* Professional Actions */}
-          {user?.tipo === "profesional" && ["creada", "consulta"].includes(solicitud.estado) && (
-            <>
-              <button
-                onClick={() => setModalAccion({ estado: "cancelada", titulo: t("confirmar_cancelacion_titulo"), mensaje: t("confirmar_cancelacion_mensaje"), textoConfirmar: t("cancelar_solicitud"), confirmColor: "red", mostrarMotivos: true, mostrarObservacion: true })}
-                className="btn-secondary flex-1 py-3.5 text-rose-600 hover:bg-rose-50"
-              >
-                Rechazar
-              </button>
-              <button
-                onClick={() => setModalAccion({ estado: "aceptada", titulo: t("confirmar_aceptacion_titulo"), mensaje: t("confirmar_aceptacion_mensaje"), textoConfirmar: t("aceptar_solicitud"), confirmColor: "green" })}
-                className="btn-primary flex-1 py-3.5 shadow-md"
-              >
-                Aceptar pedido
-              </button>
-            </>
-          )}
-
           {/* Fallback space if no actions to avoid layout jump */}
-          {!((user?.tipo === "cliente" && ["creada", "consulta", "aceptada"].includes(solicitud.estado)) || (user?.tipo === "profesional" && ["creada", "consulta"].includes(solicitud.estado))) && (
+          {!((user?.tipo === "cliente" && ["creada", "consulta", "aceptada"].includes(solicitud.estado)) || (user?.tipo === "profesional" && ["creada", "consulta", "aceptada"].includes(solicitud.estado))) && (
             <div className="w-full text-center text-sm font-medium text-slate-400 py-3.5">
-              No hay acciones disponibles
+              {t("no_hay_acciones", "No hay acciones disponibles")}
             </div>
           )}
         </div>

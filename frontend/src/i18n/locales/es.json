@@ -96,6 +96,8 @@
     "consulta": "Consulta enviada",
     "aceptada": "Aceptada",
     "confirmada": "Confirmada",
+    "verificada": "Trabajo verificado",
+    "calificada": "Trabajo calificado",
     "rechazada": "Rechazada",
     "cancelada": "Cancelada",
     "finalizada": "Finalizada"
@@ -439,5 +441,15 @@
   "error_aceptar_terminos_privacidad_responsabilidad": "Debes aceptar los Términos y Condiciones de Uso, la Política de Privacidad y el deslinde de responsabilidad de Casa Click para poder registrarte.",
   "texto_terminos_condiciones": "Bienvenido a Casa Click. Al utilizar nuestra plataforma, aceptas cumplir y estar sujeto a los siguientes términos y condiciones de uso. Por favor, léelos atentamente antes de utilizar el servicio:\n\n1. Relación Contractual: Casa Click es un intermediario tecnológico que facilita el contacto entre usuarios y proveedores de servicios independientes.\n2. Capacidad Legal: El usuario declara tener al menos 18 años y plena capacidad legal para contratar.\n3. Registro de Cuenta: El usuario es responsable de la veracidad de los datos registrados y de mantener la confidencialidad de sus credenciales.\n4. Uso de la Plataforma: Está prohibido el uso de la plataforma para fines ilícitos, fraudulentos o que vulneren derechos de terceros.\n5. Modificaciones: Nos reservamos el derecho de modificar estos términos en cualquier momento, lo cual será debidamente notificado a los usuarios.",
   "texto_politica_privacidad": "En Casa Click nos tomamos muy en serio la protección y seguridad de tus datos personales:\n\n1. Recopilación de Información: Solicitamos información básica como nombre completo, correo electrónico, número de teléfono y foto de perfil para posibilitar el registro y el correcto funcionamiento del servicio.\n2. Uso de Datos: Tus datos son utilizados únicamente con el fin de conectar clientes con profesionales, facilitar la comunicación a través del chat interno y gestionar el flujo de solicitudes de trabajo.\n3. Confidencialidad: Casa Click no comparte, vende ni arrienda tus datos personales a terceros con fines publicitarios o comerciales sin tu previo consentimiento.\n4. Seguridad: Implementamos medidas técnicas para resguardar tu información personal frente a accesos no autorizados.\n5. Derechos del Usuario: Puedes solicitar el acceso, corrección o eliminación de tus datos en cualquier momento.",
-  "texto_compromiso_comunidad": "El Compromiso de Comunidad de Casa Click establece pautas básicas de convivencia para asegurar una experiencia segura, respetuosa y confiable para todos:\n\n1. Respeto y Cortesía: Promovemos el trato digno entre profesionales y clientes. No se tolera ningún tipo de discriminación, acoso ni lenguaje ofensivo.\n2. Honestidad: Toda la información de perfiles, cotizaciones, descripciones y calificaciones debe ser verídica y transparente.\n3. Responsabilidad: Tanto clientes como profesionales se comprometen a respetar los horarios pactados y las especificaciones acordadas para cada servicio.\n4. Calidad del Servicio: Invitamos a los profesionales a brindar el mejor servicio posible y a los clientes a calificar de forma constructiva y honesta."
+  "texto_compromiso_comunidad": "El Compromiso de Comunidad de Casa Click establece pautas básicas de convivencia para asegurar una experiencia segura, respetuosa y confiable para todos:\n\n1. Respeto y Cortesía: Promovemos el trato digno entre profesionales y clientes. No se tolera ningún tipo de discriminación, acoso ni lenguaje ofensivo.\n2. Honestidad: Toda la información de perfiles, cotizaciones, descripciones and calificaciones debe ser verídica y transparente.\n3. Responsabilidad: Tanto clientes y profesionales se comprometen a respetar los horarios pactados y las especificaciones acordadas para cada servicio.\n4. Calidad del Servicio: Invitamos a los profesionales a brindar el mejor servicio posible y a los clientes a calificar de forma constructiva y honesta.",
+  "pregunta_verificacion_titulo": "¿Se realizó el trabajo?",
+  "pregunta_verificacion_mensaje": "Por favor, confirmá si el servicio contratado fue completado correctamente.",
+  "si": "Sí",
+  "no": "No",
+  "notif_profesional_verifico": "El profesional confirmó que el trabajo fue realizado. ¿Querés calificar al profesional?",
+  "notif_cliente_verifico": "El cliente confirmó que el trabajo fue realizado. ¿Querés calificar al cliente?",
+  "calificar_ahora": "Calificar ahora",
+  "trabajos_verificados": "Trabajos verificados",
+  "calificaciones_cantidad": "Calificaciones",
+  "no_hay_acciones": "No hay acciones disponibles"
 }

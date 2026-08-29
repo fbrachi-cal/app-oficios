@@ -186,6 +186,7 @@ def test_professional_level_progression_en_camino():
         "id": "prof_001",
         "tipo": "profesional",
         "cantidadCalificaciones": 5,
+        "cantidadTrabajosVerificados": 5,
         "promedioCalificacion": 4.0,
         "nombre": "Juan",
         "foto": "url",

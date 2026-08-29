@@ -50,6 +50,20 @@ class FirebaseRatingRepository(RatingRepository):
             if d.to_dict().get("deleted_at") is None
         ]
 
+    def obtener_calificaciones_por_solicitudes(self, solicitud_ids: List[str]) -> List[dict]:
+        if not solicitud_ids:
+            return []
+        
+        results = []
+        for i in range(0, len(solicitud_ids), 30):
+            chunk = solicitud_ids[i:i+30]
+            query = self.collection.where("solicitud_id", "in", chunk).stream()
+            for doc in query:
+                data = doc.to_dict()
+                if data.get("deleted_at") is None:
+                    results.append(data)
+        return results
+
     def obtener_calificacion_por_solicitud_y_usuario(
         self, solicitud_id: str, calificador_id: str
     ) -> Optional[dict]:
@@ -220,3 +234,119 @@ class FirebaseRatingRepository(RatingRepository):
             txn.update(rating_ref, rating_data)
 
         _run(transaction, rating_ref, user_ref, rating_data, new_score, is_delete)
+
+    def crear_calificacion_y_actualizar_estado_transaccional(
+        self, solicitud_id: str, calificador_id: str, calificacion: int, observacion: str
+    ) -> dict:
+        transaction = self.db.transaction()
+        solicitud_ref = self.db.collection("solicitudes").document(solicitud_id)
+        
+        client_rating_ref = self.collection.document(f"calif_client_{solicitud_id}")
+        pro_rating_ref = self.collection.document(f"calif_prof_{solicitud_id}")
+
+        @firestore.transactional
+        def _run(txn):
+            # 1. Read request doc
+            solicitud_snap = solicitud_ref.get(transaction=txn)
+            if not solicitud_snap.exists:
+                raise Exception("Solicitud no encontrada")
+            
+            solicitud = solicitud_snap.to_dict()
+            solicitud["id"] = solicitud_snap.id
+            
+            # Verify request state is verificada
+            estado = solicitud.get("estado")
+            if estado == "calificada":
+                # User is attempting to rate but it is already rated (possibly duplicate request or concurrent ratings)
+                # Let's check if caller already rated by checking doc existence
+                caller_rating_ref = client_rating_ref if calificador_id == solicitud["solicitante_id"] else pro_rating_ref
+                if caller_rating_ref.get(transaction=txn).exists:
+                    raise Exception("Ya calificaste esta solicitud")
+                # Request is already calificada but this participant hasn't rated? (This shouldn't happen under normal transitions unless data was corrupted)
+                raise Exception("La solicitud ya se encuentra calificada")
+                
+            if estado != "verificada":
+                raise Exception("Solo se pueden calificar solicitudes verificadas")
+                
+            # Verify caller is a participant
+            client_id = solicitud["solicitante_id"]
+            pro_id = solicitud["profesional_id"]
+            if calificador_id not in [client_id, pro_id]:
+                raise Exception("No tenés permiso para calificar esta solicitud")
+                
+            # Read both potential ratings
+            client_rating_snap = client_rating_ref.get(transaction=txn)
+            pro_rating_snap = pro_rating_ref.get(transaction=txn)
+            
+            # Determine roles
+            is_client = calificador_id == client_id
+            if is_client:
+                if client_rating_snap.exists:
+                    raise Exception("Ya calificaste esta solicitud")
+                caller_rating_ref = client_rating_ref
+                calificado_id = pro_id
+                has_counterpart_rating = pro_rating_snap.exists
+            else:
+                if pro_rating_snap.exists:
+                    raise Exception("Ya calificaste esta solicitud")
+                caller_rating_ref = pro_rating_ref
+                calificado_id = client_id
+                has_counterpart_rating = client_rating_snap.exists
+                
+            # 2. Update user profile aggregates for the calificado
+            calificado_ref = self.db.collection("usuarios").document(calificado_id)
+            calificado_snap = calificado_ref.get(transaction=txn)
+            if calificado_snap.exists:
+                udata = calificado_snap.to_dict()
+                old_count = int(udata.get("cantidadCalificaciones", 0))
+                old_total = _resolve_total(udata, old_count)
+            else:
+                old_count = 0
+                old_total = 0.0
+                
+            new_count = old_count + 1
+            new_total = old_total + float(calificacion)
+            new_avg = new_total / new_count if new_count > 0 else 0.0
+            
+            # 3. Create rating document
+            ahora = datetime.utcnow()
+            ahora_iso = ahora.isoformat()
+            rating_data = {
+                "id": caller_rating_ref.id,
+                "solicitud_id": solicitud_id,
+                "calificador_id": calificador_id,
+                "calificado_id": calificado_id,
+                "calificacion": calificacion,
+                "observacion": observacion,
+                "fecha": ahora_iso,
+                "created_at": ahora_iso
+            }
+            txn.set(caller_rating_ref, rating_data)
+            
+            # Update user profile
+            txn.update(calificado_ref, {
+                "promedioCalificacion": new_avg,
+                "cantidadCalificaciones": new_count,
+                "totalScore": new_total
+            })
+            
+            # 4. Conditionally transition request to calificada
+            if has_counterpart_rating:
+                txn.update(solicitud_ref, {
+                    "estado": "calificada",
+                    "fecha_cambio_estado": ahora,
+                    "historial_estados": firestore.ArrayUnion([{
+                        "estado": "calificada",
+                        "fecha": ahora
+                    }])
+                })
+                solicitud["estado"] = "calificada"
+                solicitud["fecha_cambio_estado"] = ahora
+                solicitud["historial_estados"] = solicitud.get("historial_estados", []) + [{
+                    "estado": "calificada",
+                    "fecha": ahora
+                }]
+                
+            return {"rating_id": caller_rating_ref.id, "calificado_id": calificado_id, "solicitud": solicitud}
+
+        return _run(transaction)

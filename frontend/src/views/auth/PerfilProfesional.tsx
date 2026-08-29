@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FiChevronLeft, FiStar, FiMapPin, FiBriefcase, FiClock, FiChevronDown } from "react-icons/fi";
+import { FiChevronLeft, FiStar, FiMapPin, FiBriefcase, FiClock, FiChevronDown, FiCheckCircle } from "react-icons/fi";
 import config from "../../config";
 import { fetchConToken } from "../../utils/fetchConToken";
 import { useLoading } from "../../context/LoadingContext";
@@ -109,26 +109,26 @@ const PerfilProfesional: React.FC = () => {
         </div>
 
         {/* Stats Row */}
-        <div className={`grid ${profesional.tipo === "cliente" ? "grid-cols-2" : "grid-cols-3"} gap-4 mb-10`}>
-          <div className="card p-4 text-center">
-            <FiBriefcase className="mx-auto text-brand-500 mb-2" size={20} />
-            <div className="text-xl font-bold text-neutral-900">{profesional.cantidadCalificaciones ?? 0}</div>
-            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">
-              {profesional.tipo === "cliente" ? t("trabajos_solicitados") : t("trabajos")}
-            </div>
-          </div>
+        <div className="grid grid-cols-3 gap-4 mb-10">
           <div className="card p-4 text-center">
             <FiStar className="mx-auto text-warning-500 mb-2" size={20} />
             <div className="text-xl font-bold text-neutral-900">{profesional.promedioCalificacion ?? 0}</div>
             <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">{t("calificacion")}</div>
           </div>
-          {profesional.tipo !== "cliente" && (
-            <div className="card p-4 text-center">
-              <FiClock className="mx-auto text-success-500 mb-2" size={20} />
-              <div className="text-xl font-bold text-neutral-900">{profesional.disponibilidad || "N/A"}</div>
-              <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">{t("disponibilidad")}</div>
+          <div className="card p-4 text-center">
+            <FiBriefcase className="mx-auto text-brand-500 mb-2" size={20} />
+            <div className="text-xl font-bold text-neutral-900">{profesional.cantidadCalificaciones ?? 0}</div>
+            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">
+              {t("calificaciones_cantidad", "Calificaciones")}
             </div>
-          )}
+          </div>
+          <div className="card p-4 text-center">
+            <FiCheckCircle className="mx-auto text-success-500 mb-2" size={20} />
+            <div className="text-xl font-bold text-neutral-900">{profesional.cantidadTrabajosVerificados ?? 0}</div>
+            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">
+              {t("trabajos_verificados", "Verificados")}
+            </div>
+          </div>
         </div>
 
         {/* Description */}

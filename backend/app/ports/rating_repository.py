@@ -16,6 +16,10 @@ class RatingRepository(ABC):
         pass
 
     @abstractmethod
+    def obtener_calificaciones_por_solicitudes(self, solicitud_ids: List[str]) -> List[dict]:
+        pass
+
+    @abstractmethod
     def list_ratings_admin(self, limit: int = 20, status_filter: Optional[str] = None, start_after_id: Optional[str] = None) -> List[dict]:
         pass
 
@@ -33,4 +37,10 @@ class RatingRepository(ABC):
 
     @abstractmethod
     def update_rating_and_stats_transactional(self, rating_id: str, rating_data: dict, calificado_id: Optional[str], old_score: int, new_score: Optional[int], is_delete: bool = False) -> None:
+        pass
+
+    @abstractmethod
+    def crear_calificacion_y_actualizar_estado_transaccional(
+        self, solicitud_id: str, calificador_id: str, calificacion: int, observacion: str
+    ) -> dict:
         pass

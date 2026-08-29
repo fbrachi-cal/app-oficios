@@ -91,7 +91,7 @@ def _resolve_professional_metrics(user: dict, user_repo=None, referrals_repo=Non
     profile_completed = all(bool(user.get(f)) for f in profile_fields)
 
     return {
-        "completed_jobs_count": int(user.get("cantidadCalificaciones", 0)),
+        "completed_jobs_count": int(user.get("cantidadTrabajosVerificados", 0)),
         "average_rating": float(user.get("promedioCalificacion", 0.0)),
         "profile_completed": bool(profile_completed),
         # phone_verified: field not yet written by registration flow.

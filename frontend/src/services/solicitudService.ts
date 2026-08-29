@@ -112,6 +112,17 @@ export const solicitudService = {
           throw error;
         }
       },
+    async responderVerificacion(id: string, respuesta: "si" | "no") {
+        try {
+            const res = await axiosWithAuth.patch(`/solicitudes/${id}/responder-verificacion`, {
+                respuesta
+            });
+            return res.data;
+        } catch (err) {
+            logger.error("❌ Error al responder verificación", err);
+            throw err;
+        }
+    },
     
     
 

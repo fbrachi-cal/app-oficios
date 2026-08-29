@@ -55,9 +55,9 @@ const ActividadView: React.FC = () => {
   }, [user, cargarSolicitudes]);
 
   const pendingRatingSolicitud = solicitudes.find((s) => {
-    if (s.estado !== "confirmada") return false;
-    if (user?.tipo === "cliente" && !s.calificacion_cliente) return true;
-    if (user?.tipo === "profesional" && !s.calificacion_profesional) return true;
+    if (s.estado !== "confirmada" && s.estado !== "verificada") return false;
+    if (user?.tipo === "cliente" && !s.califico_cliente) return true;
+    if (user?.tipo === "profesional" && !s.califico_profesional) return true;
     return false;
   });
 
@@ -87,6 +87,10 @@ const ActividadView: React.FC = () => {
   const getStatusBadge = (estado: string) => {
     const lower = estado?.toLowerCase();
     switch (lower) {
+      case "verificada":
+        return <span className="badge text-xs px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
+      case "calificada":
+        return <span className="badge text-xs px-2.5 py-1 bg-blue-100 text-blue-800 border border-blue-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
       case "confirmada":
         return <span className="badge badge-confirmed">{t(`estado.${lower}`)}</span>;
       case "aceptada":
@@ -196,43 +200,45 @@ const ActividadView: React.FC = () => {
                 </p>
                 
                 {/* Rating Visibility */}
-                {s.estado === "confirmada" && (
+                {["verificada", "calificada", "confirmada"].includes(s.estado) && (
                   <div className="flex flex-col gap-1 mt-2 border-t border-slate-100 pt-2">
-                    {user?.tipo === "cliente" && s.calificacion_cliente && (
+                    {user?.tipo === "cliente" && s.califico_cliente && (
                       <>
                         <div className="text-xs font-semibold text-amber-600 flex items-center gap-1 mb-2">
                           <FiStar className="fill-amber-500 text-amber-500" />
-                          {typeof s.calificacion_cliente === "number" ? `Calificaste con ${s.calificacion_cliente}` : "Ya calificaste este trabajo"}
+                          {t("ya_calificaste", "Ya calificaste este trabajo")}
                         </div>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/profesional/${s.profesional_id}`, { state: { openContactModal: true } });
-                          }}
-                          className="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs px-3 py-1.5 rounded-md transition-colors inline-block"
-                        >
-                          {t("volver_a_contactar")}
-                        </button>
+                        {s.estado !== "calificada" && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/profesional/${s.profesional_id}`, { state: { openContactModal: true } });
+                            }}
+                            className="w-full sm:w-auto bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs px-3 py-1.5 rounded-md transition-colors inline-block"
+                          >
+                            {t("volver_a_contactar")}
+                          </button>
+                        )}
                       </>
                     )}
-                    {user?.tipo === "profesional" && s.calificacion_profesional && (
+                    {user?.tipo === "profesional" && s.califico_profesional && (
                       <div className="text-xs font-semibold text-amber-600 flex items-center gap-1">
                         <FiStar className="fill-amber-500 text-amber-500" />
-                        {typeof s.calificacion_profesional === "number" ? `Calificaste al cliente con ${s.calificacion_profesional}` : "Ya calificaste al cliente"}
+                        {t("ya_calificaste_cliente", "Ya calificaste al cliente")}
                       </div>
                     )}
                     
                     {/* Counterpart's rating */}
-                    {user?.tipo === "cliente" && s.calificacion_profesional && (
+                    {user?.tipo === "cliente" && s.califico_profesional && (
                       <div className="text-xs font-medium text-slate-500 flex items-center gap-1">
                         <FiStar className="fill-slate-400 text-slate-400" />
-                        {typeof s.calificacion_profesional === "number" ? `El profesional te calificó con ${s.calificacion_profesional}` : "El profesional ya te calificó"}
+                        {t("el_profesional_te_califico", "El profesional ya te calificó")}
                       </div>
                     )}
-                    {user?.tipo === "profesional" && s.calificacion_cliente && (
+                    {user?.tipo === "profesional" && s.califico_cliente && (
                       <div className="text-xs font-medium text-slate-500 flex items-center gap-1">
                         <FiStar className="fill-slate-400 text-slate-400" />
-                        {typeof s.calificacion_cliente === "number" ? `El cliente te calificó con ${s.calificacion_cliente}` : "El cliente ya te calificó"}
+                        {t("el_cliente_te_califico", "El cliente ya te calificó")}
                       </div>
                     )}
                   </div>

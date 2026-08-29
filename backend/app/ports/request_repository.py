@@ -33,3 +33,7 @@ class RequestRepository(ABC):
     @abstractmethod
     def get_all_requests(self) -> List[Dict[str, Any]]:
         pass
+
+    @abstractmethod
+    def responder_verificacion_si_transaccional(self, solicitud_id: str, user_id: str) -> dict:
+        pass
