@@ -112,10 +112,12 @@ export const solicitudService = {
           throw error;
         }
       },
-    async responderVerificacion(id: string, respuesta: "si" | "no") {
+    async responderVerificacion(id: string, respuesta: "si" | "no", motivo?: string, observacion?: string) {
         try {
             const res = await axiosWithAuth.patch(`/solicitudes/${id}/responder-verificacion`, {
-                respuesta
+                respuesta,
+                motivo,
+                observacion
             });
             return res.data;
         } catch (err) {

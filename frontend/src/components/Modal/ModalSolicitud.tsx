@@ -97,10 +97,10 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
               </div>
             )}
 
-            <div className="flex flex-row justify-end gap-3 mt-6">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 mt-6">
               <button
                 onClick={onClose}
-                className="px-4 py-3 sm:py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 w-1/3 sm:w-auto font-medium"
+                className="px-4 py-2.5 sm:py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 w-full sm:w-auto font-medium text-sm text-center"
               >
                 {textoCancelar || t("volver_atras")}
               </button>
@@ -110,7 +110,7 @@ const ModalSolicitud: React.FC<ModalSolicitudProps> = ({
                     onConfirm(motivoSeleccionado, observacion);
                     onClose();
                   }}
-                  className={`px-4 py-3 sm:py-2 text-white rounded hover:opacity-90 w-2/3 sm:w-auto font-medium ${confirmColor === "green"
+                  className={`px-4 py-2.5 sm:py-2 text-white rounded hover:opacity-90 w-full sm:w-auto font-medium text-sm text-center ${confirmColor === "green"
                     ? "bg-green-600 hover:bg-green-700"
                     : confirmColor === "blue"
                       ? "bg-blue-600 hover:bg-blue-700"

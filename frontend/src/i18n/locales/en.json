@@ -103,7 +103,10 @@
         "cliente_no_disponible": "The client/professional was not available",
         "cambio_de_plan": "There was a change of plans",
         "trabajo_ya_realizado": "The job was already done",
-        "informacion_insuficiente": "There was not enough information"
+        "informacion_insuficiente": "There was not enough information",
+        "seguimos_coordinando": "We are still coordinating / agreeing on the work",
+        "no_llegamos_a_un_acuerdo": "We could not reach an agreement",
+        "cambie_de_opinion": "I changed my mind / I will not proceed with the work"
     },
     "categorias": {
         "Servicios del hogar": "Home services",
@@ -433,6 +436,14 @@
     "texto_compromiso_comunidad": "The Community Commitment of Casa Click establishes basic guidelines to ensure a safe, respectful, and reliable experience for everyone:\n\n1. Mutual Respect: We promote dignified treatment between professionals and clients. No discrimination, harassment, or offensive language is tolerated.\n2. Honesty: All information in profiles, quotes, descriptions, and ratings must be truthful and transparent.\n3. Responsibility: Both clients and professionals commit to respecting agreed schedules and job specifications.\n4. Service Quality: We invite professionals to provide the best possible service and clients to rate constructively and honestly.",
     "pregunta_verificacion_titulo": "Was the job completed?",
     "pregunta_verificacion_mensaje": "Please confirm if the hired service was completed correctly.",
+    "modal_no_realizado_titulo": "Reason why work was not completed",
+    "modal_no_realizado_mensaje": "Please select the option that best describes the status of the job:",
+    "motivo_seguimos_coordinando": "We are still coordinating / agreeing on the work",
+    "motivo_no_llegamos_acuerdo": "We could not reach an agreement",
+    "motivo_cambio_opinion": "I changed my mind / I will not proceed with the work",
+    "seguimos_coordinando": "We are still coordinating / agreeing on the work",
+    "no_llegamos_a_un_acuerdo": "We could not reach an agreement",
+    "cambie_de_opinion": "I changed my mind / I will not proceed with the work",
     "si": "Yes",
     "no": "No",
     "notif_profesional_verifico": "The professional confirmed that the job was completed. Would you like to rate the professional?",

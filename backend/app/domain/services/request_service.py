@@ -202,7 +202,14 @@ class RequestService:
 
         return has_new_message or has_time_passed
 
-    def responder_verificacion(self, solicitud_id: str, user_id: str, respuesta: str) -> dict:
+    def responder_verificacion(
+        self,
+        solicitud_id: str,
+        user_id: str,
+        respuesta: str,
+        motivo: Optional[str] = None,
+        observacion: Optional[str] = None
+    ) -> dict:
         solicitud = self.request_repo.get_by_id(solicitud_id)
         if not solicitud:
             raise Exception("Solicitud no encontrada")
@@ -217,13 +224,19 @@ class RequestService:
         elif respuesta.lower() == "no":
             if solicitud.get("estado") not in ["creada", "consulta", "aceptada"]:
                 raise Exception("Solo se pueden verificar solicitudes activas")
-            
-            ahora = datetime.utcnow()
-            campo_no = "no_prompt_client_at" if user_id == client_id else "no_prompt_professional_at"
-            self.request_repo.actualizar(solicitud_id, {campo_no: ahora})
-            
-            # Fetch updated doc
-            updated_solicitud = self.request_repo.get_by_id(solicitud_id)
-            return {"solicitud": updated_solicitud, "ofrecer_calificacion": False}
+
+            # Cancellation reasons end the pending completion flow permanently
+            if motivo and motivo in ["no_llegamos_a_un_acuerdo", "cambie_de_opinion", "cambio_de_plan"]:
+                self.cambiar_estado(solicitud_id, user_id, "cancelada", motivo=motivo, observacion=observacion)
+                updated_solicitud = self.request_repo.get_by_id(solicitud_id)
+                return {"solicitud": updated_solicitud, "ofrecer_calificacion": False}
+            else:
+                # "seguimos_coordinando" or fallback suppresses prompt temporarily for current participant
+                ahora = datetime.utcnow()
+                campo_no = "no_prompt_client_at" if user_id == client_id else "no_prompt_professional_at"
+                self.request_repo.actualizar(solicitud_id, {campo_no: ahora})
+                updated_solicitud = self.request_repo.get_by_id(solicitud_id)
+                return {"solicitud": updated_solicitud, "ofrecer_calificacion": False}
         else:
             raise Exception("Respuesta inválida")
+

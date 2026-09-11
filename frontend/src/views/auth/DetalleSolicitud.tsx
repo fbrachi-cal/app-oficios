@@ -30,6 +30,9 @@ const DetalleSolicitud: React.FC = () => {
 
   const [modalAccion, setModalAccion] = useState<any>(null);
   const [modalCalificarAbierta, setModalCalificarAbierta] = useState(false);
+  const [modalVerificacionNoAbierta, setModalVerificacionNoAbierta] = useState(false);
+  const [motivoNoSeleccionado, setMotivoNoSeleccionado] = useState("");
+
 
   const lastSignatureRef = useRef<string | null>(null);
   const lastLoadTimeRef = useRef<number>(0);
@@ -163,15 +166,16 @@ const DetalleSolicitud: React.FC = () => {
     }
   };
 
-  const responderVerificacion = async (respuesta: "si" | "no") => {
+  const responderVerificacion = async (respuesta: "si" | "no", motivo?: string) => {
     try {
       setLoading(true);
-      const res = await solicitudService.responderVerificacion(id!, respuesta);
+      const res = await solicitudService.responderVerificacion(id!, respuesta, motivo);
       await cargarSolicitud();
       
       if (respuesta === "si" && res.ofrecer_calificacion) {
         setModalCalificarAbierta(true);
       }
+      setModalVerificacionNoAbierta(false);
     } catch (err) {
       logger.error("Error al responder verificación", err);
     } finally {
@@ -357,7 +361,10 @@ const DetalleSolicitud: React.FC = () => {
                 {t("si", "Sí")}
               </button>
               <button
-                onClick={() => responderVerificacion("no")}
+                onClick={() => {
+                  setMotivoNoSeleccionado("");
+                  setModalVerificacionNoAbierta(true);
+                }}
                 className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold"
               >
                 {t("no", "No")}
@@ -555,6 +562,70 @@ const DetalleSolicitud: React.FC = () => {
         onSubmit={enviarCalificacion}
         titulo={user?.tipo === "cliente" ? "Calificá al profesional" : "Calificá al cliente"}
       />
+
+      {/* Modal Verification No (Reason selection) */}
+      {modalVerificacionNoAbierta && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative max-h-[90dvh] overflow-y-auto">
+            <button
+              className="absolute top-3 right-3 text-slate-400 hover:text-slate-700 text-xl font-bold p-1"
+              onClick={() => setModalVerificacionNoAbierta(false)}
+            >
+              ×
+            </button>
+
+            <h2 className="text-xl font-bold text-slate-900 mb-2">
+              {t("modal_no_realizado_titulo", "Motivo por el cual no se realizó")}
+            </h2>
+            <p className="text-sm text-slate-600 mb-6">
+              {t("modal_no_realizado_mensaje", "Por favor, indicá cuál de estas situaciones describe mejor el estado del trabajo:")}
+            </p>
+
+            <div className="space-y-3 mb-6">
+              {[
+                { key: "seguimos_coordinando", label: t("motivo_seguimos_coordinando", "Seguimos coordinando / acordando el trabajo") },
+                { key: "no_llegamos_a_un_acuerdo", label: t("motivo_no_llegamos_acuerdo", "No llegamos a un acuerdo") },
+                { key: "cambie_de_opinion", label: t("motivo_cambio_opinion", "Cambié de opinión / No voy a proceder con el trabajo") },
+              ].map((opt) => (
+                <label
+                  key={opt.key}
+                  className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all ${
+                    motivoNoSeleccionado === opt.key
+                      ? "border-blue-600 bg-blue-50/60 ring-1 ring-blue-600 text-blue-900 font-medium"
+                      : "border-slate-200 hover:border-slate-300 bg-white text-slate-700"
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="motivo_no"
+                    value={opt.key}
+                    checked={motivoNoSeleccionado === opt.key}
+                    onChange={(e) => setMotivoNoSeleccionado(e.target.value)}
+                    className="mt-0.5 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-sm leading-snug">{opt.label}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setModalVerificacionNoAbierta(false)}
+                className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium text-sm transition-colors"
+              >
+                {t("cancelar", "Cancelar")}
+              </button>
+              <button
+                onClick={() => responderVerificacion("no", motivoNoSeleccionado)}
+                disabled={!motivoNoSeleccionado}
+                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:bg-slate-300 text-white rounded-xl font-semibold text-sm transition-colors shadow-sm"
+              >
+                {t("confirmar", "Confirmar")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

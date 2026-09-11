@@ -287,7 +287,7 @@ async def responder_verificacion(
 ):
     try:
         service = RequestService(request_repo)
-        res = service.responder_verificacion(id, user_id, datos.respuesta)
+        res = service.responder_verificacion(id, user_id, datos.respuesta, motivo=datos.motivo, observacion=datos.observacion)
         
         # Trigger job_verified notification to counterpart if yes and it's newly verified
         if datos.respuesta.lower() == "si" and res.get("ofrecer_calificacion") and not res.get("already_done", False):
@@ -313,8 +313,32 @@ async def responder_verificacion(
                     )
             except Exception as notif_err:
                 log.error(f"Error sending verification notification: {notif_err}")
+        elif datos.respuesta.lower() == "no" and res.get("solicitud", {}).get("estado") == "cancelada":
+            try:
+                solicitud = res.get("solicitud") or request_repo.get_by_id(id)
+                if solicitud:
+                    recipient_uid = (
+                        solicitud["profesional_id"]
+                        if user_id == solicitud["solicitante_id"]
+                        else solicitud["solicitante_id"]
+                    )
+                    sender = user_repo.get_user_by_id(user_id)
+                    sender_name = sender.get("nombre", "Un usuario") if sender else "Un usuario"
+                    
+                    await notification_service.create_and_send_notification(
+                        recipient_uid=recipient_uid,
+                        actor_uid=user_id,
+                        type="request_cancelled",
+                        title="Solicitud cancelada",
+                        body=f"{sender_name} ha cancelado la solicitud.",
+                        related_entity_type="request",
+                        related_entity_id=id
+                    )
+            except Exception as notif_err:
+                log.error(f"Error sending verification cancellation notification: {notif_err}")
                 
         return res
     except Exception as e:
         log.error(f"Error al responder verificacion: {e}")
         raise HTTPException(status_code=400, detail=str(e))
+

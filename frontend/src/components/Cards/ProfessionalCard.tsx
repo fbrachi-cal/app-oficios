@@ -41,8 +41,8 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
 
         {/* Info */}
         <div className="flex-1 min-w-0">
-          <div className="flex justify-between items-start mb-1">
-            <h3 className="text-base font-bold text-neutral-900 truncate pr-2 group-hover:text-brand-600 transition-colors">
+          <div className="flex justify-between items-start gap-1 mb-1 min-w-0">
+            <h3 className="text-base font-bold text-neutral-900 truncate pr-1 group-hover:text-brand-600 transition-colors min-w-0">
               {profesional.nombre}
             </h3>
             {profesional.disponibilidad && (

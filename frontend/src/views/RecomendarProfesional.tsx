@@ -160,8 +160,8 @@ const RecomendarProfesional: React.FC = () => {
                   />
                 </div>
 
-                <div className="relative w-full mb-3 flex gap-4">
-                  <div className="w-1/2">
+                <div className="relative w-full mb-3 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <div className="w-full sm:w-1/2">
                     <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                       {t("telefono")}
                     </label>
@@ -174,7 +174,7 @@ const RecomendarProfesional: React.FC = () => {
                       placeholder={t("ejemplo_telefono", { defaultValue: "Ej: 1122334455" })}
                     />
                   </div>
-                  <div className="w-1/2">
+                  <div className="w-full sm:w-1/2">
                     <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                       {t("email")}
                     </label>
@@ -192,8 +192,8 @@ const RecomendarProfesional: React.FC = () => {
                   {t("referral.contact_hint", { defaultValue: "Es necesario proveer al menos el teléfono o el email del profesional." })}
                 </div>
 
-                <div className="relative w-full mb-3 flex gap-4">
-                  <div className="w-1/2">
+                <div className="relative w-full mb-3 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  <div className="w-full sm:w-1/2">
                     <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                       {t("categoria")}
                     </label>
@@ -209,7 +209,7 @@ const RecomendarProfesional: React.FC = () => {
                       ))}
                     </select>
                   </div>
-                  <div className="w-1/2">
+                  <div className="w-full sm:w-1/2">
                     <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                       {t("subcategoria")}
                     </label>

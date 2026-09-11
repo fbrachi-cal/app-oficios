@@ -222,6 +222,53 @@ def test_responder_verificacion_no(service, mock_repo):
     assert "no_prompt_client_at" in args[1]
     assert isinstance(args[1]["no_prompt_client_at"], datetime)
 
+def test_responder_verificacion_no_seguimos_coordinando(service, mock_repo):
+    mock_repo.get_by_id.return_value = {
+        "id": "req_123",
+        "solicitante_id": "client_1",
+        "profesional_id": "pro_1",
+        "estado": "aceptada"
+    }
+    
+    res = service.responder_verificacion("req_123", "client_1", "no", motivo="seguimos_coordinando")
+    assert res["ofrecer_calificacion"] is False
+    assert mock_repo.actualizar.called
+    
+    args, kwargs = mock_repo.actualizar.call_args
+    assert args[0] == "req_123"
+    assert "no_prompt_client_at" in args[1]
+    assert isinstance(args[1]["no_prompt_client_at"], datetime)
+
+def test_responder_verificacion_no_cancellation_reasons(service, mock_repo):
+    mock_repo.get_by_id.return_value = {
+        "id": "req_123",
+        "solicitante_id": "client_1",
+        "profesional_id": "pro_1",
+        "estado": "aceptada"
+    }
+    
+    res = service.responder_verificacion("req_123", "client_1", "no", motivo="no_llegamos_a_un_acuerdo")
+    assert res["ofrecer_calificacion"] is False
+    assert mock_repo.actualizar_con_historial.called
+    args, kwargs = mock_repo.actualizar_con_historial.call_args
+    assert args[0] == "req_123"
+    assert args[1]["estado"] == "cancelada"
+    assert args[1]["motivo_cancelacion"] == "no_llegamos_a_un_acuerdo"
+
+    mock_repo.reset_mock()
+    mock_repo.get_by_id.return_value = {
+        "id": "req_123",
+        "solicitante_id": "client_1",
+        "profesional_id": "pro_1",
+        "estado": "aceptada"
+    }
+    res_cambio = service.responder_verificacion("req_123", "client_1", "no", motivo="cambie_de_opinion")
+    assert res_cambio["ofrecer_calificacion"] is False
+    assert mock_repo.actualizar_con_historial.called
+    args, kwargs = mock_repo.actualizar_con_historial.call_args
+    assert args[1]["estado"] == "cancelada"
+    assert args[1]["motivo_cancelacion"] == "cambie_de_opinion"
+
 @patch("firebase_admin.firestore.client")
 @patch("firebase_admin.firestore.transactional", lambda f: f)
 def test_responder_verificacion_si_transaccional_idempotency_and_missing_profiles(mock_client_fn):

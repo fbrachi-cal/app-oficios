@@ -24,3 +24,5 @@ class EstadoRequest(BaseModel):
 
 class RespuestaVerificacion(BaseModel):
     respuesta: str
+    motivo: Optional[str] = None
+    observacion: Optional[str] = None

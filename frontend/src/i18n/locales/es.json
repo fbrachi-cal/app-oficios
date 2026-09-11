@@ -114,7 +114,10 @@
     "cliente_no_disponible": "El cliente/profesional no estaba disponible",
     "cambio_de_plan": "Se cambió de plan",
     "trabajo_ya_realizado": "El trabajo ya fue realizado",
-    "informacion_insuficiente": "No había información suficiente"
+    "informacion_insuficiente": "No había información suficiente",
+    "seguimos_coordinando": "Seguimos coordinando / acordando el trabajo",
+    "no_llegamos_a_un_acuerdo": "No llegamos a un acuerdo",
+    "cambie_de_opinion": "Cambié de opinión / No voy a proceder con el trabajo"
   },
   "categorias": {
     "Servicios del hogar": "Servicios del hogar",
@@ -444,6 +447,14 @@
   "texto_compromiso_comunidad": "El Compromiso de Comunidad de Casa Click establece pautas básicas de convivencia para asegurar una experiencia segura, respetuosa y confiable para todos:\n\n1. Respeto y Cortesía: Promovemos el trato digno entre profesionales y clientes. No se tolera ningún tipo de discriminación, acoso ni lenguaje ofensivo.\n2. Honestidad: Toda la información de perfiles, cotizaciones, descripciones and calificaciones debe ser verídica y transparente.\n3. Responsabilidad: Tanto clientes y profesionales se comprometen a respetar los horarios pactados y las especificaciones acordadas para cada servicio.\n4. Calidad del Servicio: Invitamos a los profesionales a brindar el mejor servicio posible y a los clientes a calificar de forma constructiva y honesta.",
   "pregunta_verificacion_titulo": "¿Se realizó el trabajo?",
   "pregunta_verificacion_mensaje": "Por favor, confirmá si el servicio contratado fue completado correctamente.",
+  "modal_no_realizado_titulo": "Motivo por el cual no se realizó",
+  "modal_no_realizado_mensaje": "Por favor, indicá cuál de estas situaciones describe mejor el estado del trabajo:",
+  "motivo_seguimos_coordinando": "Seguimos coordinando / acordando el trabajo",
+  "motivo_no_llegamos_acuerdo": "No llegamos a un acuerdo",
+  "motivo_cambio_opinion": "Cambié de opinión / No voy a proceder con el trabajo",
+  "seguimos_coordinando": "Seguimos coordinando / acordando el trabajo",
+  "no_llegamos_a_un_acuerdo": "No llegamos a un acuerdo",
+  "cambie_de_opinion": "Cambié de opinión / No voy a proceder con el trabajo",
   "si": "Sí",
   "no": "No",
   "notif_profesional_verifico": "El profesional confirmó que el trabajo fue realizado. ¿Querés calificar al profesional?",

@@ -109,23 +109,25 @@ const PerfilProfesional: React.FC = () => {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-4 mb-10">
-          <div className="card p-4 text-center">
-            <FiStar className="mx-auto text-warning-500 mb-2" size={20} />
-            <div className="text-xl font-bold text-neutral-900">{profesional.promedioCalificacion ?? 0}</div>
-            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">{t("calificacion")}</div>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-10">
+          <div className="card p-2 sm:p-4 text-center min-w-0 flex flex-col items-center justify-center">
+            <FiStar className="mx-auto text-warning-500 mb-1.5 sm:mb-2 shrink-0" size={20} />
+            <div className="text-lg sm:text-xl font-bold text-neutral-900 leading-none">{profesional.promedioCalificacion ?? 0}</div>
+            <div className="text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-tight sm:tracking-wide leading-tight mt-1 break-words max-w-full">
+              {t("calificacion")}
+            </div>
           </div>
-          <div className="card p-4 text-center">
-            <FiBriefcase className="mx-auto text-brand-500 mb-2" size={20} />
-            <div className="text-xl font-bold text-neutral-900">{profesional.cantidadCalificaciones ?? 0}</div>
-            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">
+          <div className="card p-2 sm:p-4 text-center min-w-0 flex flex-col items-center justify-center">
+            <FiBriefcase className="mx-auto text-brand-500 mb-1.5 sm:mb-2 shrink-0" size={20} />
+            <div className="text-lg sm:text-xl font-bold text-neutral-900 leading-none">{profesional.cantidadCalificaciones ?? 0}</div>
+            <div className="text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-tight sm:tracking-wide leading-tight mt-1 break-words max-w-full">
               {t("calificaciones_cantidad", "Calificaciones")}
             </div>
           </div>
-          <div className="card p-4 text-center">
-            <FiCheckCircle className="mx-auto text-success-500 mb-2" size={20} />
-            <div className="text-xl font-bold text-neutral-900">{profesional.cantidadTrabajosVerificados ?? 0}</div>
-            <div className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mt-1">
+          <div className="card p-2 sm:p-4 text-center min-w-0 flex flex-col items-center justify-center">
+            <FiCheckCircle className="mx-auto text-success-500 mb-1.5 sm:mb-2 shrink-0" size={20} />
+            <div className="text-lg sm:text-xl font-bold text-neutral-900 leading-none">{profesional.cantidadTrabajosVerificados ?? 0}</div>
+            <div className="text-[10px] sm:text-xs font-semibold text-neutral-500 uppercase tracking-tight sm:tracking-wide leading-tight mt-1 break-words max-w-full">
               {t("trabajos_verificados", "Verificados")}
             </div>
           </div>
