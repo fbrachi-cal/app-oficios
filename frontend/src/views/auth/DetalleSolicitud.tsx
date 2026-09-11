@@ -48,8 +48,8 @@ const DetalleSolicitud: React.FC = () => {
     return `${data.estado || ""}_${consultas.length}_${lastMsgSig}`;
   };
 
-  const cargarSolicitud = async () => {
-    if (fetchInProgress.current) {
+  const cargarSolicitud = async (force: boolean = false) => {
+    if (fetchInProgress.current && !force) {
       pendingReloadRef.current = true;
       return;
     }
@@ -57,7 +57,7 @@ const DetalleSolicitud: React.FC = () => {
     const now = Date.now();
     const timeSinceLastLoad = now - lastLoadTimeRef.current;
     
-    if (timeSinceLastLoad < 1500) {
+    if (!force && timeSinceLastLoad < 1500) {
       pendingReloadRef.current = true;
       if (!cooldownTimerRef.current) {
         const delay = 1500 - timeSinceLastLoad;
@@ -78,7 +78,7 @@ const DetalleSolicitud: React.FC = () => {
       const data = await solicitudService.obtenerSolicitudPorId(id!);
       setSolicitud(data);
 
-      const esCliente = user?.tipo === "cliente";
+      const esCliente = user?.id ? data.solicitante_id === user.id : user?.tipo === "cliente";
       const otroId = esCliente ? data.profesional_id : data.solicitante_id;
 
       const userRes = await fetchConToken(`${config.apiBaseUrl}/usuarios/${otroId}`);
@@ -102,7 +102,7 @@ const DetalleSolicitud: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    cargarSolicitud();
+    cargarSolicitud(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
 
@@ -113,7 +113,7 @@ const DetalleSolicitud: React.FC = () => {
       const targetId = requestId || related_entity_id;
       if (targetId === id) {
         logger.info("Auto-refreshing request details from foreground notification", { requestId: targetId });
-        void cargarSolicitud();
+        void cargarSolicitud(true);
       }
     };
     window.addEventListener("casaclick:notification-received", handleNotification);
@@ -136,7 +136,7 @@ const DetalleSolicitud: React.FC = () => {
           lastSignatureRef.current = signature;
         } else if (lastSignatureRef.current !== signature) {
           logger.info("Realtime Firestore update detected changes, refetching request via API", { id, signature, lastSignature: lastSignatureRef.current });
-          void cargarSolicitud();
+          void cargarSolicitud(true);
         }
       }
     }, (err) => {
@@ -157,7 +157,7 @@ const DetalleSolicitud: React.FC = () => {
     try {
       setLoading(true);
       await solicitudService.actualizarEstado(id!, nuevo_estado, motivo, obs);
-      await cargarSolicitud();
+      await cargarSolicitud(true);
       setModalAccion(null);
     } catch (err) {
       logger.error("Error cambiar estado", err);
@@ -170,7 +170,10 @@ const DetalleSolicitud: React.FC = () => {
     try {
       setLoading(true);
       const res = await solicitudService.responderVerificacion(id!, respuesta, motivo);
-      await cargarSolicitud();
+      if (res.solicitud) {
+        setSolicitud(res.solicitud);
+      }
+      await cargarSolicitud(true);
       
       if (respuesta === "si" && res.ofrecer_calificacion) {
         setModalCalificarAbierta(true);
@@ -375,18 +378,18 @@ const DetalleSolicitud: React.FC = () => {
 
         {/* Rating Nudge / Form */}
         {((solicitud.estado === "verificada" || solicitud.estado === "confirmada") &&
-          !(user?.tipo === "cliente" ? solicitud.califico_cliente : solicitud.califico_profesional)) && (
+          !(user?.id ? (solicitud.solicitante_id === user.id ? solicitud.califico_cliente : solicitud.califico_profesional) : (user?.tipo === "cliente" ? solicitud.califico_cliente : solicitud.califico_profesional))) && (
           <div className="card p-6 bg-amber-50 border-amber-200 text-center">
             <FiStar className="text-amber-500 mx-auto mb-3" size={32} />
             <h3 className="text-lg font-bold text-amber-900 mb-2">
               {solicitud.verificado_por && solicitud.verificado_por !== user?.id
-                ? (user?.tipo === "cliente" 
+                ? ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente")
                     ? t("notif_profesional_verifico", "El profesional confirmó que el trabajo fue realizado. ¿Querés calificar al profesional?") 
                     : t("notif_cliente_verifico", "El cliente confirmó que el trabajo fue realizado. ¿Querés calificar al cliente?"))
-                : (user?.tipo === "cliente" ? t("califica_al_profesional", "Calificá al profesional") : t("califica_al_cliente", "Calificá al cliente"))}
+                : ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente") ? t("califica_al_profesional", "Calificá al profesional") : t("califica_al_cliente", "Calificá al cliente"))}
             </h3>
             <p className="text-sm text-amber-700 mb-4">
-              Ayudá a la comunidad contando tu experiencia con {otroUsuario.nombre}.
+              Ayudá a la comunidad contando tu experiencia con {otroUsuario?.nombre}.
             </p>
             <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 max-w-md mx-auto">
               <button onClick={() => setModalCalificarAbierta(true)} className="btn-primary flex-1 bg-amber-500 hover:bg-amber-600 border-none py-2 px-4 rounded-xl font-semibold text-white">
@@ -560,7 +563,8 @@ const DetalleSolicitud: React.FC = () => {
         isOpen={modalCalificarAbierta}
         onClose={() => setModalCalificarAbierta(false)}
         onSubmit={enviarCalificacion}
-        titulo={user?.tipo === "cliente" ? "Calificá al profesional" : "Calificá al cliente"}
+        titulo={(user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente") ? "Calificá al profesional" : "Calificá al cliente"}
+        nombreTarget={otroUsuario?.nombre}
       />
 
       {/* Modal Verification No (Reason selection) */}

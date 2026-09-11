@@ -56,9 +56,9 @@ const ActividadView: React.FC = () => {
 
   const pendingRatingSolicitud = solicitudes.find((s) => {
     if (s.estado !== "confirmada" && s.estado !== "verificada") return false;
-    if (user?.tipo === "cliente" && !s.califico_cliente) return true;
-    if (user?.tipo === "profesional" && !s.califico_profesional) return true;
-    return false;
+    const isClient = user?.id ? s.solicitante_id === user.id : user?.tipo === "cliente";
+    const hasUserRated = isClient ? s.califico_cliente : s.califico_profesional;
+    return !hasUserRated;
   });
 
   const enviarCalificacion = async (puntuacion: number, observacion: string) => {

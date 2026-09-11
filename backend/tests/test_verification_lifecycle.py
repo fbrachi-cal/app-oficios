@@ -530,3 +530,115 @@ async def test_requests_endpoints_enrichment():
     
     assert res_single["califico_cliente"] is True
     assert res_single["califico_profesional"] is False
+
+@patch("firebase_admin.firestore.client")
+@patch("firebase_admin.firestore.transactional", lambda f: f)
+def test_cross_rating_order_pro_first_then_client(mock_client_fn):
+    from app.adapters.firebase.firebase_rating_repo import FirebaseRatingRepository
+    
+    mock_db = MagicMock()
+    mock_client_fn.return_value = mock_db
+    
+    repo = FirebaseRatingRepository()
+    mock_txn = MagicMock()
+    mock_db.transaction.return_value = mock_txn
+    
+    mock_solicitud_ref = MagicMock()
+    mock_client_rating_ref = MagicMock()
+    mock_pro_rating_ref = MagicMock()
+    mock_calificado_user_ref = MagicMock()
+    
+    repo.collection = MagicMock()
+    def get_rating_ref(doc_id=""):
+        if doc_id == "calif_client_req_123":
+            return mock_client_rating_ref
+        elif doc_id == "calif_prof_req_123":
+            return mock_pro_rating_ref
+        return MagicMock()
+    repo.collection.document.side_effect = get_rating_ref
+    
+    mock_solic_col = MagicMock()
+    mock_solic_col.document.return_value = mock_solicitud_ref
+    mock_users_col = MagicMock()
+    mock_users_col.document.return_value = mock_calificado_user_ref
+    
+    def get_col_ref(col_name):
+        if col_name == "solicitudes":
+            return mock_solic_col
+        elif col_name == "usuarios":
+            return mock_users_col
+        return MagicMock()
+    mock_db.collection.side_effect = get_col_ref
+    
+    mock_snap_sol = MagicMock()
+    mock_snap_sol.exists = True
+    mock_snap_sol.id = "req_123"
+    mock_snap_sol.to_dict.return_value = {
+        "solicitante_id": "client_1",
+        "profesional_id": "pro_1",
+        "estado": "verificada"
+    }
+    mock_solicitud_ref.get.return_value = mock_snap_sol
+    
+    mock_snap_client_rating = MagicMock()
+    mock_snap_client_rating.exists = False
+    mock_snap_pro_rating = MagicMock()
+    mock_snap_pro_rating.exists = False
+    
+    mock_client_rating_ref.get.return_value = mock_snap_client_rating
+    mock_pro_rating_ref.get.return_value = mock_snap_pro_rating
+    
+    mock_snap_calificado = MagicMock()
+    mock_snap_calificado.exists = True
+    mock_snap_calificado.to_dict.return_value = {"promedioCalificacion": 5.0, "cantidadCalificaciones": 1, "totalScore": 5.0}
+    mock_calificado_user_ref.get.return_value = mock_snap_calificado
+
+    # 1. Professional rates first
+    res1 = repo.crear_calificacion_y_actualizar_estado_transaccional("req_123", "pro_1", 5, "Great client")
+    assert res1["solicitud"]["estado"] == "verificada" # Remains verificada until client also rates
+    
+    # 2. Client rates second
+    mock_snap_pro_rating.exists = True
+    res2 = repo.crear_calificacion_y_actualizar_estado_transaccional("req_123", "client_1", 5, "Great pro")
+    assert res2["solicitud"]["estado"] == "calificada" # Transitions to calificada
+
+@pytest.mark.anyio
+async def test_participant_rating_eligibility_enrichment_and_reloads():
+    from app.api.routes.requests import obtener_solicitud_por_id
+    
+    mock_req_repo = MagicMock()
+    mock_rating_repo = MagicMock()
+    
+    mock_req = {
+        "id": "req_123",
+        "solicitante_id": "client_1",
+        "profesional_id": "pro_1",
+        "estado": "verificada",
+        "fecha_creacion": datetime.now(timezone.utc)
+    }
+    mock_req_repo.get_by_id.return_value = mock_req
+    
+    # Case A: Neither has rated yet
+    mock_rating_repo.obtener_calificacion_por_solicitud_y_usuario.return_value = None
+    
+    client_view = await obtener_solicitud_por_id("req_123", user_id="client_1", request_repo=mock_req_repo, rating_repo=mock_rating_repo)
+    assert client_view["califico_cliente"] is False
+    assert client_view["califico_profesional"] is False
+    
+    pro_view = await obtener_solicitud_por_id("req_123", user_id="pro_1", request_repo=mock_req_repo, rating_repo=mock_rating_repo)
+    assert pro_view["califico_cliente"] is False
+    assert pro_view["califico_profesional"] is False
+    
+    # Case B: Client rated first
+    def mock_get_rating(sid, uid):
+        return {"id": "r1"} if uid == "client_1" else None
+    mock_rating_repo.obtener_calificacion_por_solicitud_y_usuario.side_effect = mock_get_rating
+    
+    client_view_after_client_rated = await obtener_solicitud_por_id("req_123", user_id="client_1", request_repo=mock_req_repo, rating_repo=mock_rating_repo)
+    assert client_view_after_client_rated["califico_cliente"] is True
+    assert client_view_after_client_rated["califico_profesional"] is False
+    
+    pro_view_after_client_rated = await obtener_solicitud_por_id("req_123", user_id="pro_1", request_repo=mock_req_repo, rating_repo=mock_rating_repo)
+    assert pro_view_after_client_rated["califico_cliente"] is True
+    assert pro_view_after_client_rated["califico_profesional"] is False # Pro can still rate!
+

@@ -6,6 +6,7 @@ interface ModalCalificacionProps {
   onClose: () => void;
   onSubmit: (calificacion: number, observacion: string) => void;
   titulo: string;
+  nombreTarget?: string;
 }
 
 const ModalCalificacion: React.FC<ModalCalificacionProps> = ({
@@ -13,6 +14,7 @@ const ModalCalificacion: React.FC<ModalCalificacionProps> = ({
   onClose,
   onSubmit,
   titulo,
+  nombreTarget,
 }) => {
   const { t } = useTranslation();
   const [calificacion, setCalificacion] = useState(0);
@@ -22,15 +24,20 @@ const ModalCalificacion: React.FC<ModalCalificacionProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative max-h-[90dvh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative max-h-[90dvh] overflow-y-auto">
         <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-lg font-bold"
+          className="absolute top-3 right-3 text-slate-400 hover:text-slate-700 text-xl font-bold p-1"
           onClick={onClose}
         >
           ×
         </button>
 
-        <h2 className="text-xl font-semibold mb-4">{titulo}</h2>
+        <h2 className="text-xl font-bold text-slate-900 mb-1">{titulo}</h2>
+        {nombreTarget && (
+          <p className="text-sm text-slate-600 mb-4">
+            ¿Cómo fue tu experiencia con <span className="font-semibold text-slate-900">{nombreTarget}</span>?
+          </p>
+        )}
 
         <div className="flex gap-2 justify-center mb-4">
           {[1, 2, 3, 4, 5].map((n) => (
