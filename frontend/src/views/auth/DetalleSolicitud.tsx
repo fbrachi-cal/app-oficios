@@ -10,7 +10,7 @@ import { useUser } from "../../context/UserContext";
 import { logger } from "../../utils/logger";
 import default_avatar from "../../assets/img/default_avatar.png";
 import ModalSolicitud from "../../components/Modal/ModalSolicitud";
-import ModalCalificacion from "../../components/Modal/ModalCalifica";
+import ModalCalificacion, { FormCalificacion } from "../../components/Modal/ModalCalifica";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 
@@ -171,14 +171,17 @@ const DetalleSolicitud: React.FC = () => {
       setLoading(true);
       const res = await solicitudService.responderVerificacion(id!, respuesta, motivo);
       if (res.solicitud) {
-        setSolicitud(res.solicitud);
-      }
-      await cargarSolicitud(true);
-      
-      if (respuesta === "si" && res.ofrecer_calificacion) {
-        setModalCalificarAbierta(true);
+        setSolicitud((prev: any) => ({
+          ...prev,
+          ...res.solicitud,
+          mostrar_prompt_verificacion: false,
+        }));
       }
       setModalVerificacionNoAbierta(false);
+      if (respuesta === "si") {
+        setModalCalificarAbierta(true);
+      }
+      await cargarSolicitud(true);
     } catch (err) {
       logger.error("Error al responder verificación", err);
     } finally {
@@ -379,23 +382,20 @@ const DetalleSolicitud: React.FC = () => {
         {/* Rating Nudge / Form */}
         {((solicitud.estado === "verificada" || solicitud.estado === "confirmada") &&
           !(user?.id ? (solicitud.solicitante_id === user.id ? solicitud.califico_cliente : solicitud.califico_profesional) : (user?.tipo === "cliente" ? solicitud.califico_cliente : solicitud.califico_profesional))) && (
-          <div className="card p-6 bg-amber-50 border-amber-200 text-center">
-            <FiStar className="text-amber-500 mx-auto mb-3" size={32} />
-            <h3 className="text-lg font-bold text-amber-900 mb-2">
-              {solicitud.verificado_por && solicitud.verificado_por !== user?.id
-                ? ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente")
-                    ? t("notif_profesional_verifico", "El profesional confirmó que el trabajo fue realizado. ¿Querés calificar al profesional?") 
-                    : t("notif_cliente_verifico", "El cliente confirmó que el trabajo fue realizado. ¿Querés calificar al cliente?"))
-                : ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente") ? t("califica_al_profesional", "Calificá al profesional") : t("califica_al_cliente", "Calificá al cliente"))}
-            </h3>
-            <p className="text-sm text-amber-700 mb-4">
-              Ayudá a la comunidad contando tu experiencia con {otroUsuario?.nombre}.
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row sm:gap-3 max-w-md mx-auto">
-              <button onClick={() => setModalCalificarAbierta(true)} className="btn-primary flex-1 bg-amber-500 hover:bg-amber-600 border-none py-2 px-4 rounded-xl font-semibold text-white">
-                {t("calificar_ahora", "Calificar ahora")}
-              </button>
-            </div>
+          <div className="card p-6 bg-amber-50 border-amber-200 shadow-sm">
+            <FiStar className="text-amber-500 mx-auto mb-3" size={36} />
+            <FormCalificacion
+              titulo={
+                solicitud.verificado_por && solicitud.verificado_por !== user?.id
+                  ? ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente")
+                      ? t("notif_profesional_verifico", "El profesional confirmó que el trabajo fue realizado. ¿Querés calificar al profesional?") 
+                      : t("notif_cliente_verifico", "El cliente confirmó que el trabajo fue realizado. ¿Querés calificar al cliente?"))
+                  : ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente") ? t("califica_al_profesional", "Calificá al profesional") : t("califica_al_cliente", "Calificá al cliente"))
+              }
+              nombreTarget={otroUsuario?.nombre}
+              onSubmit={(calificacion, obs) => enviarCalificacion(calificacion, obs)}
+              submitButtonText={t("enviar_calificacion", "Enviar calificación")}
+            />
           </div>
         )}
 

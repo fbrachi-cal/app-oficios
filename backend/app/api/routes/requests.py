@@ -337,6 +337,15 @@ async def responder_verificacion(
             except Exception as notif_err:
                 log.error(f"Error sending verification cancellation notification: {notif_err}")
                 
+        # Enrich returning solicitud dictionary with rating flags and prompt eligibility
+        if res.get("solicitud"):
+            solicitud_dict = res["solicitud"]
+            solicitud_dict["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(solicitud_dict, user_id)
+            if get_calificacion_repo:
+                rating_repo = get_calificacion_repo()
+                solicitud_dict["califico_cliente"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud_dict["solicitante_id"]) is not None
+                solicitud_dict["califico_profesional"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud_dict["profesional_id"]) is not None
+
         return res
     except Exception as e:
         log.error(f"Error al responder verificacion: {e}")
