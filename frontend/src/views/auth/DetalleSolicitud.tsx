@@ -350,54 +350,73 @@ const DetalleSolicitud: React.FC = () => {
         </div>
 
         {/* Verification Prompt Card */}
-        {["creada", "consulta", "aceptada"].includes(solicitud.estado) && solicitud.mostrar_prompt_verificacion && (
-          <div className="card p-6 bg-blue-50 border-blue-200 text-center space-y-4">
-            <FiAlertCircle className="text-blue-600 mx-auto" size={32} />
-            <h3 className="text-lg font-bold text-blue-900">
-              {t("pregunta_verificacion_titulo", "¿Se realizó el trabajo?")}
-            </h3>
-            <p className="text-sm text-blue-700">
-              {t("pregunta_verificacion_mensaje", "Por favor, confirmá si el servicio contratado fue completado correctamente.")}
-            </p>
-            <div className="flex gap-3 max-w-xs mx-auto">
-              <button
-                onClick={() => responderVerificacion("si")}
-                className="btn-primary flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold"
-              >
-                {t("si", "Sí")}
-              </button>
-              <button
-                onClick={() => {
-                  setMotivoNoSeleccionado("");
-                  setModalVerificacionNoAbierta(true);
-                }}
-                className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold"
-              >
-                {t("no", "No")}
-              </button>
+        {(() => {
+          const isClient = user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente";
+          const hasConfirmedCompletion = isClient
+            ? (solicitud.confirmo_realizacion_cliente || solicitud.verificado_por === solicitud.solicitante_id)
+            : (solicitud.confirmo_realizacion_profesional || solicitud.verificado_por === solicitud.profesional_id);
+          const hasUserRated = isClient ? solicitud.califico_cliente : solicitud.califico_profesional;
+          const showPrompt = solicitud.estado !== "cancelada" && solicitud.mostrar_prompt_verificacion && !hasConfirmedCompletion && !hasUserRated;
+
+          if (!showPrompt) return null;
+
+          return (
+            <div className="card p-6 bg-blue-50 border-blue-200 text-center space-y-4">
+              <FiAlertCircle className="text-blue-600 mx-auto" size={32} />
+              <h3 className="text-lg font-bold text-blue-900">
+                {t("pregunta_verificacion_titulo", "¿Se realizó el trabajo?")}
+              </h3>
+              <p className="text-sm text-blue-700">
+                {t("pregunta_verificacion_mensaje", "Por favor, confirmá si el servicio contratado fue completado correctamente.")}
+              </p>
+              <div className="flex gap-3 max-w-xs mx-auto">
+                <button
+                  onClick={() => responderVerificacion("si")}
+                  className="btn-primary flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold"
+                >
+                  {t("si", "Sí")}
+                </button>
+                <button
+                  onClick={() => {
+                    setMotivoNoSeleccionado("");
+                    setModalVerificacionNoAbierta(true);
+                  }}
+                  className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold"
+                >
+                  {t("no", "No")}
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Rating Nudge / Form */}
-        {((solicitud.estado === "verificada" || solicitud.estado === "confirmada") &&
-          !(user?.id ? (solicitud.solicitante_id === user.id ? solicitud.califico_cliente : solicitud.califico_profesional) : (user?.tipo === "cliente" ? solicitud.califico_cliente : solicitud.califico_profesional))) && (
-          <div className="card p-6 bg-amber-50 border-amber-200 shadow-sm">
-            <FiStar className="text-amber-500 mx-auto mb-3" size={36} />
-            <FormCalificacion
-              titulo={
-                solicitud.verificado_por && solicitud.verificado_por !== user?.id
-                  ? ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente")
-                      ? t("notif_profesional_verifico", "El profesional confirmó que el trabajo fue realizado. ¿Querés calificar al profesional?") 
-                      : t("notif_cliente_verifico", "El cliente confirmó que el trabajo fue realizado. ¿Querés calificar al cliente?"))
-                  : ((user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente") ? t("califica_al_profesional", "Calificá al profesional") : t("califica_al_cliente", "Calificá al cliente"))
-              }
-              nombreTarget={otroUsuario?.nombre}
-              onSubmit={(calificacion, obs) => enviarCalificacion(calificacion, obs)}
-              submitButtonText={t("enviar_calificacion", "Enviar calificación")}
-            />
-          </div>
-        )}
+        {(() => {
+          const isClient = user?.id ? solicitud.solicitante_id === user.id : user?.tipo === "cliente";
+          const hasConfirmedCompletion = isClient
+            ? (solicitud.confirmo_realizacion_cliente || solicitud.verificado_por === solicitud.solicitante_id)
+            : (solicitud.confirmo_realizacion_profesional || solicitud.verificado_por === solicitud.profesional_id);
+          const hasUserRated = isClient ? solicitud.califico_cliente : solicitud.califico_profesional;
+          const canRate = hasConfirmedCompletion && !hasUserRated && solicitud.estado !== "cancelada";
+
+          if (!canRate) return null;
+
+          return (
+            <div className="card p-6 bg-amber-50 border-amber-200 shadow-sm">
+              <FiStar className="text-amber-500 mx-auto mb-3" size={36} />
+              <FormCalificacion
+                titulo={
+                  isClient
+                    ? t("califica_al_profesional", "Calificá al profesional")
+                    : t("califica_al_cliente", "Calificá al cliente")
+                }
+                nombreTarget={otroUsuario?.nombre}
+                onSubmit={(calificacion, obs) => enviarCalificacion(calificacion, obs)}
+                submitButtonText={t("enviar_calificacion", "Enviar calificación")}
+              />
+            </div>
+          );
+        })()}
 
         {/* Conversation Thread */}
         {solicitud.historial_consultas?.length > 0 && (

@@ -55,10 +55,13 @@ const ActividadView: React.FC = () => {
   }, [user, cargarSolicitudes]);
 
   const pendingRatingSolicitud = solicitudes.find((s) => {
-    if (s.estado !== "confirmada" && s.estado !== "verificada") return false;
+    if (s.estado === "cancelada") return false;
     const isClient = user?.id ? s.solicitante_id === user.id : user?.tipo === "cliente";
+    const hasConfirmedCompletion = isClient
+      ? (s.confirmo_realizacion_cliente || s.verificado_por === s.solicitante_id)
+      : (s.confirmo_realizacion_profesional || s.verificado_por === s.profesional_id);
     const hasUserRated = isClient ? s.califico_cliente : s.califico_profesional;
-    return !hasUserRated;
+    return hasConfirmedCompletion && !hasUserRated;
   });
 
   const enviarCalificacion = async (puntuacion: number, observacion: string) => {

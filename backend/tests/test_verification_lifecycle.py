@@ -324,13 +324,13 @@ def test_responder_verificacion_si_transaccional_idempotency_and_missing_profile
     assert res["already_done"] is False
     
     mock_txn.update.assert_any_call(mock_client_ref, {"cantidadTrabajosVerificados": 1})
-    mock_txn.set.assert_any_call(mock_pro_ref, {"cantidadTrabajosVerificados": 1}, merge=True)
     
-    # Retry Scenario
+    # Retry Scenario for client_1
     mock_txn.reset_mock()
     mock_snap_request.to_dict.return_value = {
         "solicitante_id": "client_1",
         "profesional_id": "pro_1",
+        "confirmo_realizacion_cliente": True,
         "estado": "verificada"
     }
     
@@ -641,4 +641,41 @@ async def test_participant_rating_eligibility_enrichment_and_reloads():
     pro_view_after_client_rated = await obtener_solicitud_por_id("req_123", user_id="pro_1", request_repo=mock_req_repo, rating_repo=mock_rating_repo)
     assert pro_view_after_client_rated["califico_cliente"] is True
     assert pro_view_after_client_rated["califico_profesional"] is False # Pro can still rate!
+
+@pytest.mark.anyio
+async def test_participant_specific_completion_and_rating_rules(service, mock_repo):
+    now = datetime.now(timezone.utc)
+    
+    # 1. Unconfirmed request: prompt is eligible, but completion is not confirmed yet
+    solicitud = {
+        "id": "req_999",
+        "solicitante_id": "client_1",
+        "profesional_id": "pro_1",
+        "estado": "creada", # State does NOT gate prompt or completion
+        "fecha_creacion": now - timedelta(days=3),
+        "confirmo_realizacion_cliente": False,
+        "confirmo_realizacion_profesional": False,
+        "califico_cliente": False,
+        "califico_profesional": False,
+        "historial_consultas": []
+    }
+    mock_repo.get_by_id.return_value = solicitud
+
+    # Client eligible for prompt because confirmo_realizacion_cliente is False
+    assert service.calcular_eligibilidad_verificacion(solicitud, "client_1") is True
+    # Professional also eligible for prompt
+    assert service.calcular_eligibilidad_verificacion(solicitud, "pro_1") is True
+
+    # 2. Client confirms YES -> confirmo_realizacion_cliente = True
+    solicitud["confirmo_realizacion_cliente"] = True
+    # Prompt is now suppressed for client because client confirmed!
+    assert service.calcular_eligibilidad_verificacion(solicitud, "client_1") is False
+    # Professional has NOT confirmed -> prompt remains eligible for professional!
+    assert service.calcular_eligibilidad_verificacion(solicitud, "pro_1") is True
+
+    # 3. Request in 'consulta' state can also be verified and rated directly
+    solicitud["estado"] = "consulta"
+    solicitud["confirmo_realizacion_profesional"] = True
+    # Prompt now suppressed for professional as well
+    assert service.calcular_eligibilidad_verificacion(solicitud, "pro_1") is False
 

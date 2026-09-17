@@ -101,54 +101,57 @@ class FirebaseRequestRepository:
             if user_id not in [client_id, pro_id]:
                 raise Exception("No tenés permiso para responder la verificación de esta solicitud")
             
-            estado = solicitud.get("estado")
-            if estado in ["verificada", "calificada"]:
+            is_client = user_id == client_id
+
+            # Canonical source of truth: participant-specific completion fields. Fallback to verificado_por for historical data.
+            already_confirmed = (
+                solicitud.get("confirmo_realizacion_cliente") if is_client
+                else solicitud.get("confirmo_realizacion_profesional")
+            )
+            if already_confirmed is None:
+                already_confirmed = (solicitud.get("verificado_por") == user_id)
+
+            if already_confirmed:
                 return {"solicitud": solicitud, "ofrecer_calificacion": True, "already_done": True}
-                
-            if estado not in ["creada", "consulta", "aceptada"]:
-                raise Exception(f"Solo se pueden verificar solicitudes activas (estado actual: {estado})")
-            
+
+            if solicitud.get("estado") == "cancelada":
+                raise Exception("No se pueden verificar solicitudes canceladas")
+
             ahora = datetime.utcnow()
             
-            historial_entry = {
-                "estado": "verificada",
-                "fecha": ahora
+            field_name = "confirmo_realizacion_cliente" if is_client else "confirmo_realizacion_profesional"
+            date_field = "confirmo_cliente_at" if is_client else "confirmo_profesional_at"
+
+            updates = {
+                field_name: True,
+                date_field: ahora,
             }
             
-            txn.update(solicitud_ref, {
-                "estado": "verificada",
-                "fecha_cambio_estado": ahora,
-                "verificado_por": user_id,
-                "verificado_at": ahora,
-                "historial_estados": firestore.ArrayUnion([historial_entry])
-            })
+            # Historical fallback fields
+            if not solicitud.get("verificado_por"):
+                updates["verificado_por"] = user_id
+                updates["verificado_at"] = ahora
+
+            # Retain "verificada" state for UI status badges only if active and not already verified/calificada
+            if solicitud.get("estado") not in ["verificada", "calificada"]:
+                updates["estado"] = "verificada"
+                updates["fecha_cambio_estado"] = ahora
+                historial_entry = {"estado": "verificada", "fecha": ahora}
+                updates["historial_estados"] = firestore.ArrayUnion([historial_entry])
+
+            txn.update(solicitud_ref, updates)
             
-            client_ref = self.db.collection("usuarios").document(client_id)
-            pro_ref = self.db.collection("usuarios").document(pro_id)
-            
-            client_snap = client_ref.get(transaction=txn)
-            if client_snap.exists:
-                client_data = client_snap.to_dict()
-                new_count = int(client_data.get("cantidadTrabajosVerificados", 0)) + 1
-                txn.update(client_ref, {"cantidadTrabajosVerificados": new_count})
+            # Increment user's verified job count
+            target_user_ref = self.db.collection("usuarios").document(user_id)
+            target_snap = target_user_ref.get(transaction=txn)
+            if target_snap.exists:
+                target_data = target_snap.to_dict()
+                new_count = int(target_data.get("cantidadTrabajosVerificados", 0)) + 1
+                txn.update(target_user_ref, {"cantidadTrabajosVerificados": new_count})
             else:
-                txn.set(client_ref, {"cantidadTrabajosVerificados": 1}, merge=True)
-                
-            pro_snap = pro_ref.get(transaction=txn)
-            if pro_snap.exists:
-                pro_data = pro_snap.to_dict()
-                new_count = int(pro_data.get("cantidadTrabajosVerificados", 0)) + 1
-                txn.update(pro_ref, {"cantidadTrabajosVerificados": new_count})
-            else:
-                txn.set(pro_ref, {"cantidadTrabajosVerificados": 1}, merge=True)
+                txn.set(target_user_ref, {"cantidadTrabajosVerificados": 1}, merge=True)
             
-            solicitud.update({
-                "estado": "verificada",
-                "fecha_cambio_estado": ahora,
-                "verificado_por": user_id,
-                "verificado_at": ahora
-            })
-            solicitud["historial_estados"] = solicitud.get("historial_estados", []) + [historial_entry]
+            solicitud.update(updates)
             return {"solicitud": solicitud, "ofrecer_calificacion": True, "already_done": False}
 
         return _run(transaction)

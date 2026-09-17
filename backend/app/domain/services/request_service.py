@@ -145,12 +145,28 @@ class RequestService:
         return self.request_repo.actualizar_con_historial(solicitud_id, update_data)
 
     def calcular_eligibilidad_verificacion(self, solicitud: dict, user_id: str) -> bool:
-        if solicitud.get("estado") not in ["creada", "consulta", "aceptada"]:
+        if solicitud.get("estado") == "cancelada":
             return False
 
         client_id = solicitud.get("solicitante_id")
         pro_id = solicitud.get("profesional_id")
         if user_id not in [client_id, pro_id]:
+            return False
+
+        is_client = user_id == client_id
+
+        # Canonical participant completion check with historical fallback
+        confirmo = (
+            solicitud.get("confirmo_realizacion_cliente") if is_client
+            else solicitud.get("confirmo_realizacion_profesional")
+        )
+        if confirmo is None:
+            confirmo = (solicitud.get("verificado_por") == user_id)
+
+        califico = solicitud.get("califico_cliente") if is_client else solicitud.get("califico_profesional")
+
+        # Suppress completion prompt if participant has already confirmed completion or already rated
+        if confirmo or califico:
             return False
 
         ahora = datetime.now(timezone.utc)
@@ -183,7 +199,7 @@ class RequestService:
         if not (trigger_messages or trigger_time):
             return False
 
-        if user_id == client_id:
+        if is_client:
             no_prompt_at = _normalizar_fecha(solicitud.get("no_prompt_client_at"))
         else:
             no_prompt_at = _normalizar_fecha(solicitud.get("no_prompt_professional_at"))
@@ -222,8 +238,8 @@ class RequestService:
         if respuesta.lower() == "si":
             return self.request_repo.responder_verificacion_si_transaccional(solicitud_id, user_id)
         elif respuesta.lower() == "no":
-            if solicitud.get("estado") not in ["creada", "consulta", "aceptada"]:
-                raise Exception("Solo se pueden verificar solicitudes activas")
+            if solicitud.get("estado") == "cancelada":
+                raise Exception("No se pueden verificar solicitudes canceladas")
 
             # Cancellation reasons end the pending completion flow permanently
             if motivo and motivo in ["no_llegamos_a_un_acuerdo", "cambie_de_opinion", "cambio_de_plan"]:

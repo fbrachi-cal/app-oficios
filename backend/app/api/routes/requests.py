@@ -186,9 +186,11 @@ async def listar_mis_solicitudes(
         ratings_map = {(r["solicitud_id"], r["calificador_id"]): True for r in ratings}
 
         for s in solicitudes:
-            s["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(s, user_id)
+            s["confirmo_realizacion_cliente"] = bool(s.get("confirmo_realizacion_cliente") or (s.get("verificado_por") == s["solicitante_id"]))
+            s["confirmo_realizacion_profesional"] = bool(s.get("confirmo_realizacion_profesional") or (s.get("verificado_por") == s["profesional_id"]))
             s["califico_cliente"] = (s["id"], s["solicitante_id"]) in ratings_map
             s["califico_profesional"] = (s["id"], s["profesional_id"]) in ratings_map
+            s["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(s, user_id)
 
         return solicitudes
     except Exception as e:
@@ -265,9 +267,11 @@ async def obtener_solicitud_por_id(
             raise HTTPException(status_code=403, detail="No tenés permiso para ver esta solicitud")
 
         service = RequestService(request_repo)
-        solicitud["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(solicitud, user_id)
+        solicitud["confirmo_realizacion_cliente"] = bool(solicitud.get("confirmo_realizacion_cliente") or (solicitud.get("verificado_por") == solicitud["solicitante_id"]))
+        solicitud["confirmo_realizacion_profesional"] = bool(solicitud.get("confirmo_realizacion_profesional") or (solicitud.get("verificado_por") == solicitud["profesional_id"]))
         solicitud["califico_cliente"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud["solicitante_id"]) is not None
         solicitud["califico_profesional"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud["profesional_id"]) is not None
+        solicitud["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(solicitud, user_id)
 
         return solicitud
 
@@ -337,14 +341,16 @@ async def responder_verificacion(
             except Exception as notif_err:
                 log.error(f"Error sending verification cancellation notification: {notif_err}")
                 
-        # Enrich returning solicitud dictionary with rating flags and prompt eligibility
+        # Enrich returning solicitud dictionary with rating & confirmation flags and prompt eligibility
         if res.get("solicitud"):
             solicitud_dict = res["solicitud"]
-            solicitud_dict["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(solicitud_dict, user_id)
+            solicitud_dict["confirmo_realizacion_cliente"] = bool(solicitud_dict.get("confirmo_realizacion_cliente") or (solicitud_dict.get("verificado_por") == solicitud_dict.get("solicitante_id")))
+            solicitud_dict["confirmo_realizacion_profesional"] = bool(solicitud_dict.get("confirmo_realizacion_profesional") or (solicitud_dict.get("verificado_por") == solicitud_dict.get("profesional_id")))
             if get_calificacion_repo:
                 rating_repo = get_calificacion_repo()
                 solicitud_dict["califico_cliente"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud_dict["solicitante_id"]) is not None
                 solicitud_dict["califico_profesional"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud_dict["profesional_id"]) is not None
+            solicitud_dict["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(solicitud_dict, user_id)
 
         return res
     except Exception as e:
