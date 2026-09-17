@@ -139,11 +139,13 @@ class FirebaseRequestRepository:
                 historial_entry = {"estado": "verificada", "fecha": ahora}
                 updates["historial_estados"] = firestore.ArrayUnion([historial_entry])
 
-            txn.update(solicitud_ref, updates)
-            
-            # Increment user's verified job count
+            # Perform all transactional reads first
             target_user_ref = self.db.collection("usuarios").document(user_id)
             target_snap = target_user_ref.get(transaction=txn)
+
+            # Perform transactional writes second
+            txn.update(solicitud_ref, updates)
+            
             if target_snap.exists:
                 target_data = target_snap.to_dict()
                 new_count = int(target_data.get("cantidadTrabajosVerificados", 0)) + 1
