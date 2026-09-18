@@ -32,6 +32,8 @@ const DetalleSolicitud: React.FC = () => {
   const [modalCalificarAbierta, setModalCalificarAbierta] = useState(false);
   const [modalVerificacionNoAbierta, setModalVerificacionNoAbierta] = useState(false);
   const [motivoNoSeleccionado, setMotivoNoSeleccionado] = useState("");
+  const [enviandoVerificacion, setEnviandoVerificacion] = useState(false);
+  const enviandoVerificacionRef = useRef(false);
 
 
   const lastSignatureRef = useRef<string | null>(null);
@@ -167,16 +169,41 @@ const DetalleSolicitud: React.FC = () => {
   };
 
   const responderVerificacion = async (respuesta: "si" | "no", motivo?: string) => {
+    if (enviandoVerificacionRef.current) {
+      logger.info("Guard: responderVerificacion call ignored as submission is already in flight");
+      return;
+    }
+    enviandoVerificacionRef.current = true;
+    setEnviandoVerificacion(true);
+
     try {
       setLoading(true);
       const res = await solicitudService.responderVerificacion(id!, respuesta, motivo);
-      if (res.solicitud) {
+      const isClient = user?.id ? solicitud?.solicitante_id === user.id : user?.tipo === "cliente";
+
+      if (res?.solicitud) {
         setSolicitud((prev: any) => ({
           ...prev,
           ...res.solicitud,
           mostrar_prompt_verificacion: false,
+          ...(respuesta === "si"
+            ? isClient
+              ? { confirmo_realizacion_cliente: true }
+              : { confirmo_realizacion_profesional: true }
+            : {}),
+        }));
+      } else {
+        setSolicitud((prev: any) => ({
+          ...prev,
+          mostrar_prompt_verificacion: false,
+          ...(respuesta === "si"
+            ? isClient
+              ? { confirmo_realizacion_cliente: true }
+              : { confirmo_realizacion_profesional: true }
+            : {}),
         }));
       }
+
       setModalVerificacionNoAbierta(false);
       if (respuesta === "si") {
         setModalCalificarAbierta(true);
@@ -186,6 +213,8 @@ const DetalleSolicitud: React.FC = () => {
       logger.error("Error al responder verificación", err);
     } finally {
       setLoading(false);
+      setEnviandoVerificacion(false);
+      enviandoVerificacionRef.current = false;
     }
   };
 
@@ -371,17 +400,22 @@ const DetalleSolicitud: React.FC = () => {
               </p>
               <div className="flex gap-3 max-w-xs mx-auto">
                 <button
+                  type="button"
+                  disabled={enviandoVerificacion}
                   onClick={() => responderVerificacion("si")}
-                  className="btn-primary flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold"
+                  className="btn-primary flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("si", "Sí")}
                 </button>
                 <button
+                  type="button"
+                  disabled={enviandoVerificacion}
                   onClick={() => {
+                    if (enviandoVerificacionRef.current) return;
                     setMotivoNoSeleccionado("");
                     setModalVerificacionNoAbierta(true);
                   }}
-                  className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold"
+                  className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {t("no", "No")}
                 </button>

@@ -355,5 +355,25 @@ async def responder_verificacion(
         return res
     except Exception as e:
         log.error(f"Error al responder verificacion: {e}")
+        # Idempotency safety fallback: if yes response fails because request is already confirmed
+        if datos.respuesta.lower() == "si":
+            try:
+                solicitud = request_repo.get_by_id(id)
+                if solicitud:
+                    is_client = user_id == solicitud.get("solicitante_id")
+                    already_confirmed = (
+                        solicitud.get("confirmo_realizacion_cliente") if is_client
+                        else solicitud.get("confirmo_realizacion_profesional")
+                    )
+                    if already_confirmed is None:
+                        already_confirmed = (solicitud.get("verificado_por") == user_id)
+                    if already_confirmed:
+                        service = RequestService(request_repo)
+                        solicitud["confirmo_realizacion_cliente"] = bool(solicitud.get("confirmo_realizacion_cliente") or (solicitud.get("verificado_por") == solicitud.get("solicitante_id")))
+                        solicitud["confirmo_realizacion_profesional"] = bool(solicitud.get("confirmo_realizacion_profesional") or (solicitud.get("verificado_por") == solicitud.get("profesional_id")))
+                        solicitud["mostrar_prompt_verificacion"] = False
+                        return {"solicitud": solicitud, "ofrecer_calificacion": True, "already_done": True}
+            except Exception as inner_e:
+                log.error(f"Error in idempotency fallback check: {inner_e}")
         raise HTTPException(status_code=400, detail=str(e))
 
