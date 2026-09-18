@@ -9,10 +9,10 @@ import { solicitudService } from "../../services/solicitudService";
 import { useUser } from "../../context/UserContext";
 import { logger } from "../../utils/logger";
 import default_avatar from "../../assets/img/default_avatar.png";
-import ModalSolicitud from "../../components/Modal/ModalSolicitud";
 import ModalCalificacion, { FormCalificacion } from "../../components/Modal/ModalCalifica";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
+import { getStatusBadge } from "../../utils/requestStatus";
 
 const DetalleSolicitud: React.FC = () => {
   const { t } = useTranslation();
@@ -28,7 +28,6 @@ const DetalleSolicitud: React.FC = () => {
   const [imagenSeleccionada, setImagenSeleccionada] = useState<string | null>(null);
   const archivoInputRef = useRef<HTMLInputElement>(null);
 
-  const [modalAccion, setModalAccion] = useState<any>(null);
   const [modalCalificarAbierta, setModalCalificarAbierta] = useState(false);
   const [modalVerificacionNoAbierta, setModalVerificacionNoAbierta] = useState(false);
   const [motivoNoSeleccionado, setMotivoNoSeleccionado] = useState("");
@@ -155,18 +154,6 @@ const DetalleSolicitud: React.FC = () => {
     };
   }, [id, user]);
 
-  const cambiarEstado = async (nuevo_estado: string, motivo?: string, obs?: string) => {
-    try {
-      setLoading(true);
-      await solicitudService.actualizarEstado(id!, nuevo_estado, motivo, obs);
-      await cargarSolicitud(true);
-      setModalAccion(null);
-    } catch (err) {
-      logger.error("Error cambiar estado", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const responderVerificacion = async (respuesta: "si" | "no", motivo?: string) => {
     if (enviandoVerificacionRef.current) {
@@ -261,25 +248,13 @@ const DetalleSolicitud: React.FC = () => {
     }
   };
 
-  const getStatusBadge = (estado: string) => {
-    const lower = estado?.toLowerCase();
-    switch (lower) {
-      case "verificada": return <span className="badge text-sm px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
-      case "calificada": return <span className="badge text-sm px-3 py-1 bg-blue-100 text-blue-800 border border-blue-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
-      case "confirmada": return <span className="badge badge-confirmed text-sm px-3 py-1">{t(`estado.${lower}`)}</span>;
-      case "aceptada": return <span className="badge badge-accepted text-sm px-3 py-1">{t(`estado.${lower}`)}</span>;
-      case "cancelada":
-      case "rechazada": return <span className="badge badge-cancelled text-sm px-3 py-1">{t(`estado.${lower}`)}</span>;
-      default: return <span className="badge badge-pending text-sm px-3 py-1">{t(`estado.${lower}`)}</span>;
-    }
-  };
 
   if (!solicitud || !otroUsuario) return null;
 
 
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-[calc(4rem+6rem)] md:pb-24">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans pb-16 md:pb-24">
       
       {/* Header compact */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 h-16 flex items-center justify-between">
@@ -302,7 +277,7 @@ const DetalleSolicitud: React.FC = () => {
           <div>
             <div className="text-xs text-slate-500 font-medium uppercase tracking-wide mb-1">Estado actual</div>
             <div className="flex items-center gap-2">
-              {getStatusBadge(solicitud.estado)}
+              {getStatusBadge(solicitud, t, "text-sm px-3 py-1")}
             </div>
           </div>
           <div className="text-right">
@@ -500,7 +475,7 @@ const DetalleSolicitud: React.FC = () => {
 
         {/* Input box for active states */}
         {["creada", "consulta", "aceptada"].includes(solicitud.estado) && (
-          <div className="card p-3 flex items-end gap-2 bg-white sticky bottom-[calc(4rem+6rem)] md:bottom-24 shadow-lg ring-1 ring-slate-200">
+          <div className="card p-3 flex items-end gap-2 bg-white sticky bottom-16 md:bottom-4 shadow-lg ring-1 ring-slate-200">
             <div className="flex-1 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-blue-400 focus-within:ring-1 focus-within:ring-blue-400 transition-all p-2 flex flex-col">
               {archivosAdjuntos.length > 0 && (
                 <div className="flex gap-2 mb-2 overflow-x-auto pb-1">
@@ -547,49 +522,6 @@ const DetalleSolicitud: React.FC = () => {
 
       </main>
 
-      {/* Sticky Bottom Actions */}
-      <div className="fixed bottom-16 md:bottom-0 left-0 right-0 p-4 bg-white border-t border-slate-200 z-40" style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.05)", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)" }}>
-        <div className="container mx-auto max-w-2xl flex gap-3">
-          
-          {/* Client Actions */}
-          {user?.tipo === "cliente" && ["creada", "consulta", "aceptada"].includes(solicitud.estado) && (
-            <button
-              onClick={() => setModalAccion({ estado: "cancelada", titulo: t("confirmar_cancelacion_titulo"), mensaje: t("confirmar_cancelacion_mensaje"), textoConfirmar: t("cancelar_solicitud"), confirmColor: "red", mostrarMotivos: true, mostrarObservacion: true })}
-              className="btn-secondary flex-1 py-3.5 text-rose-600 hover:bg-rose-50"
-            >
-              {t("cancelar", "Cancelar")}
-            </button>
-          )}
-
-          {/* Professional Actions */}
-          {user?.tipo === "profesional" && ["creada", "consulta", "aceptada"].includes(solicitud.estado) && (
-            <>
-              <button
-                onClick={() => setModalAccion({ estado: "cancelada", titulo: t("confirmar_cancelacion_titulo"), mensaje: t("confirmar_cancelacion_mensaje"), textoConfirmar: t("cancelar_solicitud"), confirmColor: "red", mostrarMotivos: true, mostrarObservacion: true })}
-                className="btn-secondary flex-1 py-3.5 text-rose-600 hover:bg-rose-50"
-              >
-                {solicitud.estado === "aceptada" ? t("cancelar", "Cancelar") : t("rechazar", "Rechazar")}
-              </button>
-              {["creada", "consulta"].includes(solicitud.estado) && (
-                <button
-                  onClick={() => setModalAccion({ estado: "aceptada", titulo: t("confirmar_aceptacion_titulo"), mensaje: t("confirmar_aceptacion_mensaje"), textoConfirmar: t("aceptar_solicitud"), confirmColor: "green" })}
-                  className="btn-primary flex-1 py-3.5 shadow-md"
-                >
-                  {t("aceptar_pedido", "Aceptar pedido")}
-                </button>
-              )}
-            </>
-          )}
-
-          {/* Fallback space if no actions to avoid layout jump */}
-          {!((user?.tipo === "cliente" && ["creada", "consulta", "aceptada"].includes(solicitud.estado)) || (user?.tipo === "profesional" && ["creada", "consulta", "aceptada"].includes(solicitud.estado))) && (
-            <div className="w-full text-center text-sm font-medium text-slate-400 py-3.5">
-              {t("no_hay_acciones", "No hay acciones disponibles")}
-            </div>
-          )}
-        </div>
-      </div>
-
       {/* Image Lightbox */}
       {imagenSeleccionada && (
         <div className="fixed inset-0 bg-slate-900/90 backdrop-blur-sm flex items-center justify-center z-[100]" onClick={() => setImagenSeleccionada(null)}>
@@ -603,14 +535,6 @@ const DetalleSolicitud: React.FC = () => {
       )}
 
       {/* Modals */}
-      {modalAccion && (
-        <ModalSolicitud
-          isOpen={true}
-          onClose={() => setModalAccion(null)}
-          onConfirm={(m, o) => cambiarEstado(modalAccion.estado, m, o)}
-          {...modalAccion}
-        />
-      )}
 
       <ModalCalificacion
         isOpen={modalCalificarAbierta}

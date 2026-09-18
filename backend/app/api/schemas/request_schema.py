@@ -8,11 +8,6 @@ class SolicitudRegistro(BaseModel):
     descripcion: str
     estado: str
 
-class RespuestaProfesionalRequest(BaseModel):
-    nuevo_estado: str
-    fechas_propuestas: List[str]
-    observacion_profesional: str
-    
 class ConsultaRequest(BaseModel):
     mensaje: str
     fotos: Optional[List[str]] = None

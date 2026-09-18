@@ -50,35 +50,6 @@ class RequestService:
 
         return self.request_repo.agregar_a_array(solicitud_id, "historial_consultas", consulta, update_data)
         
-    def actualizar_estado_y_respuesta_profesional(
-        self,
-        solicitud_id: str,
-        nuevo_estado: str,
-        fechas_propuestas: List[str],
-        observacion: str,
-        user_id: str
-    ) -> Dict[str, Any]:
-        ahora = datetime.utcnow()
-        solicitud = self.request_repo.get_by_id(solicitud_id)
-        if not solicitud:
-            raise Exception("Solicitud no encontrada")
-
-        if solicitud["profesional_id"] != user_id:
-            raise Exception("No estás autorizado para responder esta solicitud")
-
-        update_data = {
-            "estado": nuevo_estado,
-            "fecha_cambio_estado": ahora,
-            "fechas_propuestas": fechas_propuestas,
-            "observacion_profesional": observacion,
-            "historial_estados": {
-                "estado": nuevo_estado,
-                "fecha": ahora
-            }
-        }
-
-        return self.request_repo.actualizar_con_historial(solicitud_id, update_data)
-        
     async def listar_solicitudes_por_solicitante(self, user_id: str) -> List[Dict[str, Any]]:
         return self.request_repo.listar_por_solicitante(user_id)
 

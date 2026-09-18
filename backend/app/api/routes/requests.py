@@ -1,4 +1,4 @@
-from app.api.schemas.request_schema import RespuestaProfesionalRequest, ConsultaRequest, EstadoRequest, RespuestaVerificacion
+from app.api.schemas.request_schema import ConsultaRequest, EstadoRequest, RespuestaVerificacion
 from app.domain.services.request_service import RequestService
 from app.ports.request_repository import RequestRepository
 from app.ports.rating_repository import RatingRepository
@@ -103,59 +103,6 @@ async def agregar_consulta_a_solicitud(
         return res
     except Exception as e:
         log.error(f"Error al agregar consulta: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@router.patch("/{id}/responder")
-async def responder_solicitud(
-    id: str,
-    datos: RespuestaProfesionalRequest,
-    user_id: str = Depends(get_current_verified_user_id),
-    request_repo: RequestRepository = Depends(get_request_repo),
-    user_repo: UserRepository = Depends(get_user_repo),
-    notification_service: NotificationService = Depends(get_notification_service),
-):
-    try:
-        service = RequestService(request_repo)
-        res = service.actualizar_estado_y_respuesta_profesional(
-            solicitud_id=id,
-            nuevo_estado=datos.nuevo_estado,
-            fechas_propuestas=datos.fechas_propuestas,
-            observacion=datos.observacion_profesional,
-            user_id=user_id,
-        )
-        
-        try:
-            solicitud = request_repo.get_by_id(id)
-            if solicitud:
-                recipient_uid = solicitud["solicitante_id"]
-                sender = user_repo.get_user_by_id(user_id)
-                sender_name = sender.get("nombre", "El profesional") if sender else "El profesional"
-                
-                if datos.nuevo_estado == "aceptada":
-                    notif_type = "request_accepted"
-                    notif_title = "Solicitud aceptada"
-                    notif_body = f"{sender_name} ha aceptado tu solicitud de {solicitud.get('subcategoria')}."
-                else:
-                    notif_type = "request_rejected"
-                    notif_title = "Solicitud rechazada"
-                    notif_body = f"{sender_name} ha rechazado tu solicitud."
-                
-                await notification_service.create_and_send_notification(
-                    recipient_uid=recipient_uid,
-                    actor_uid=user_id,
-                    type=notif_type,
-                    title=notif_title,
-                    body=notif_body,
-                    related_entity_type="request",
-                    related_entity_id=id
-                )
-        except Exception as notif_err:
-            log.error(f"Error sending responder_solicitud notification: {notif_err}")
-
-        return res
-    except Exception as e:
-        log.info(f"Error al responder solicitud: {e}")	
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/mis")

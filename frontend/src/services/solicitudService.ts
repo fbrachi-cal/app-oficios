@@ -42,27 +42,6 @@ export const solicitudService = {
             throw new Error("No se pudo cargar la solicitud. Verificá tu conexión o intentá más tarde.");
         }
     },
-    actualizarRespuestaProfesional: async (solicitudId: string, body: {
-        nuevo_estado: string;
-        fechas_propuestas: string[];
-        observacion_profesional: string;
-    }) => {
-        const url = `${config.apiBaseUrl}/solicitudes/${solicitudId}/responder`;
-
-        const response = await fetchConToken(url, {
-            method: "PATCH", // o "PUT" si tu backend espera reemplazo completo
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(body),
-        });
-
-        if (!response.ok) {
-            throw new Error("No se pudo actualizar la solicitud");
-        }
-
-        return await response.json();
-    },
     async enviarConsulta(id: string, data: { mensaje: string; fotos?: string[] }) {
         try {
             const res = await axiosWithAuth.patch(`/solicitudes/${id}/consultar`, data);

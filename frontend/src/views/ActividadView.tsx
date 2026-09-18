@@ -7,6 +7,7 @@ import { solicitudService } from "../services/solicitudService";
 import { useLoading } from "../context/LoadingContext";
 import ModalCalificacion from "../components/Modal/ModalCalifica";
 import { logger } from "../utils/logger";
+import { getStatusBadge } from "../utils/requestStatus";
 
 const ActividadView: React.FC = () => {
   const { t } = useTranslation();
@@ -84,27 +85,6 @@ const ActividadView: React.FC = () => {
       logger.error("Error al calificar", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getStatusBadge = (estado: string) => {
-    const lower = estado?.toLowerCase();
-    switch (lower) {
-      case "verificada":
-        return <span className="badge text-xs px-2.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
-      case "calificada":
-        return <span className="badge text-xs px-2.5 py-1 bg-blue-100 text-blue-800 border border-blue-200 rounded-full font-semibold">{t(`estado.${lower}`)}</span>;
-      case "confirmada":
-        return <span className="badge badge-confirmed">{t(`estado.${lower}`)}</span>;
-      case "aceptada":
-        return <span className="badge badge-accepted">{t(`estado.${lower}`)}</span>;
-      case "cancelada":
-      case "rechazada":
-        return <span className="badge badge-cancelled">{t(`estado.${lower}`)}</span>;
-      case "creada":
-      case "consulta":
-      default:
-        return <span className="badge badge-pending">{t(`estado.${lower}`)}</span>;
     }
   };
 
@@ -190,7 +170,7 @@ const ActividadView: React.FC = () => {
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2">
-                  {getStatusBadge(s.estado)}
+                  {getStatusBadge(s, t)}
                   <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
                     {new Date(s.fecha_cambio_estado).toLocaleDateString()}
                   </span>
