@@ -277,7 +277,7 @@ const DetalleSolicitud: React.FC = () => {
           <div>
             <div className="text-xs text-slate-500 font-medium uppercase tracking-wide mb-1">Estado actual</div>
             <div className="flex items-center gap-2">
-              {getStatusBadge(solicitud, t, "text-sm px-3 py-1")}
+              {getStatusBadge(solicitud, t, "text-sm px-3 py-1", { currentUser: user, otroUsuario })}
             </div>
           </div>
           <div className="text-right">
@@ -365,37 +365,77 @@ const DetalleSolicitud: React.FC = () => {
           if (!showPrompt) return null;
 
           return (
-            <div className="card p-6 bg-blue-50 border-blue-200 text-center space-y-4">
-              <FiAlertCircle className="text-blue-600 mx-auto" size={32} />
-              <h3 className="text-lg font-bold text-blue-900">
-                {t("pregunta_verificacion_titulo", "¿Se realizó el trabajo?")}
-              </h3>
-              <p className="text-sm text-blue-700">
-                {t("pregunta_verificacion_mensaje", "Por favor, confirmá si el servicio contratado fue completado correctamente.")}
-              </p>
-              <div className="flex gap-3 max-w-xs mx-auto">
-                <button
-                  type="button"
-                  disabled={enviandoVerificacion}
-                  onClick={() => responderVerificacion("si")}
-                  className="btn-primary flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {t("si", "Sí")}
-                </button>
-                <button
-                  type="button"
-                  disabled={enviandoVerificacion}
-                  onClick={() => {
-                    if (enviandoVerificacionRef.current) return;
-                    setMotivoNoSeleccionado("");
-                    setModalVerificacionNoAbierta(true);
-                  }}
-                  className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {t("no", "No")}
-                </button>
+            <>
+              {/* Desktop view: Inline card in conversation flow */}
+              <div className="hidden md:block card p-6 bg-blue-50 border-blue-200 text-center space-y-4">
+                <FiAlertCircle className="text-blue-600 mx-auto" size={32} />
+                <h3 className="text-lg font-bold text-blue-900">
+                  {t("pregunta_verificacion_titulo", "¿Se realizó el trabajo?")}
+                </h3>
+                <p className="text-sm text-blue-700">
+                  {t("pregunta_verificacion_mensaje", "Por favor, confirmá si el servicio contratado fue completado correctamente.")}
+                </p>
+                <div className="flex gap-3 max-w-xs mx-auto">
+                  <button
+                    type="button"
+                    disabled={enviandoVerificacion}
+                    onClick={() => responderVerificacion("si")}
+                    className="btn-primary flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {t("si", "Sí")}
+                  </button>
+                  <button
+                    type="button"
+                    disabled={enviandoVerificacion}
+                    onClick={() => {
+                      if (enviandoVerificacionRef.current) return;
+                      setMotivoNoSeleccionado("");
+                      setModalVerificacionNoAbierta(true);
+                    }}
+                    className="btn-secondary flex-1 py-2 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {t("no", "No")}
+                  </button>
+                </div>
               </div>
-            </div>
+
+              {/* Mobile view: Fixed modal overlay on conversation entry */}
+              <div className="block md:hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm border border-slate-100 text-center space-y-4">
+                  <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <FiAlertCircle size={28} />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900">
+                    {t("pregunta_verificacion_titulo", "¿Se realizó el trabajo?")}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">
+                    {t("pregunta_verificacion_mensaje", "Por favor, confirmá si el servicio contratado fue completado correctamente.")}
+                  </p>
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      type="button"
+                      disabled={enviandoVerificacion}
+                      onClick={() => responderVerificacion("si")}
+                      className="btn-primary flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
+                    >
+                      {t("si", "Sí")}
+                    </button>
+                    <button
+                      type="button"
+                      disabled={enviandoVerificacion}
+                      onClick={() => {
+                        if (enviandoVerificacionRef.current) return;
+                        setMotivoNoSeleccionado("");
+                        setModalVerificacionNoAbierta(true);
+                      }}
+                      className="btn-secondary flex-1 py-2.5 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      {t("no", "No")}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
           );
         })()}
 
@@ -546,7 +586,7 @@ const DetalleSolicitud: React.FC = () => {
 
       {/* Modal Verification No (Reason selection) */}
       {modalVerificacionNoAbierta && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black bg-opacity-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 relative max-h-[90dvh] overflow-y-auto">
             <button
               className="absolute top-3 right-3 text-slate-400 hover:text-slate-700 text-xl font-bold p-1"

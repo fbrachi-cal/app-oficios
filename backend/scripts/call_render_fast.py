@@ -13,7 +13,9 @@ load_dotenv("backend/.env")
 private_key = os.getenv("FIREBASE_PRIVATE_KEY").replace('\\n', '\n')
 client_email = os.getenv("FIREBASE_CLIENT_EMAIL")
 project_id = os.getenv("FIREBASE_PROJECT_ID")
-API_KEY = "AIzaSyC8gokmmf8rO3qooeP6w0P11tbQHyGCLB8"
+API_KEY = os.getenv("FIREBASE_API_KEY")
+if not API_KEY:
+    raise RuntimeError("FIREBASE_API_KEY is not configured")
 
 def mint_custom_token(uid: str) -> str:
     now = int(time.time())

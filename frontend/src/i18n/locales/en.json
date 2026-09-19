@@ -90,6 +90,7 @@
         "finalizada": "Finished"
     },
     "trabajo_realizado": "Work completed",
+    "confirmo_trabajo": "{{nombre}} confirmed the work",
     "en_curso": "In progress",
     "confirmar_solicitud": "Confirm request",
     "calificar_profesional": "Rate professional",
@@ -278,8 +279,8 @@
     "volver": "Go back",
     "registrando_usuario": "Registering...",
     "volver_a_contactar": "Contact again",
-    "recomendar_la_app": "Recommend the app",
-    "compartir_app_texto": "I recommend this app to find trusted professionals.",
+    "recomendar_la_app": "Recommend CasaClick",
+    "compartir_app_texto": "Find trusted professionals for your home with CasaClick 🏠",
     "compartir_app_exito": "Link copied to clipboard",
     "compartir_app_error": "Error copying link",
     "aceptando": "Accepting...",

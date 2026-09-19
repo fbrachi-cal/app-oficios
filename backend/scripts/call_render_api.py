@@ -4,6 +4,8 @@ import json
 import requests
 from dotenv import load_dotenv
 
+load_dotenv()
+
 sys.path.insert(0, os.path.join(os.getcwd(), "backend"))
 
 import firebase_admin
@@ -27,7 +29,9 @@ client_id = data.get("solicitante_id")
 pro_id = data.get("profesional_id")
 print(f"Client: {client_id}, Pro: {pro_id}", flush=True)
 
-API_KEY = "AIzaSyC8gokmmf8rO3qooeP6w0P11tbQHyGCLB8"
+API_KEY = os.getenv("FIREBASE_API_KEY")
+if not API_KEY:
+    raise RuntimeError("FIREBASE_API_KEY is not configured")
 
 def get_id_token(uid: str) -> str:
     print(f"Creating custom token for {uid}...", flush=True)

@@ -138,6 +138,13 @@ async def listar_mis_solicitudes(
             s["califico_cliente"] = (s["id"], s["solicitante_id"]) in ratings_map
             s["califico_profesional"] = (s["id"], s["profesional_id"]) in ratings_map
             s["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(s, user_id)
+            if user_repo and hasattr(user_repo, "get_user_by_id"):
+                solic_user = user_repo.get_user_by_id(s["solicitante_id"])
+                prof_user = user_repo.get_user_by_id(s["profesional_id"])
+                if solic_user and isinstance(solic_user, dict):
+                    s["solicitante_nombre"] = solic_user.get("nombre")
+                if prof_user and isinstance(prof_user, dict):
+                    s["profesional_nombre"] = prof_user.get("nombre")
 
         return solicitudes
     except Exception as e:
@@ -202,6 +209,7 @@ async def obtener_solicitud_por_id(
     user_id: str = Depends(get_current_verified_user_id),
     request_repo: RequestRepository = Depends(get_request_repo),
     rating_repo: RatingRepository = Depends(get_calificacion_repo),
+    user_repo: UserRepository = Depends(get_user_repo),
 ):
     try:
         solicitud = request_repo.get_by_id(id)
@@ -219,6 +227,14 @@ async def obtener_solicitud_por_id(
         solicitud["califico_cliente"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud["solicitante_id"]) is not None
         solicitud["califico_profesional"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud["profesional_id"]) is not None
         solicitud["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(solicitud, user_id)
+
+        if user_repo and hasattr(user_repo, "get_user_by_id"):
+            solic_user = user_repo.get_user_by_id(solicitud["solicitante_id"])
+            prof_user = user_repo.get_user_by_id(solicitud["profesional_id"])
+            if solic_user and isinstance(solic_user, dict):
+                solicitud["solicitante_nombre"] = solic_user.get("nombre")
+            if prof_user and isinstance(prof_user, dict):
+                solicitud["profesional_nombre"] = prof_user.get("nombre")
 
         return solicitud
 
@@ -298,6 +314,13 @@ async def responder_verificacion(
                 solicitud_dict["califico_cliente"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud_dict["solicitante_id"]) is not None
                 solicitud_dict["califico_profesional"] = rating_repo.obtener_calificacion_por_solicitud_y_usuario(id, solicitud_dict["profesional_id"]) is not None
             solicitud_dict["mostrar_prompt_verificacion"] = service.calcular_eligibilidad_verificacion(solicitud_dict, user_id)
+            if user_repo and hasattr(user_repo, "get_user_by_id"):
+                solic_user = user_repo.get_user_by_id(solicitud_dict["solicitante_id"])
+                prof_user = user_repo.get_user_by_id(solicitud_dict["profesional_id"])
+                if solic_user and isinstance(solic_user, dict):
+                    solicitud_dict["solicitante_nombre"] = solic_user.get("nombre")
+                if prof_user and isinstance(prof_user, dict):
+                    solicitud_dict["profesional_nombre"] = prof_user.get("nombre")
 
         return res
     except Exception as e:

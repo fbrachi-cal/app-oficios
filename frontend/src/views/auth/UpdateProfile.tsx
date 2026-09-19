@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { useGamification } from "../../hooks/useGamification";
 import GamificationBadge from "../../components/Gamification/GamificationBadge";
 import { useCategorias } from "../../hooks/useCategorias";
+import { Share } from "@capacitor/share";
+import { Capacitor } from "@capacitor/core";
 
 
 const UpdateProfile = (): JSX.Element => {
@@ -79,25 +81,47 @@ const UpdateProfile = (): JSX.Element => {
   }, [mensajeExito, error]);
 
   const handleCompartirApp = async () => {
-    const landingUrl = import.meta.env.VITE_LANDING_URL || window.location.origin;
+    let publicUrl = config.publicUrl;
+    if (!Capacitor.isNativePlatform() && window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
+      publicUrl = import.meta.env.VITE_PUBLIC_URL || import.meta.env.VITE_LANDING_URL || window.location.origin;
+    }
+
+    const shareTitle = t("titulo");
+    const shareText = t("compartir_app_texto");
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        await Share.share({
+          title: shareTitle,
+          text: shareText,
+          url: publicUrl,
+          dialogTitle: t("recomendar_la_app"),
+        });
+      } catch (e) {
+        logger.info("Native share sheet closed or canceled", e as Record<string, any>);
+      }
+      return;
+    }
+
     if (navigator.share) {
       try {
         await navigator.share({
-          title: t("titulo"),
-          text: t("compartir_app_texto"),
-          url: landingUrl,
+          title: shareTitle,
+          text: shareText,
+          url: publicUrl,
         });
       } catch (e) {
-        logger.error("Error sharing app", e);
+        logger.info("Web share sheet closed or canceled", e as Record<string, any>);
       }
-    } else {
-      try {
-        await navigator.clipboard.writeText(landingUrl);
-        setMensajeExito(t("compartir_app_exito"));
-      } catch (e) {
-        logger.error("Error copy clipboard", e);
-        setError(t("compartir_app_error"));
-      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(`${shareText} ${publicUrl}`);
+      setMensajeExito(t("compartir_app_exito"));
+    } catch (e) {
+      logger.error("Error copy clipboard", e);
+      setError(t("compartir_app_error"));
     }
   };
 

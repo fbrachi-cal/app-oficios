@@ -170,7 +170,7 @@ const ActividadView: React.FC = () => {
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-2">
-                  {getStatusBadge(s, t)}
+                  {getStatusBadge(s, t, "text-xs px-2.5 py-1", { currentUser: user })}
                   <span className="text-xs text-slate-400 font-medium whitespace-nowrap">
                     {new Date(s.fecha_cambio_estado).toLocaleDateString()}
                   </span>

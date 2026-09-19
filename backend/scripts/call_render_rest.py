@@ -66,7 +66,9 @@ print(f"Califico Cliente: {data.get('califico_cliente')}")
 print(f"Califico Profesional: {data.get('califico_profesional')}")
 
 # Now mint custom token & ID token for client & pro
-API_KEY = "AIzaSyC8gokmmf8rO3qooeP6w0P11tbQHyGCLB8"
+API_KEY = os.getenv("FIREBASE_API_KEY")
+if not API_KEY:
+    raise RuntimeError("FIREBASE_API_KEY is not configured")
 
 import firebase_admin
 from firebase_admin import auth as fb_auth

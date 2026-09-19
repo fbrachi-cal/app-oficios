@@ -102,6 +102,7 @@
     "finalizada": "Finalizada"
   },
   "trabajo_realizado": "Trabajo realizado",
+  "confirmo_trabajo": "{{nombre}} confirmó el trabajo",
   "en_curso": "En curso",
   "confirmar_solicitud": "Confirmar solicitud",
   "calificar_profesional": "Calificar profesional",
@@ -289,8 +290,8 @@
   "volver": "Volver",
   "registrando_usuario": "Registrando...",
   "volver_a_contactar": "Volver a contactar",
-  "recomendar_la_app": "Recomendar la app",
-  "compartir_app_texto": "Te recomiendo esta app para encontrar profesionales de confianza.",
+  "recomendar_la_app": "Recomendar CasaClick",
+  "compartir_app_texto": "Encontrá profesionales para tu casa en CasaClick 🏠",
   "compartir_app_exito": "Enlace copiado al portapapeles",
   "compartir_app_error": "Error al copiar el enlace",
   "aceptando": "Aceptando...",

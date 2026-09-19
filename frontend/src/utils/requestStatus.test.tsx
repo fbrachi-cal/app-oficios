@@ -1,13 +1,20 @@
 import { describe, it, expect } from "vitest";
 import { getRequestStatusInfo } from "./requestStatus";
 
-const dummyTranslate = (key: string, fallback?: string) => fallback || key;
+const dummyTranslate = (key: string, fallback?: string, options?: any) => {
+  if (key === "confirmo_trabajo" && options?.nombre) {
+    return `${options.nombre} confirmó el trabajo`;
+  }
+  return fallback || key;
+};
 
 describe("getRequestStatusInfo - Status derivation rules", () => {
-  it("Scenario 1: 0 ratings, no non-completion reason -> En curso", () => {
+  it("Scenario 1: 0 ratings/confirmations, no non-completion reason -> En curso", () => {
     const solicitud = {
       califico_cliente: false,
       califico_profesional: false,
+      confirmo_realizacion_cliente: false,
+      confirmo_realizacion_profesional: false,
       estado: "creada",
     };
     const info = getRequestStatusInfo(solicitud, dummyTranslate);
@@ -15,34 +22,47 @@ describe("getRequestStatusInfo - Status derivation rules", () => {
     expect(info.isNonCompletion).toBe(false);
   });
 
-  it("Scenario 2: 1 rating -> Trabajo realizado", () => {
-    const solicitudWithClientRating = {
-      califico_cliente: true,
-      califico_profesional: false,
-      estado: "creada",
+  it("Scenario 2a: Only client confirmed -> {Nombre} confirmó el trabajo", () => {
+    const solicitudWithClientConfirm = {
+      solicitante_id: "client_1",
+      profesional_id: "pro_1",
+      solicitante_nombre: "Juan",
+      confirmo_realizacion_cliente: true,
+      confirmo_realizacion_profesional: false,
+      estado: "verificada",
     };
-    const info1 = getRequestStatusInfo(solicitudWithClientRating, dummyTranslate);
-    expect(info1.label).toBe("Trabajo realizado");
-    expect(info1.isNonCompletion).toBe(false);
-
-    const solicitudWithProRating = {
-      califico_cliente: false,
-      califico_profesional: true,
-      estado: "creada",
-    };
-    const info2 = getRequestStatusInfo(solicitudWithProRating, dummyTranslate);
-    expect(info2.label).toBe("Trabajo realizado");
-    expect(info2.isNonCompletion).toBe(false);
+    const info = getRequestStatusInfo(solicitudWithClientConfirm, dummyTranslate);
+    expect(info.label).toBe("Juan confirmó el trabajo");
+    expect(info.badgeClass).toContain("bg-blue-100");
+    expect(info.isNonCompletion).toBe(false);
   });
 
-  it("Scenario 3: 2 ratings -> Trabajo verificado", () => {
-    const solicitudWithBothRatings = {
-      califico_cliente: true,
-      califico_profesional: true,
-      estado: "creada",
+  it("Scenario 2b: Only professional confirmed -> {Nombre} confirmó el trabajo", () => {
+    const solicitudWithProConfirm = {
+      solicitante_id: "client_1",
+      profesional_id: "pro_1",
+      profesional_nombre: "María",
+      confirmo_realizacion_cliente: false,
+      confirmo_realizacion_profesional: true,
+      estado: "verificada",
     };
-    const info = getRequestStatusInfo(solicitudWithBothRatings, dummyTranslate);
+    const info = getRequestStatusInfo(solicitudWithProConfirm, dummyTranslate);
+    expect(info.label).toBe("María confirmó el trabajo");
+    expect(info.badgeClass).toContain("bg-blue-100");
+    expect(info.isNonCompletion).toBe(false);
+  });
+
+  it("Scenario 3: Both participants confirmed -> Trabajo verificado", () => {
+    const solicitudWithBothConfirm = {
+      solicitante_id: "client_1",
+      profesional_id: "pro_1",
+      confirmo_realizacion_cliente: true,
+      confirmo_realizacion_profesional: true,
+      estado: "verificada",
+    };
+    const info = getRequestStatusInfo(solicitudWithBothConfirm, dummyTranslate);
     expect(info.label).toBe("Trabajo verificado");
+    expect(info.badgeClass).toContain("bg-emerald-100");
     expect(info.isNonCompletion).toBe(false);
   });
 
@@ -63,7 +83,7 @@ describe("getRequestStatusInfo - Status derivation rules", () => {
     expect(info.label).toBe("No llegamos a un acuerdo");
     expect(info.isNonCompletion).toBe(true);
     expect(info.label).not.toBe("En curso");
-    expect(info.label).not.toBe("Trabajo realizado");
     expect(info.label).not.toBe("Trabajo verificado");
   });
 });
+
