@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import VersionDisplay from "../VersionDisplay";
 
@@ -63,6 +64,11 @@ const Footer: React.FC = () => {
                 Cal Consultora
               </a>
               .
+            </div>
+            <div className="text-sm py-1">
+              <Link to="/privacy" className="text-blueGray-500 hover:text-blueGray-800">
+                Política de privacidad
+              </Link>
             </div>
             <VersionDisplay className="mt-1 !text-blueGray-400 !font-normal" />
           </div>

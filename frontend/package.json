@@ -1,7 +1,7 @@
 {
   "name": "app-oficios-frontend",
   "private": true,
-  "version": "0.1.4",
+  "version": "0.1.9",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,7 @@
     "cap:open:android": "pnpm cap open android",
     "android:build": "pnpm build && pnpm cap sync android && cd android && gradlew assembleDebug",
     "android:build:unix": "pnpm build && pnpm cap sync android && cd android && ./gradlew assembleDebug",
+    "android:bundle": "pnpm build && pnpm cap sync android && cd android && gradlew bundleRelease",
     "build:android:prod": "VITE_API_URL=https://oficios-web-back.onrender.com pnpm build",
     "cap:sync:android:prod": "VITE_API_URL=https://oficios-web-back.onrender.com pnpm cap sync android",
     "android:build:prod": "pnpm build:android:prod && pnpm cap:sync:android:prod && cd android && cmd.exe /c gradlew.bat clean assembleDebug",

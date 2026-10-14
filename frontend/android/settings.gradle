@@ -1,3 +1,30 @@
+def localPropsFile = new File(rootDir, 'local.properties')
+if (localPropsFile.exists()) {
+    def props = new Properties()
+    localPropsFile.withInputStream { props.load(it) }
+    def sdkDir = props.getProperty('sdk.dir')
+    if (sdkDir) {
+        def osName = System.getProperty("os.name", "").toLowerCase()
+        def newSdkDir = sdkDir
+        if (!osName.contains("win") && sdkDir.matches("(?i)^[a-z]:[\\\\/].*")) {
+            def drive = sdkDir[0].toLowerCase()
+            def path = sdkDir.substring(2).replace('\\', '/')
+            newSdkDir = "/mnt/${drive}${path}"
+        } else if (osName.contains("win") && sdkDir.startsWith("/mnt/")) {
+            def parts = sdkDir.split('/')
+            if (parts.length >= 4 && parts[1] == 'mnt') {
+                def drive = parts[2].toUpperCase()
+                def path = parts[3..-1].join('\\')
+                newSdkDir = "${drive}:\\${path}"
+            }
+        }
+        if (newSdkDir != sdkDir) {
+            props.setProperty('sdk.dir', newSdkDir)
+            localPropsFile.withOutputStream { props.store(it, "Auto-updated by settings.gradle for OS compatibility") }
+        }
+    }
+}
+
 include ':app'
 include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')

@@ -64,6 +64,10 @@
 
 # Attempt to set APP_HOME
 
+if [ -f /proc/version ] && grep -qi microsoft /proc/version 2>/dev/null && command -v cmd.exe >/dev/null 2>&1; then
+    exec cmd.exe /c gradlew.bat "$@"
+fi
+
 # Resolve links: $0 may be a link
 app_path=$0
 

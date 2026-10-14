@@ -18,6 +18,27 @@ def getAppVersionName() {
     }
 }
 
+def resolveKeystoreFile(String pathStr) {
+    if (!pathStr) return null
+    def osName = System.getProperty("os.name", "").toLowerCase()
+    if (!osName.contains("win")) {
+        if (pathStr.matches("(?i)^[a-z]:[\\\\/].*")) {
+            def drive = pathStr[0].toLowerCase()
+            def path = pathStr.substring(2).replace('\\', '/')
+            pathStr = "/mnt/${drive}${path}"
+        } else {
+            pathStr = pathStr.replace('\\', '/')
+        }
+    }
+    return file(pathStr)
+}
+
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace "ar.casaclick.app"
     compileSdk rootProject.ext.compileSdkVersion
@@ -25,7 +46,7 @@ android {
         applicationId "ar.casaclick.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 6
         versionName getAppVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
@@ -34,8 +55,24 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                storeFile resolveKeystoreFile(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            } else if (System.getenv("KEYSTORE_PATH") != null) {
+                storeFile resolveKeystoreFile(System.getenv("KEYSTORE_PATH"))
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias System.getenv("KEY_ALIAS")
+                keyPassword System.getenv("KEY_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -58,6 +95,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+    implementation "com.google.android.gms:play-services-auth:21.0.0"
 }
 
 apply from: 'capacitor.build.gradle'

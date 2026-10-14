@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './views/Home';
-import Auth from "./layouts/Auth";
 import AdminLayout from "./layouts/Admin";
 import Login from './views/auth/Login';
 import UpdateProfile from './views/auth/UpdateProfile';
@@ -29,6 +28,7 @@ import RecomendarProfesional from './views/RecomendarProfesional';
 import { GamificationProvider } from './context/GamificationContext';
 import RequireVerifiedPhone from './utils/RequireVerifiedPhone';
 import VerificacionTelefonoPage from './views/auth/VerificacionTelefonoPage';
+import PrivacyPolicyPage from './views/PrivacyPolicyPage';
 
 function App() {
   return (
@@ -61,6 +61,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/bloqueado" element={<BlockedPage />} />
         <Route path="/terminos-y-condiciones" element={<TermsAndConditionsPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
 
         {/* Rutas protegidas por teléfono y T&C */}
         <Route element={<RequireVerifiedPhone />}>
