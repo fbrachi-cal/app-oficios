@@ -1,7 +1,7 @@
 {
   "name": "app-oficios-frontend",
   "private": true,
-  "version": "0.1.9",
+  "version": "0.1.10",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,14 +13,15 @@
     "cap:open:android": "pnpm cap open android",
     "android:build": "pnpm build && pnpm cap sync android && cd android && gradlew assembleDebug",
     "android:build:unix": "pnpm build && pnpm cap sync android && cd android && ./gradlew assembleDebug",
-    "android:bundle": "pnpm build && pnpm cap sync android && cd android && gradlew bundleRelease",
+    "android:bundle": "tsc -b && vite build --mode production && pnpm cap sync android && node scripts/verify-api-url.mjs && cd android && gradlew bundleRelease && node ../scripts/verify-api-url.mjs --aab",
     "build:android:prod": "VITE_API_URL=https://oficios-web-back.onrender.com pnpm build",
     "cap:sync:android:prod": "VITE_API_URL=https://oficios-web-back.onrender.com pnpm cap sync android",
     "android:build:prod": "pnpm build:android:prod && pnpm cap:sync:android:prod && cd android && cmd.exe /c gradlew.bat clean assembleDebug",
     "android:install:wsl": "cd android && cp app/build/outputs/apk/debug/app-debug.apk /mnt/c/Users/Federico/Downloads/app-debug.apk && /mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe uninstall ar.casaclick.app || true && /mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe install 'C:\\Users\\Federico\\Downloads\\app-debug.apk'",
     "android:launch:wsl": "/mnt/c/Users/Federico/AppData/Local/Android/Sdk/platform-tools/adb.exe shell monkey -p ar.casaclick.app 1",
     "android:reinstall:prod": "pnpm android:build:prod && pnpm android:install:wsl && pnpm android:launch:wsl",
-    "android:verify-api-url": "grep -Roh 'oficios-web-back.onrender.com\\|192\\.168\\.[0-9.]*\\|127\\.0\\.0\\.1\\|localhost:8000' dist/assets/*.js android/app/src/main/assets/public/assets/*.js | sort -u",
+    "android:verify-api-url": "node scripts/verify-api-url.mjs",
+    "android:verify-aab": "node scripts/verify-api-url.mjs --aab",
     "version:patch": "pnpm version patch --no-git-tag-version",
     "version:minor": "pnpm version minor --no-git-tag-version",
     "version:major": "pnpm version major --no-git-tag-version"
