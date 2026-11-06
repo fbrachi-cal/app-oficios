@@ -115,7 +115,7 @@ const ActividadView: React.FC = () => {
             <div>
               <h4 className="text-sm font-bold text-amber-900">¡Tenés una calificación pendiente!</h4>
               <p className="text-sm text-amber-700 mt-0.5">
-                Calificá el trabajo en {pendingRatingSolicitud.zona} para mantener la comunidad segura.
+                Calificá el trabajo en {pendingRatingSolicitud.zona_nombre || pendingRatingSolicitud.zona} para mantener la comunidad segura.
               </p>
             </div>
           </div>
@@ -176,7 +176,7 @@ const ActividadView: React.FC = () => {
                   </span>
                 </div>
                 <h4 className="text-base font-bold text-slate-900 truncate mb-1">
-                  {s.subcategoria} en {s.zona}
+                  {s.subcategoria} en {s.zona_nombre || s.zona}
                 </h4>
                 <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed mb-2">
                   {s.descripcion}

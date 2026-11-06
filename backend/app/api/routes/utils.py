@@ -1,9 +1,19 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Response
 from firebase_admin import firestore
 from app.api.dependencies import get_current_verified_user_id
+from app.domain.services.geo_service import get_geo_catalog
 
 
 router = APIRouter(prefix="/utils", tags=["utils"])
+geo_router = APIRouter(prefix="/geo", tags=["geo"])
+
+
+@geo_router.get("/catalog")
+def obtener_catalogo_geografico(response: Response):
+    catalog = get_geo_catalog()
+    response.headers["ETag"] = f'"{catalog.version}"'
+    return catalog.to_dict()
+
 
 @router.get("/zonas")
 def listar_zonas():

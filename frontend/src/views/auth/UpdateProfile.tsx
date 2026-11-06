@@ -14,6 +14,7 @@ import GamificationBadge from "../../components/Gamification/GamificationBadge";
 import { useCategorias } from "../../hooks/useCategorias";
 import { Share } from "@capacitor/share";
 import { Capacitor } from "@capacitor/core";
+import GeoAreaPicker from "../../components/Geo/GeoAreaPicker";
 
 
 const UpdateProfile = (): JSX.Element => {
@@ -29,9 +30,8 @@ const UpdateProfile = (): JSX.Element => {
 
   const [nombre, setNombre] = useState(user?.nombre || "");
   const [tipo] = useState<"cliente" | "profesional">(user?.tipo as "cliente" | "profesional");
-  const [zonas, setZonas] = useState<string[]>(user?.zonas || []);
+  const [coberturaIds, setCoberturaIds] = useState<string[]>(user?.cobertura_ids || []);
   const [subcategoriasSeleccionadas, setSubcategoriasSeleccionadas] = useState<string[]>([]);
-  const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [descripcion, setDescripcion] = useState<string>(user?.descripcion || "");
   const [disponibilidad, setDisponibilidad] = useState<string>(user?.disponibilidad || "");
@@ -55,15 +55,9 @@ const UpdateProfile = (): JSX.Element => {
   }, [preview]);
 
   useEffect(() => {
-    fetch(`${config.apiBaseUrl}/utils/zonas`)
-      .then((res) => res.json())
-      .then(setZonasDisponibles);
-  }, []);
-
-  useEffect(() => {
     if (user && !isInitialized) {
       setNombre(user.nombre || "");
-      setZonas(user.zonas || []);
+      setCoberturaIds(user.cobertura_ids || []);
       setSubcategoriasSeleccionadas(user.subcategorias || user.oficios || []);
       setDescripcion(user.descripcion || "");
       setDisponibilidad(user.disponibilidad || "");
@@ -146,10 +140,10 @@ const UpdateProfile = (): JSX.Element => {
       };
 
       if (tipo === "profesional") {
-        if (zonas.length === 0 || subcategoriasSeleccionadas.length === 0) {
+        if (coberturaIds.length === 0 || subcategoriasSeleccionadas.length === 0) {
           throw new Error(t("error_zonas_subcategorias"));
         }
-        payload.zonas = zonas;
+        payload.cobertura_ids = coberturaIds;
         payload.subcategorias = subcategoriasSeleccionadas;
       }
 
@@ -278,26 +272,21 @@ const UpdateProfile = (): JSX.Element => {
 
                 {tipo === "profesional" && (
                   <>
-                    <label className="block mb-1 font-medium">{t("zonas")}</label>
-                    <select
-                      multiple
-                      className="w-full mb-3 p-2 border rounded"
-                      value={zonas}
-                      onChange={(e) =>
-                        setZonas(
-                          Array.from(
-                            e.target.selectedOptions,
-                            (option) => option.value
-                          )
-                        )
-                      }
-                    >
-                      {zonasDisponibles.map((z) => (
-                        <option key={z} value={z}>
-                          {z}
-                        </option>
-                      ))}
-                    </select>
+                    {(user?.requires_coverage_setup || coberturaIds.length === 0) && (
+                      <div className="mb-4 p-3.5 bg-amber-50 border border-amber-300 text-amber-900 rounded-xl text-xs font-medium leading-relaxed">
+                        <strong className="block text-sm mb-0.5">Actualizá tus zonas de cobertura</strong>
+                        Seleccioná los barrios, localidades, comunas o partidos donde trabajás para aparecer en las búsquedas de clientes.
+                      </div>
+                    )}
+                    <div className="mb-4">
+                      <label className="block mb-2 font-medium">{t("zonas")}</label>
+                      <GeoAreaPicker
+                        mode="pro"
+                        selectedIds={coberturaIds}
+                        onChange={setCoberturaIds}
+                        placeholder="Buscar barrio, localidad, comuna o partido..."
+                      />
+                    </div>
 
                     <label className="block mb-1 font-medium">{t("categoria")}</label>
                     <select multiple

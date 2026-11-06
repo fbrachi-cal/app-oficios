@@ -27,6 +27,8 @@ export type AdminUser = {
   deleted_at?: string | null;
   foto?: string;
   descripcion?: string;
+  cobertura_ids?: string[];
+  cobertura_nombres?: string[];
   zonas?: string[];
   categorias?: string[];
   updated_by?: string;

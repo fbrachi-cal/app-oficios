@@ -87,8 +87,9 @@ def _resolve_professional_metrics(user: dict, user_repo=None, referrals_repo=Non
         Limitation: a job may be rated 0 or multiple times.
         Replace this adapter once a formal job-completion status exists.
     """
-    profile_fields = ["nombre", "foto", "descripcion", "subcategorias", "zonas"]
-    profile_completed = all(bool(user.get(f)) for f in profile_fields)
+    has_coverage = bool(user.get("cobertura_ids") or user.get("zonas"))
+    profile_fields = ["nombre", "foto", "descripcion", "subcategorias"]
+    profile_completed = all(bool(user.get(f)) for f in profile_fields) and has_coverage
 
     return {
         "completed_jobs_count": int(user.get("cantidadTrabajosVerificados", 0)),

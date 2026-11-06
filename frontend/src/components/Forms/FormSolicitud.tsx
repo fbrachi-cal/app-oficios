@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { FiMapPin, FiBriefcase, FiFileText, FiCamera, FiX } from "react-icons/fi";
+import { FiMapPin, FiBriefcase, FiFileText, FiCamera, FiX, FiSearch } from "react-icons/fi";
+import { useGeoCatalog, normalizeText } from "../../hooks/useGeoCatalog";
 
 type FormSolicitudProps = {
-  zonasDisponibles: string[];
+  coberturaIds?: string[];
+  zonasDisponibles?: string[];
   subcategoriasDisponibles: string[];
   onSubmit: (data: {
     zona: string;
+    zona_id: string;
     subcategoria: string;
     descripcion: string;
     fotos: File[] | null;
@@ -15,20 +18,44 @@ type FormSolicitudProps = {
 };
 
 const FormSolicitud: React.FC<FormSolicitudProps> = ({
-  zonasDisponibles,
+  coberturaIds = [],
+  zonasDisponibles = [],
   subcategoriasDisponibles,
   onSubmit,
   onCancel,
 }) => {
   const { t } = useTranslation();
-  const [zona, setZona] = useState("");
+  const { expandProCoverageToClientLeaves } = useGeoCatalog();
+  const [zonaId, setZonaId] = useState("");
+  const [zonaFiltro, setZonaFiltro] = useState("");
   const [subcategoria, setSubcategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [fotos, setFotos] = useState<File[]>([]);
 
+  const coveredLeafOptions = useMemo(() => {
+    if (coberturaIds && coberturaIds.length > 0) {
+      return expandProCoverageToClientLeaves(coberturaIds);
+    }
+    return zonasDisponibles.map((z) => ({
+      id: z,
+      nombre: z,
+      tipo: "barrio",
+      parent_id: null,
+      parent_nombre: null,
+    }));
+  }, [coberturaIds, zonasDisponibles, expandProCoverageToClientLeaves]);
+
+  const filteredLeafOptions = useMemo(() => {
+    const q = normalizeText(zonaFiltro);
+    if (!q) return coveredLeafOptions;
+    return coveredLeafOptions.filter((opt) =>
+      normalizeText(`${opt.nombre} ${opt.parent_nombre || ""}`).includes(q)
+    );
+  }, [coveredLeafOptions, zonaFiltro]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({ zona, subcategoria, descripcion, fotos });
+    onSubmit({ zona: zonaId, zona_id: zonaId, subcategoria, descripcion, fotos });
   };
 
   return (
@@ -38,15 +65,32 @@ const FormSolicitud: React.FC<FormSolicitudProps> = ({
         <label className="input-label flex items-center gap-1.5">
           <FiMapPin size={14} /> {t("zona_trabajo")}
         </label>
+        {coveredLeafOptions.length > 8 && (
+          <div className="relative mb-2">
+            <FiSearch
+              size={14}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+            />
+            <input
+              type="text"
+              value={zonaFiltro}
+              onChange={(e) => setZonaFiltro(e.target.value)}
+              placeholder="Filtrar barrio o localidad cubierta..."
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+        )}
         <select
-          value={zona}
-          onChange={(e) => setZona(e.target.value)}
+          value={zonaId}
+          onChange={(e) => setZonaId(e.target.value)}
           className="input-base"
           required
         >
           <option value="">{t("selecciona_zona")}</option>
-          {zonasDisponibles.map((z) => (
-            <option key={z} value={z}>{z}</option>
+          {filteredLeafOptions.map((opt) => (
+            <option key={opt.id} value={opt.id}>
+              {opt.parent_nombre ? `${opt.nombre} (${opt.parent_nombre})` : opt.nombre}
+            </option>
           ))}
         </select>
       </div>

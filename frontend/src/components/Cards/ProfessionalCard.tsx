@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FiStar } from "react-icons/fi";
+import { FiCheckCircle } from "react-icons/fi";
 import { FaStar as FaStarSolid } from "react-icons/fa";
 import default_avatar from "../../assets/img/default_avatar.png";
 
@@ -11,7 +11,13 @@ type ProfessionalCardProps = {
     foto?: string;
     categoria?: string;
     subcategorias?: string[];
+    cobertura_ids?: string[];
+    cobertura_nombres?: string[];
     zonas?: string[];
+    matched_location_ids?: string[];
+    matched_location_names?: string[];
+    matched_locations_count?: number;
+    total_searched_locations?: number;
     calificacion?: number;
     trabajosRealizados?: number;
     disponibilidad?: string;
@@ -25,6 +31,12 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
   // Handle rating display
   const rating = profesional.calificacion || 0;
   const trabajos = profesional.trabajosRealizados || 0;
+  const displayZonas = profesional.cobertura_nombres?.length
+    ? profesional.cobertura_nombres
+    : profesional.zonas || [];
+  const matchedNames = profesional.matched_location_names || [];
+  const matchedCount = profesional.matched_locations_count ?? matchedNames.length;
+  const totalSearched = profesional.total_searched_locations ?? 0;
 
   return (
     <div className="card flex flex-col p-5 group cursor-pointer hover:-translate-y-1 transition-transform min-w-0 overflow-hidden" onClick={() => onVerPerfil?.(profesional.id)}>
@@ -66,17 +78,37 @@ const ProfessionalCard: React.FC<ProfessionalCardProps> = ({ profesional, onVerP
         </div>
       </div>
 
+      {/* Matched Search Locations Badge */}
+      {totalSearched > 0 && matchedCount > 0 && (
+        <div
+          className={`mb-3 px-2.5 py-1.5 rounded-lg border text-xs font-medium flex items-start gap-1.5 ${
+            matchedCount === totalSearched
+              ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+              : "bg-blue-50 border-blue-200 text-blue-800"
+          }`}
+        >
+          <FiCheckCircle className="shrink-0 mt-0.5" size={13} />
+          <div className="min-w-0">
+            <span className="font-bold">
+              Cubre {matchedCount}/{totalSearched}{" "}
+              {totalSearched === 1 ? "ubicaciones" : "buscadas"}:
+            </span>{" "}
+            <span className="break-words">{matchedNames.join(", ")}</span>
+          </div>
+        </div>
+      )}
+
       {/* Zonas Chips */}
-      {profesional.zonas && profesional.zonas.length > 0 && (
+      {displayZonas.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
-          {profesional.zonas.slice(0, 2).map((zona, idx) => (
+          {displayZonas.slice(0, 2).map((zona, idx) => (
             <span key={idx} className="inline-flex items-center px-2 py-1 rounded-md bg-neutral-100 text-neutral-600 text-xs font-medium">
               {zona}
             </span>
           ))}
-          {profesional.zonas.length > 2 && (
+          {displayZonas.length > 2 && (
             <span className="inline-flex items-center px-2 py-1 rounded-md bg-neutral-50 border border-neutral-200 text-neutral-500 text-xs font-medium">
-              +{profesional.zonas.length - 2}
+              +{displayZonas.length - 2}
             </span>
           )}
         </div>

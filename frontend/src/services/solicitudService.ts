@@ -7,12 +7,15 @@ export const solicitudService = {
 
     async crearSolicitud(profesionalId: string, data: {
         zona: string;
+        zona_id?: string;
         subcategoria: string;
         descripcion: string;
         fotos: File[] | null;
     }) {
         const formData = new FormData();
-        formData.append("zona", data.zona);
+        const zonaId = data.zona_id || data.zona;
+        formData.append("zona_id", zonaId);
+        formData.append("zona", zonaId);
         formData.append("subcategoria", data.subcategoria);
         formData.append("descripcion", data.descripcion);
         if (data.fotos) {

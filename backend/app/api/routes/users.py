@@ -10,6 +10,7 @@ from app.shared.auth_utils import obtener_tipo
 from app.shared.roles import require_role
 from app.shared.logger import log
 from app.domain.services.tyc_service import TycService
+from app.domain.services.geo_service import get_geo_catalog
 
 
 router = APIRouter()
@@ -24,9 +25,18 @@ def listar_todos_los_usuarios(user_data: dict = Depends(require_role("admin")),s
 
 @router.post("/profesionales/buscar")
 async def buscar_profesionales(filtros: FiltroBusquedaProfesionales, user=Depends(verify_verified_phone),service: UserService = Depends(get_user_service)): 
-    log.info("CATEGORIA EN ROUTER: "+filtros.categoria) 
-    return service.buscar_profesionales_multifiltro(filtros.zonas, filtros.categoria, filtros.subcategorias ,limit=filtros.limit,
-        start_after_id=filtros.start_after_id)
+    log.info(f"CATEGORIA EN ROUTER: {filtros.categoria}")
+    ubicaciones = filtros.ubicaciones if filtros.ubicaciones is not None else filtros.zonas
+    try:
+        return service.buscar_profesionales_multifiltro(
+            ubicaciones,
+            filtros.categoria,
+            filtros.subcategorias,
+            limit=filtros.limit,
+            start_after_id=filtros.start_after_id,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
 @router.get("/me")
 def obtener_usuario_autenticado(
@@ -37,7 +47,7 @@ def obtener_usuario_autenticado(
     usuario = user_repo.get_user_by_id(uid)
     if usuario:
         usuario["requires_tyc_acceptance"] = TycService.requires_acceptance(usuario)
-        return usuario
+        return get_geo_catalog().enrich_professional_profile(usuario)
     raise HTTPException(status_code=404, detail="Usuario no encontrado")
 
 @router.post("/me/tyc/accept")
@@ -72,7 +82,11 @@ def actualizar_usuario_autenticado(
     if phone_number:
         datos.telefono = phone_number
 
-    usuario_actualizado = service.actualizar_usuario(uid, datos)
+    try:
+        usuario_actualizado = service.actualizar_usuario(uid, datos)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
     if usuario_actualizado:
         if usuario_actualizado.get("tipo") == "profesional":
             email = user_data.get("email")

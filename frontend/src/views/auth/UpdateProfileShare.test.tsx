@@ -49,9 +49,39 @@ vi.mock("@capacitor/core", () => ({
   },
 }));
 
-// Mock fetch for zonas endpoint in UpdateProfile
+// Mock fetch for geo catalog endpoint in UpdateProfile
 globalThis.fetch = vi.fn().mockResolvedValue({
-  json: () => Promise.resolve(["Palermo", "Belgrano"]),
+  ok: true,
+  json: () =>
+    Promise.resolve({
+      version: "2026.11.1",
+      areas: [
+        {
+          id: "ar",
+          nombre: "Argentina",
+          tipo: "pais",
+          parent_id: null,
+          ancestors: [],
+          selectable_by_pro: false,
+          selectable_by_client: false,
+          activo: true,
+          orden: 1,
+        },
+        {
+          id: "ar-c",
+          nombre: "Ciudad Autónoma de Buenos Aires",
+          nombre_corto: "CABA",
+          tipo: "ciudad_autonoma",
+          parent_id: "ar",
+          ancestors: ["ar"],
+          selectable_by_pro: true,
+          selectable_by_client: false,
+          activo: true,
+          orden: 10,
+        },
+      ],
+      agrupaciones: [],
+    }),
 } as any);
 
 describe("UpdateProfile - Recomendar CasaClick Native Share Flow", () => {

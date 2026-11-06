@@ -1,5 +1,6 @@
 from datetime import datetime, timezone, timedelta
 from app.ports.request_repository import RequestRepository
+from app.domain.services.geo_service import GeoCatalog, get_geo_catalog
 from typing import List,Dict,Any,Optional
 
 def _normalizar_fecha(fecha) -> Optional[datetime]:
@@ -17,8 +18,9 @@ def _normalizar_fecha(fecha) -> Optional[datetime]:
     return None
 
 class RequestService:
-    def __init__(self, request_repo: RequestRepository):
+    def __init__(self, request_repo: RequestRepository, geo_catalog: Optional[GeoCatalog] = None):
         self.request_repo = request_repo
+        self.geo_catalog = geo_catalog or get_geo_catalog()
         
     
         
@@ -63,12 +65,29 @@ class RequestService:
         zona: str,
         subcategoria: str,
         descripcion: str,
-        fotos_urls: List[str]
+        fotos_urls: List[str],
+        profesional_data: Optional[Dict[str, Any]] = None,
+        zona_id: Optional[str] = None,
     ) -> dict:
+        target_area_id = zona_id or zona
+        if profesional_data is not None:
+            area = self.geo_catalog.validate_request_location(
+                profesional_data.get("cobertura_ids"),
+                target_area_id,
+            )
+            resolved_zona_id = area.id
+            resolved_zona_nombre = area.nombre
+        else:
+            area = self.geo_catalog.get_area(target_area_id) if target_area_id else None
+            resolved_zona_id = area.id if area else target_area_id
+            resolved_zona_nombre = area.nombre if area else zona
+
         solicitud_data = {
             "solicitante_id": solicitante_id,
             "profesional_id": profesional_id,
-            "zona": zona,
+            "zona_id": resolved_zona_id,
+            "zona_nombre": resolved_zona_nombre,
+            "zona": resolved_zona_nombre,
             "estado": "creada", 
             "subcategoria": subcategoria,
             "descripcion": descripcion,

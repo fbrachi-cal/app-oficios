@@ -6,13 +6,13 @@ import { fetchConToken } from "../../utils/fetchConToken";
 import { useTranslation } from "react-i18next";
 import ProfessionalCard from "../Cards/ProfessionalCard";
 import { useNavigate } from 'react-router-dom';
+import GeoAreaPicker from "../Geo/GeoAreaPicker";
 
 const CalificarProfesionales: React.FC = () => {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const [zonas, setZonas] = useState<string[]>([]);
+    const [ubicaciones, setUbicaciones] = useState<string[]>([]);
     const [oficios, setOficios] = useState<string[]>([]);
-    const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
     const [oficiosDisponibles, setOficiosDisponibles] = useState<string[]>([]);
     const [resultados, setResultados] = useState<any[]>([]);
     const [expandido, setExpandido] = useState(false);
@@ -21,10 +21,6 @@ const CalificarProfesionales: React.FC = () => {
     const [tieneMas, setTieneMas] = useState(false);
 
     useEffect(() => {
-        fetch(`${config.apiBaseUrl}/utils/zonas`)
-            .then((res) => res.json())
-            .then(setZonasDisponibles);
-
         fetch(`${config.apiBaseUrl}/utils/oficios`)
             .then((res) => res.json())
             .then(setOficiosDisponibles);
@@ -33,7 +29,7 @@ const CalificarProfesionales: React.FC = () => {
     const buscarProfesionales = async (reset = true) => {
         try {
             const body = {
-                zonas,
+                ubicaciones,
                 oficios,
                 limit,
                 ...(ultimoId && !reset ? { start_after_id: ultimoId } : {}),
@@ -85,18 +81,14 @@ const CalificarProfesionales: React.FC = () => {
                     <h6 className="text-xl font-semibold">{t("buscar_profesionales")}</h6>
                     <p className="mt-2 mb-4 text-blueGray-500">{t("elige_zonas_y_oficios")}</p>
 
-                    <select
-                        multiple
-                        className="w-full mb-3 p-2 border rounded"
-                        value={zonas}
-                        onChange={(e) =>
-                            setZonas(Array.from(e.target.selectedOptions, (opt) => opt.value))
-                        }
-                    >
-                        {zonasDisponibles.map((z) => (
-                            <option key={z} value={z}>{z}</option>
-                        ))}
-                    </select>
+                    <div className="mb-3 text-left">
+                        <GeoAreaPicker
+                            mode="client-search"
+                            selectedIds={ubicaciones}
+                            onChange={setUbicaciones}
+                            compact
+                        />
+                    </div>
 
                     <select
                         multiple

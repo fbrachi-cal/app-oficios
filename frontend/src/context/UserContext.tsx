@@ -7,6 +7,9 @@ type UserData = {
     id: string;
     nombre: string;
     tipo: string;
+    cobertura_ids?: string[];
+    cobertura_nombres?: string[];
+    requires_coverage_setup?: boolean;
     zonas?: string[];
     oficios?: string[];
     subcategorias?: string[];

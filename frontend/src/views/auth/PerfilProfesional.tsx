@@ -148,7 +148,7 @@ const PerfilProfesional: React.FC = () => {
               <FiMapPin className="text-neutral-400" /> {t("zonas")}
             </h3>
             <div className="flex flex-wrap gap-2">
-              {profesional.zonas?.map((z: string, i: number) => (
+              {(profesional.cobertura_nombres?.length ? profesional.cobertura_nombres : profesional.zonas)?.map((z: string, i: number) => (
                 <span key={i} className="px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-lg text-sm font-medium border border-neutral-200/60">
                   {z}
                 </span>
@@ -187,7 +187,8 @@ const PerfilProfesional: React.FC = () => {
       <ModalSolicitud isOpen={isSolicitudOpen} onClose={() => setIsSolicitudOpen(false)}>
         <h2 className="text-xl font-bold mb-4 text-neutral-900">{t("nueva_solicitud")}</h2>
         <FormSolicitud
-          zonasDisponibles={profesional.zonas || []}
+          coberturaIds={profesional.cobertura_ids || []}
+          zonasDisponibles={profesional.cobertura_nombres || profesional.zonas || []}
           subcategoriasDisponibles={profesional.subcategorias || []}
           onCancel={() => setIsSolicitudOpen(false)}
           onSubmit={async (data) => {

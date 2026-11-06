@@ -28,6 +28,7 @@ class AdminUserOut(BaseModel):
     deleted_at: Optional[datetime] = None
     foto: Optional[str] = None
     descripcion: Optional[str] = None
+    cobertura_ids: Optional[List[str]] = []
     zonas: Optional[List[str]] = []
     categorias: Optional[List[str]] = []
     # Audit fields

@@ -51,9 +51,15 @@ const Login: React.FC = () => {
           navigate("/recruiter/cvs", { replace: true });
         } else if (
           backendUser.tipo === "profesional" &&
-          (!backendUser.oficios?.length || !backendUser.zonas?.length)
+          !backendUser.oficios?.length &&
+          !backendUser.subcategorias?.length
         ) {
           navigate("/completar-perfil", { replace: true });
+        } else if (
+          backendUser.tipo === "profesional" &&
+          (backendUser.requires_coverage_setup || !backendUser.cobertura_ids?.length)
+        ) {
+          navigate("/perfil", { replace: true });
         } else {
           navigate("/", { replace: true });
         }

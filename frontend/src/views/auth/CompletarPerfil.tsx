@@ -10,6 +10,7 @@ import { useUser } from "../../context/UserContext";
 import { logger } from "../../utils/logger";
 import { FiUser, FiBriefcase, FiMapPin, FiCamera, FiCheck, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { useCategorias } from "../../hooks/useCategorias";
+import GeoAreaPicker from "../../components/Geo/GeoAreaPicker";
 
 const CompletarPerfil: React.FC = () => {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ const CompletarPerfil: React.FC = () => {
   const [nombre, setNombre] = useState("");
   const [telefonoValidado, setTelefonoValidado] = useState("");
   const [tipo, setTipo] = useState<"cliente" | "profesional">("cliente");
-  const [zonas, setZonas] = useState<string[]>([]);
+  const [coberturaIds, setCoberturaIds] = useState<string[]>([]);
   const [oficios, setOficios] = useState<string[]>([]);
 
   // Terms Acceptance State
@@ -37,7 +38,6 @@ const CompletarPerfil: React.FC = () => {
   const { categorias } = useCategorias();
 
   // Data State
-  const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -78,8 +78,6 @@ const CompletarPerfil: React.FC = () => {
       setTelefonoValidado(user.phoneNumber);
     }
     user.getIdToken().then(setToken);
-
-    fetch(`${config.apiBaseUrl}/utils/zonas`).then(r => r.json()).then(setZonasDisponibles);
   }, [navigate]);
 
   const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,10 +134,10 @@ const CompletarPerfil: React.FC = () => {
       };
 
       if (tipo === "profesional") {
-        if (zonas.length === 0 || oficios.length === 0) {
+        if (coberturaIds.length === 0 || oficios.length === 0) {
           throw new Error(t("error_zonas_oficios"));
         }
-        payload.zonas = zonas;
+        payload.cobertura_ids = coberturaIds;
         payload.oficios = oficios;
         payload.subcategorias = oficios; // Keep subcategorias in sync for backend
       }
@@ -203,7 +201,7 @@ const CompletarPerfil: React.FC = () => {
              aceptarResponsabilidad;
     }
     if (step === 2) return true; // Tipo is always selected
-    if (step === 3 && tipo === "profesional") return zonas.length > 0 && oficios.length > 0;
+    if (step === 3 && tipo === "profesional") return coberturaIds.length > 0 && oficios.length > 0;
     return true;
   };
 
@@ -449,23 +447,12 @@ const CompletarPerfil: React.FC = () => {
 
               <div>
                 <label className="input-label mb-3 flex items-center gap-1.5"><FiMapPin size={14} /> {t("zonas")}</label>
-                <div className="flex flex-wrap gap-2">
-                  {zonasDisponibles.map(z => {
-                    const isSelected = zonas.includes(z);
-                    return (
-                      <button
-                        key={z}
-                        type="button"
-                        onClick={() => toggleSelection(z, zonas, setZonas)}
-                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors border ${
-                          isSelected ? "bg-blue-600 text-white border-blue-600" : "bg-white text-slate-600 border-slate-200 hover:border-slate-300"
-                        }`}
-                      >
-                        {z}
-                      </button>
-                    )
-                  })}
-                </div>
+                <GeoAreaPicker
+                  mode="pro"
+                  selectedIds={coberturaIds}
+                  onChange={setCoberturaIds}
+                  placeholder="Buscar barrio, localidad, comuna o partido..."
+                />
               </div>
 
               <div>

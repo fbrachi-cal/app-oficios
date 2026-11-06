@@ -1,0 +1,4537 @@
+{
+  "version": "2026.11.2",
+  "sources": [
+    "CABA: Ley Orgánica de Comunas N° 1.777 (15 comunas, 48 barrios oficiales)",
+    "GBA: INDEC / Servicio de Normalización de Datos Geográficos de Argentina (Georef API v2.0 - BAHRA, 24 partidos del Gran Buenos Aires y sus 197 localidades censales/entidades)"
+  ],
+  "areas": [
+    {
+      "id": "ar",
+      "nombre": "Argentina",
+      "tipo": "pais",
+      "parent_id": null,
+      "ancestors": [],
+      "selectable_by_pro": false,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 1
+    },
+    {
+      "id": "ar-c",
+      "nombre": "Ciudad Autónoma de Buenos Aires",
+      "nombre_corto": "CABA",
+      "tipo": "ciudad_autonoma",
+      "parent_id": "ar",
+      "ancestors": [
+        "ar"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 10
+    },
+    {
+      "id": "ar-c-comuna-1",
+      "nombre": "Comuna 1",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 101
+    },
+    {
+      "id": "ar-c-retiro",
+      "nombre": "Retiro",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-1",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-1"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10101
+    },
+    {
+      "id": "ar-c-san-nicolas",
+      "nombre": "San Nicolás",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-1",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-1"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10102
+    },
+    {
+      "id": "ar-c-puerto-madero",
+      "nombre": "Puerto Madero",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-1",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-1"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10103
+    },
+    {
+      "id": "ar-c-san-telmo",
+      "nombre": "San Telmo",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-1",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-1"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10104
+    },
+    {
+      "id": "ar-c-montserrat",
+      "nombre": "Montserrat",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-1",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-1"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10105
+    },
+    {
+      "id": "ar-c-constitucion",
+      "nombre": "Constitución",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-1",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-1"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10106
+    },
+    {
+      "id": "ar-c-comuna-2",
+      "nombre": "Comuna 2",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 102
+    },
+    {
+      "id": "ar-c-recoleta",
+      "nombre": "Recoleta",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-2",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-2"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10201
+    },
+    {
+      "id": "ar-c-comuna-3",
+      "nombre": "Comuna 3",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 103
+    },
+    {
+      "id": "ar-c-balvanera",
+      "nombre": "Balvanera",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-3",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-3"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10301
+    },
+    {
+      "id": "ar-c-san-cristobal",
+      "nombre": "San Cristóbal",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-3",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-3"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10302
+    },
+    {
+      "id": "ar-c-comuna-4",
+      "nombre": "Comuna 4",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 104
+    },
+    {
+      "id": "ar-c-la-boca",
+      "nombre": "La Boca",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-4",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-4"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10401
+    },
+    {
+      "id": "ar-c-barracas",
+      "nombre": "Barracas",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-4",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-4"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10402
+    },
+    {
+      "id": "ar-c-parque-patricios",
+      "nombre": "Parque Patricios",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-4",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-4"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10403
+    },
+    {
+      "id": "ar-c-nueva-pompeya",
+      "nombre": "Nueva Pompeya",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-4",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-4"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10404
+    },
+    {
+      "id": "ar-c-comuna-5",
+      "nombre": "Comuna 5",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 105
+    },
+    {
+      "id": "ar-c-almagro",
+      "nombre": "Almagro",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-5",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-5"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10501
+    },
+    {
+      "id": "ar-c-boedo",
+      "nombre": "Boedo",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-5",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-5"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10502
+    },
+    {
+      "id": "ar-c-comuna-6",
+      "nombre": "Comuna 6",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 106
+    },
+    {
+      "id": "ar-c-caballito",
+      "nombre": "Caballito",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-6",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-6"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10601
+    },
+    {
+      "id": "ar-c-comuna-7",
+      "nombre": "Comuna 7",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 107
+    },
+    {
+      "id": "ar-c-flores",
+      "nombre": "Flores",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-7",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-7"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10701
+    },
+    {
+      "id": "ar-c-parque-chacabuco",
+      "nombre": "Parque Chacabuco",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-7",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-7"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10702
+    },
+    {
+      "id": "ar-c-comuna-8",
+      "nombre": "Comuna 8",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 108
+    },
+    {
+      "id": "ar-c-villa-soldati",
+      "nombre": "Villa Soldati",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-8",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-8"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10801
+    },
+    {
+      "id": "ar-c-villa-riachuelo",
+      "nombre": "Villa Riachuelo",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-8",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-8"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10802
+    },
+    {
+      "id": "ar-c-villa-lugano",
+      "nombre": "Villa Lugano",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-8",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-8"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10803
+    },
+    {
+      "id": "ar-c-comuna-9",
+      "nombre": "Comuna 9",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 109
+    },
+    {
+      "id": "ar-c-liniers",
+      "nombre": "Liniers",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-9",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-9"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10901
+    },
+    {
+      "id": "ar-c-mataderos",
+      "nombre": "Mataderos",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-9",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-9"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10902
+    },
+    {
+      "id": "ar-c-parque-avellaneda",
+      "nombre": "Parque Avellaneda",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-9",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-9"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 10903
+    },
+    {
+      "id": "ar-c-comuna-10",
+      "nombre": "Comuna 10",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 110
+    },
+    {
+      "id": "ar-c-villa-real",
+      "nombre": "Villa Real",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-10",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-10"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11001
+    },
+    {
+      "id": "ar-c-monte-castro",
+      "nombre": "Monte Castro",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-10",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-10"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11002
+    },
+    {
+      "id": "ar-c-versalles",
+      "nombre": "Versalles",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-10",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-10"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11003
+    },
+    {
+      "id": "ar-c-floresta",
+      "nombre": "Floresta",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-10",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-10"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11004
+    },
+    {
+      "id": "ar-c-velez-sarsfield",
+      "nombre": "Vélez Sársfield",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-10",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-10"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11005
+    },
+    {
+      "id": "ar-c-villa-luro",
+      "nombre": "Villa Luro",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-10",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-10"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11006
+    },
+    {
+      "id": "ar-c-comuna-11",
+      "nombre": "Comuna 11",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 111
+    },
+    {
+      "id": "ar-c-villa-general-mitre",
+      "nombre": "Villa General Mitre",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-11",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-11"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11101
+    },
+    {
+      "id": "ar-c-villa-devoto",
+      "nombre": "Villa Devoto",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-11",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-11"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11102
+    },
+    {
+      "id": "ar-c-villa-del-parque",
+      "nombre": "Villa del Parque",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-11",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-11"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11103
+    },
+    {
+      "id": "ar-c-villa-santa-rita",
+      "nombre": "Villa Santa Rita",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-11",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-11"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11104
+    },
+    {
+      "id": "ar-c-comuna-12",
+      "nombre": "Comuna 12",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 112
+    },
+    {
+      "id": "ar-c-coghlan",
+      "nombre": "Coghlan",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-12",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-12"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11201
+    },
+    {
+      "id": "ar-c-saavedra",
+      "nombre": "Saavedra",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-12",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-12"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11202
+    },
+    {
+      "id": "ar-c-villa-urquiza",
+      "nombre": "Villa Urquiza",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-12",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-12"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11203
+    },
+    {
+      "id": "ar-c-villa-pueyrredon",
+      "nombre": "Villa Pueyrredón",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-12",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-12"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11204
+    },
+    {
+      "id": "ar-c-comuna-13",
+      "nombre": "Comuna 13",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 113
+    },
+    {
+      "id": "ar-c-nunez",
+      "nombre": "Núñez",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-13",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-13"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11301
+    },
+    {
+      "id": "ar-c-belgrano",
+      "nombre": "Belgrano",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-13",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-13"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11302
+    },
+    {
+      "id": "ar-c-colegiales",
+      "nombre": "Colegiales",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-13",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-13"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11303
+    },
+    {
+      "id": "ar-c-comuna-14",
+      "nombre": "Comuna 14",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 114
+    },
+    {
+      "id": "ar-c-palermo",
+      "nombre": "Palermo",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-14",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-14"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11401
+    },
+    {
+      "id": "ar-c-comuna-15",
+      "nombre": "Comuna 15",
+      "tipo": "comuna",
+      "parent_id": "ar-c",
+      "ancestors": [
+        "ar",
+        "ar-c"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 115
+    },
+    {
+      "id": "ar-c-chacarita",
+      "nombre": "Chacarita",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-15",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-15"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11501
+    },
+    {
+      "id": "ar-c-villa-crespo",
+      "nombre": "Villa Crespo",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-15",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-15"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11502
+    },
+    {
+      "id": "ar-c-la-paternal",
+      "nombre": "La Paternal",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-15",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-15"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11503
+    },
+    {
+      "id": "ar-c-villa-ortuzar",
+      "nombre": "Villa Ortúzar",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-15",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-15"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11504
+    },
+    {
+      "id": "ar-c-agronomia",
+      "nombre": "Agronomía",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-15",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-15"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11505
+    },
+    {
+      "id": "ar-c-parque-chas",
+      "nombre": "Parque Chas",
+      "tipo": "barrio",
+      "parent_id": "ar-c-comuna-15",
+      "ancestors": [
+        "ar",
+        "ar-c",
+        "ar-c-comuna-15"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 11506
+    },
+    {
+      "id": "ar-b",
+      "nombre": "Provincia de Buenos Aires",
+      "nombre_corto": "Buenos Aires",
+      "tipo": "provincia",
+      "parent_id": "ar",
+      "ancestors": [
+        "ar"
+      ],
+      "selectable_by_pro": false,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 20
+    },
+    {
+      "id": "ar-b-vicente-lopez",
+      "indec_id": "06861",
+      "nombre": "Vicente López",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 201
+    },
+    {
+      "id": "ar-b-vicente-lopez-carapachay",
+      "indec_id": "0686101001",
+      "nombre": "Carapachay",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20101
+    },
+    {
+      "id": "ar-b-vicente-lopez-florida",
+      "indec_id": "0686101002",
+      "nombre": "Florida",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20102
+    },
+    {
+      "id": "ar-b-vicente-lopez-florida-oeste",
+      "indec_id": "0686101003",
+      "nombre": "Florida Oeste",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20103
+    },
+    {
+      "id": "ar-b-vicente-lopez-la-lucila",
+      "indec_id": "0686101004",
+      "nombre": "La Lucila",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20104
+    },
+    {
+      "id": "ar-b-vicente-lopez-munro",
+      "indec_id": "0686101005",
+      "nombre": "Munro",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20105
+    },
+    {
+      "id": "ar-b-vicente-lopez-olivos",
+      "indec_id": "0686101006",
+      "nombre": "Olivos",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20106
+    },
+    {
+      "id": "ar-b-vicente-lopez-vicente-lopez",
+      "indec_id": "0686101007",
+      "nombre": "Vicente López",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20107
+    },
+    {
+      "id": "ar-b-vicente-lopez-villa-adelina",
+      "indec_id": "0686101008",
+      "nombre": "Villa Adelina",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20108
+    },
+    {
+      "id": "ar-b-vicente-lopez-villa-martelli",
+      "indec_id": "0686101009",
+      "nombre": "Villa Martelli",
+      "tipo": "localidad",
+      "parent_id": "ar-b-vicente-lopez",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-vicente-lopez"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20109
+    },
+    {
+      "id": "ar-b-san-isidro",
+      "indec_id": "06756",
+      "nombre": "San Isidro",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 202
+    },
+    {
+      "id": "ar-b-san-isidro-acassuso",
+      "indec_id": "0675601001",
+      "nombre": "Acassuso",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-isidro",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-isidro"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20201
+    },
+    {
+      "id": "ar-b-san-isidro-boulogne",
+      "indec_id": "0675601003",
+      "nombre": "Boulogne Sur Mer",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-isidro",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-isidro"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20202
+    },
+    {
+      "id": "ar-b-san-isidro-beccar",
+      "indec_id": "0675601002",
+      "nombre": "Béccar",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-isidro",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-isidro"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20203
+    },
+    {
+      "id": "ar-b-san-isidro-martinez",
+      "indec_id": "0675601004",
+      "nombre": "Martínez",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-isidro",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-isidro"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20204
+    },
+    {
+      "id": "ar-b-san-isidro-san-isidro",
+      "indec_id": "0675601005",
+      "nombre": "San Isidro",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-isidro",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-isidro"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20205
+    },
+    {
+      "id": "ar-b-san-isidro-villa-adelina",
+      "indec_id": "0675601006",
+      "nombre": "Villa Adelina",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-isidro",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-isidro"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20206
+    },
+    {
+      "id": "ar-b-san-fernando",
+      "indec_id": "06749",
+      "nombre": "San Fernando",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 203
+    },
+    {
+      "id": "ar-b-san-fernando-san-fernando",
+      "indec_id": "0674901001",
+      "nombre": "San Fernando",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-fernando",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-fernando"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20301
+    },
+    {
+      "id": "ar-b-san-fernando-victoria",
+      "indec_id": "0674901002",
+      "nombre": "Victoria",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-fernando",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-fernando"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20302
+    },
+    {
+      "id": "ar-b-san-fernando-virreyes",
+      "indec_id": "0674901003",
+      "nombre": "Virreyes",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-fernando",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-fernando"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20303
+    },
+    {
+      "id": "ar-b-tigre",
+      "indec_id": "06805",
+      "nombre": "Tigre",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 204
+    },
+    {
+      "id": "ar-b-tigre-benavidez",
+      "indec_id": "0680501001",
+      "nombre": "Benavídez",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20401
+    },
+    {
+      "id": "ar-b-tigre-dique-lujan",
+      "indec_id": "0680501002",
+      "nombre": "Dique Luján",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20402
+    },
+    {
+      "id": "ar-b-tigre-don-torcuato-este",
+      "indec_id": "0680501003",
+      "nombre": "Don Torcuato Este",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20403
+    },
+    {
+      "id": "ar-b-tigre-don-torcuato-oeste",
+      "indec_id": "0680501004",
+      "nombre": "Don Torcuato Oeste",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20404
+    },
+    {
+      "id": "ar-b-tigre-el-talar",
+      "indec_id": "0680501005",
+      "nombre": "El Talar",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20405
+    },
+    {
+      "id": "ar-b-tigre-general-pacheco",
+      "indec_id": "0680501006",
+      "nombre": "General Pacheco",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20406
+    },
+    {
+      "id": "ar-b-tigre-ricardo-rojas",
+      "indec_id": "0680501008",
+      "nombre": "Ricardo Rojas",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20407
+    },
+    {
+      "id": "ar-b-tigre-rincon-de-milberg",
+      "indec_id": "0680501009",
+      "nombre": "Rincón de Milberg",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20408
+    },
+    {
+      "id": "ar-b-tigre-tigre",
+      "indec_id": "0680501010",
+      "nombre": "Tigre",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20409
+    },
+    {
+      "id": "ar-b-tigre-troncos-del-talar",
+      "indec_id": "0680501007",
+      "nombre": "Troncos del Talar",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tigre",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tigre"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20410
+    },
+    {
+      "id": "ar-b-general-san-martin",
+      "indec_id": "06371",
+      "nombre": "General San Martín",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 205
+    },
+    {
+      "id": "ar-b-general-san-martin-barrio-parque-general-san-martin",
+      "indec_id": "0637101001",
+      "nombre": "Barrio Parque General San Martín",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20501
+    },
+    {
+      "id": "ar-b-general-san-martin-billinghurst",
+      "indec_id": "0637101002",
+      "nombre": "Billinghurst",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20502
+    },
+    {
+      "id": "ar-b-general-san-martin-ciudad-jardin-el-libertador",
+      "indec_id": "0637101004",
+      "nombre": "Ciudad Jardín El Libertador",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20503
+    },
+    {
+      "id": "ar-b-general-san-martin-ciudad-del-libertador-general-san-martin",
+      "indec_id": "0637101003",
+      "nombre": "Ciudad del Libertador General San Martín",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20504
+    },
+    {
+      "id": "ar-b-general-san-martin-va-marques-alejandro-maria-de-aguado",
+      "indec_id": "0637101023",
+      "nombre": "Va.Marqués Alejandro María de Aguado",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20505
+    },
+    {
+      "id": "ar-b-general-san-martin-va-maria-irene-de-los-remedios-escalada",
+      "indec_id": "0637101022",
+      "nombre": "Va.María Irene de los Remedios Escalada",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20506
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-ayacucho",
+      "indec_id": "0637101005",
+      "nombre": "Villa Ayacucho",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20507
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-ballester",
+      "indec_id": "0637101006",
+      "nombre": "Villa Ballester",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20508
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-bernardo-monteagudo",
+      "indec_id": "0637101007",
+      "nombre": "Villa Bernardo Monteagudo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20509
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-chacabuco",
+      "indec_id": "0637101008",
+      "nombre": "Villa Chacabuco",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20510
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-coronel-jose-m-zapiola",
+      "indec_id": "0637101009",
+      "nombre": "Villa Coronel José M. Zapiola",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20511
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-general-antonio-j-de-sucre",
+      "indec_id": "0637101010",
+      "nombre": "Villa General Antonio J. de Sucre",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20512
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-general-eugenio-necochea",
+      "indec_id": "0637101011",
+      "nombre": "Villa General Eugenio Necochea",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20513
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-general-jose-tomas-guido",
+      "indec_id": "0637101012",
+      "nombre": "Villa General José Tomás Guido",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20514
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-general-juan-g-las-heras",
+      "indec_id": "0637101013",
+      "nombre": "Villa General Juan G. Las Heras",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20515
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-godoy-cruz",
+      "indec_id": "0637101014",
+      "nombre": "Villa Godoy Cruz",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20516
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-granaderos-de-san-martin",
+      "indec_id": "0637101015",
+      "nombre": "Villa Granaderos de San Martín",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20517
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-gregoria-matorras",
+      "indec_id": "0637101016",
+      "nombre": "Villa Gregoria Matorras",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20518
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-jose-leon-suarez",
+      "indec_id": "0637101017",
+      "nombre": "Villa José León Suárez",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20519
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-juan-martin-de-pueyrredon",
+      "indec_id": "0637101018",
+      "nombre": "Villa Juan Martín de Pueyrredón",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20520
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-libertad",
+      "indec_id": "0637101019",
+      "nombre": "Villa Libertad",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20521
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-lynch",
+      "indec_id": "0637101020",
+      "nombre": "Villa Lynch",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20522
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-maipu",
+      "indec_id": "0637101021",
+      "nombre": "Villa Maipú",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20523
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-parque-presidente-figueroa-alcorta",
+      "indec_id": "0637101024",
+      "nombre": "Villa Parque Presidente Figueroa Alcorta",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20524
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-parque-san-lorenzo",
+      "indec_id": "0637101025",
+      "nombre": "Villa Parque San Lorenzo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20525
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-san-andres",
+      "indec_id": "0637101026",
+      "nombre": "Villa San Andrés",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20526
+    },
+    {
+      "id": "ar-b-general-san-martin-villa-yapeyu",
+      "indec_id": "0637101027",
+      "nombre": "Villa Yapeyú",
+      "tipo": "localidad",
+      "parent_id": "ar-b-general-san-martin",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-general-san-martin"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20527
+    },
+    {
+      "id": "ar-b-malvinas-argentinas",
+      "indec_id": "06515",
+      "nombre": "Malvinas Argentinas",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 206
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-grand-bourg",
+      "indec_id": "0651501002",
+      "nombre": "Grand Bourg",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20601
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-ingeniero-adolfo-sourdeaux",
+      "indec_id": "0651501003",
+      "nombre": "Ingeniero Adolfo Sourdeaux",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20602
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-ingeniero-pablo-nogues",
+      "indec_id": "0651501004",
+      "nombre": "Ingeniero Pablo Nogués",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20603
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-los-polvorines",
+      "indec_id": "0651501005",
+      "nombre": "Los Polvorines",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20604
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-malvinas-argentinas",
+      "indec_id": "0651501006",
+      "nombre": "Malvinas Argentinas",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20605
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-tortuguitas",
+      "indec_id": "0651501007",
+      "nombre": "Tortuguitas",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20606
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-villa-de-mayo",
+      "indec_id": "0651501008",
+      "nombre": "Villa de Mayo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20607
+    },
+    {
+      "id": "ar-b-malvinas-argentinas-area-de-promocion-el-triangulo",
+      "indec_id": "0651501001",
+      "nombre": "Área de Promoción El Triángulo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-malvinas-argentinas",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-malvinas-argentinas"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20608
+    },
+    {
+      "id": "ar-b-jose-c-paz",
+      "indec_id": "06412",
+      "nombre": "José C. Paz",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 207
+    },
+    {
+      "id": "ar-b-jose-c-paz-del-viso",
+      "indec_id": "0641201001",
+      "nombre": "Del Viso",
+      "tipo": "localidad",
+      "parent_id": "ar-b-jose-c-paz",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-jose-c-paz"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20701
+    },
+    {
+      "id": "ar-b-jose-c-paz-jose-c-paz",
+      "indec_id": "0641201002",
+      "nombre": "José C. Paz",
+      "tipo": "localidad",
+      "parent_id": "ar-b-jose-c-paz",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-jose-c-paz"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20702
+    },
+    {
+      "id": "ar-b-jose-c-paz-tortuguitas",
+      "indec_id": "0641201003",
+      "nombre": "Tortuguitas",
+      "tipo": "localidad",
+      "parent_id": "ar-b-jose-c-paz",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-jose-c-paz"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20703
+    },
+    {
+      "id": "ar-b-san-miguel",
+      "indec_id": "06760",
+      "nombre": "San Miguel",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 208
+    },
+    {
+      "id": "ar-b-san-miguel-bella-vista",
+      "indec_id": "0676001001",
+      "nombre": "Bella Vista",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-miguel",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-miguel"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20801
+    },
+    {
+      "id": "ar-b-san-miguel-campo-de-mayo",
+      "indec_id": "0676001002",
+      "nombre": "Campo de Mayo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-miguel",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-miguel"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20802
+    },
+    {
+      "id": "ar-b-san-miguel-muniz",
+      "indec_id": "0676001003",
+      "nombre": "Muñiz",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-miguel",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-miguel"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20803
+    },
+    {
+      "id": "ar-b-san-miguel-san-miguel",
+      "indec_id": "0676001004",
+      "nombre": "San Miguel",
+      "tipo": "localidad",
+      "parent_id": "ar-b-san-miguel",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-san-miguel"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20804
+    },
+    {
+      "id": "ar-b-la-matanza",
+      "indec_id": "06427",
+      "nombre": "La Matanza",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 209
+    },
+    {
+      "id": "ar-b-la-matanza-20-de-junio",
+      "indec_id": "0642701012",
+      "nombre": "20 de Junio",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20901
+    },
+    {
+      "id": "ar-b-la-matanza-aldo-bonzi",
+      "indec_id": "0642701001",
+      "nombre": "Aldo Bonzi",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20902
+    },
+    {
+      "id": "ar-b-la-matanza-ciudad-evita",
+      "indec_id": "0642701002",
+      "nombre": "Ciudad Evita",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20903
+    },
+    {
+      "id": "ar-b-la-matanza-gonzalez-catan",
+      "indec_id": "0642701003",
+      "nombre": "González Catán",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20904
+    },
+    {
+      "id": "ar-b-la-matanza-gregorio-de-laferrere",
+      "indec_id": "0642701004",
+      "nombre": "Gregorio de Laferrere",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20905
+    },
+    {
+      "id": "ar-b-la-matanza-isidro-casanova",
+      "indec_id": "0642701005",
+      "nombre": "Isidro Casanova",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20906
+    },
+    {
+      "id": "ar-b-la-matanza-la-tablada",
+      "indec_id": "0642701006",
+      "nombre": "La Tablada",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20907
+    },
+    {
+      "id": "ar-b-la-matanza-lomas-del-mirador",
+      "indec_id": "0642701007",
+      "nombre": "Lomas del Mirador",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20908
+    },
+    {
+      "id": "ar-b-la-matanza-rafael-castillo",
+      "indec_id": "0642701008",
+      "nombre": "Rafael Castillo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20909
+    },
+    {
+      "id": "ar-b-la-matanza-ramos-mejia",
+      "indec_id": "0642701009",
+      "nombre": "Ramos Mejía",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20910
+    },
+    {
+      "id": "ar-b-la-matanza-san-justo",
+      "indec_id": "0642701010",
+      "nombre": "San Justo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20911
+    },
+    {
+      "id": "ar-b-la-matanza-tapiales",
+      "indec_id": "0642701011",
+      "nombre": "Tapiales",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20912
+    },
+    {
+      "id": "ar-b-la-matanza-villa-eduardo-madero",
+      "indec_id": "0642701013",
+      "nombre": "Villa Eduardo Madero",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20913
+    },
+    {
+      "id": "ar-b-la-matanza-villa-luzuriaga",
+      "indec_id": "0642701014",
+      "nombre": "Villa Luzuriaga",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20914
+    },
+    {
+      "id": "ar-b-la-matanza-virrey-del-pino",
+      "indec_id": "0642701015",
+      "nombre": "Virrey del Pino",
+      "tipo": "localidad",
+      "parent_id": "ar-b-la-matanza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-la-matanza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 20915
+    },
+    {
+      "id": "ar-b-tres-de-febrero",
+      "indec_id": "06840",
+      "nombre": "Tres de Febrero",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 210
+    },
+    {
+      "id": "ar-b-tres-de-febrero-11-de-septiembre",
+      "indec_id": "0684001009",
+      "nombre": "11 de Septiembre",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21001
+    },
+    {
+      "id": "ar-b-tres-de-febrero-caseros",
+      "indec_id": "0684001001",
+      "nombre": "Caseros",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21002
+    },
+    {
+      "id": "ar-b-tres-de-febrero-churruca",
+      "indec_id": "0684001002",
+      "nombre": "Churruca",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21003
+    },
+    {
+      "id": "ar-b-tres-de-febrero-ciudad-jardin-lomas-del-palomar",
+      "indec_id": "0684001003",
+      "nombre": "Ciudad Jardín Lomas del Palomar",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21004
+    },
+    {
+      "id": "ar-b-tres-de-febrero-ciudadela",
+      "indec_id": "0684001004",
+      "nombre": "Ciudadela",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21005
+    },
+    {
+      "id": "ar-b-tres-de-febrero-el-libertador",
+      "indec_id": "0684001005",
+      "nombre": "El Libertador",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21006
+    },
+    {
+      "id": "ar-b-tres-de-febrero-jose-ingenieros",
+      "indec_id": "0684001006",
+      "nombre": "José Ingenieros",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21007
+    },
+    {
+      "id": "ar-b-tres-de-febrero-loma-hermosa",
+      "indec_id": "0684001007",
+      "nombre": "Loma Hermosa",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21008
+    },
+    {
+      "id": "ar-b-tres-de-febrero-martin-coronado",
+      "indec_id": "0684001008",
+      "nombre": "Martín Coronado",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21009
+    },
+    {
+      "id": "ar-b-tres-de-febrero-pablo-podesta",
+      "indec_id": "0684001010",
+      "nombre": "Pablo Podestá",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21010
+    },
+    {
+      "id": "ar-b-tres-de-febrero-remedios-de-escalada",
+      "indec_id": "0684001011",
+      "nombre": "Remedios de Escalada",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21011
+    },
+    {
+      "id": "ar-b-tres-de-febrero-santos-lugares",
+      "indec_id": "0684001013",
+      "nombre": "Santos Lugares",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21012
+    },
+    {
+      "id": "ar-b-tres-de-febrero-saenz-pena",
+      "indec_id": "0684001012",
+      "nombre": "Sáenz Peña",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21013
+    },
+    {
+      "id": "ar-b-tres-de-febrero-villa-bosch",
+      "indec_id": "0684001014",
+      "nombre": "Villa Bosch",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21014
+    },
+    {
+      "id": "ar-b-tres-de-febrero-villa-raffo",
+      "indec_id": "0684001015",
+      "nombre": "Villa Raffo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-tres-de-febrero",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-tres-de-febrero"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21015
+    },
+    {
+      "id": "ar-b-moron",
+      "indec_id": "06568",
+      "nombre": "Morón",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 211
+    },
+    {
+      "id": "ar-b-moron-castelar",
+      "indec_id": "0656801001",
+      "nombre": "Castelar",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moron",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moron"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21101
+    },
+    {
+      "id": "ar-b-moron-el-palomar",
+      "indec_id": "0656801002",
+      "nombre": "El Palomar",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moron",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moron"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21102
+    },
+    {
+      "id": "ar-b-moron-haedo",
+      "indec_id": "0656801003",
+      "nombre": "Haedo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moron",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moron"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21103
+    },
+    {
+      "id": "ar-b-moron-moron",
+      "indec_id": "0656801004",
+      "nombre": "Morón",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moron",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moron"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21104
+    },
+    {
+      "id": "ar-b-moron-villa-sarmiento",
+      "indec_id": "0656801005",
+      "nombre": "Villa Sarmiento",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moron",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moron"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21105
+    },
+    {
+      "id": "ar-b-hurlingham",
+      "indec_id": "06408",
+      "nombre": "Hurlingham",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 212
+    },
+    {
+      "id": "ar-b-hurlingham-hurlingham",
+      "indec_id": "0640801001",
+      "nombre": "Hurlingham",
+      "tipo": "localidad",
+      "parent_id": "ar-b-hurlingham",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-hurlingham"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21201
+    },
+    {
+      "id": "ar-b-hurlingham-villa-santos-tesei",
+      "indec_id": "0640801002",
+      "nombre": "Villa Santos Tesei",
+      "tipo": "localidad",
+      "parent_id": "ar-b-hurlingham",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-hurlingham"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21202
+    },
+    {
+      "id": "ar-b-hurlingham-william-c-morris",
+      "indec_id": "0640801003",
+      "nombre": "William C. Morris",
+      "tipo": "localidad",
+      "parent_id": "ar-b-hurlingham",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-hurlingham"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21203
+    },
+    {
+      "id": "ar-b-ituzaingo",
+      "indec_id": "06410",
+      "nombre": "Ituzaingó",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 213
+    },
+    {
+      "id": "ar-b-ituzaingo-ituzaingo-centro",
+      "indec_id": "0641001001",
+      "nombre": "Ituzaingó Centro",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ituzaingo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ituzaingo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21301
+    },
+    {
+      "id": "ar-b-ituzaingo-ituzaingo-sur",
+      "indec_id": "0641001002",
+      "nombre": "Ituzaingó Sur",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ituzaingo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ituzaingo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21302
+    },
+    {
+      "id": "ar-b-ituzaingo-villa-gobernador-udadondo",
+      "indec_id": "0641001003",
+      "nombre": "Villa Gobernador Udadondo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ituzaingo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ituzaingo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21303
+    },
+    {
+      "id": "ar-b-merlo",
+      "indec_id": "06539",
+      "nombre": "Merlo",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 214
+    },
+    {
+      "id": "ar-b-merlo-libertad",
+      "indec_id": "0653901001",
+      "nombre": "Libertad",
+      "tipo": "localidad",
+      "parent_id": "ar-b-merlo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-merlo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21401
+    },
+    {
+      "id": "ar-b-merlo-mariano-acosta",
+      "indec_id": "0653901002",
+      "nombre": "Mariano Acosta",
+      "tipo": "localidad",
+      "parent_id": "ar-b-merlo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-merlo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21402
+    },
+    {
+      "id": "ar-b-merlo-merlo",
+      "indec_id": "0653901003",
+      "nombre": "Merlo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-merlo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-merlo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21403
+    },
+    {
+      "id": "ar-b-merlo-pontevedra",
+      "indec_id": "0653901004",
+      "nombre": "Pontevedra",
+      "tipo": "localidad",
+      "parent_id": "ar-b-merlo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-merlo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21404
+    },
+    {
+      "id": "ar-b-merlo-san-antonio-de-padua",
+      "indec_id": "0653901005",
+      "nombre": "San Antonio de Padua",
+      "tipo": "localidad",
+      "parent_id": "ar-b-merlo",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-merlo"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21405
+    },
+    {
+      "id": "ar-b-moreno",
+      "indec_id": "06560",
+      "nombre": "Moreno",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 215
+    },
+    {
+      "id": "ar-b-moreno-cuartel-v",
+      "indec_id": "0656001001",
+      "nombre": "Cuartel V",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moreno",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moreno"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21501
+    },
+    {
+      "id": "ar-b-moreno-francisco-alvarez",
+      "indec_id": "0656001002",
+      "nombre": "Francisco Álvarez",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moreno",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moreno"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21502
+    },
+    {
+      "id": "ar-b-moreno-la-reja",
+      "indec_id": "0656001003",
+      "nombre": "La Reja",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moreno",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moreno"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21503
+    },
+    {
+      "id": "ar-b-moreno-moreno",
+      "indec_id": "0656001004",
+      "nombre": "Moreno",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moreno",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moreno"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21504
+    },
+    {
+      "id": "ar-b-moreno-paso-del-rey",
+      "indec_id": "0656001005",
+      "nombre": "Paso del Rey",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moreno",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moreno"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21505
+    },
+    {
+      "id": "ar-b-moreno-trujui",
+      "indec_id": "0656001006",
+      "nombre": "Trujui",
+      "tipo": "localidad",
+      "parent_id": "ar-b-moreno",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-moreno"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 21506
+    },
+    {
+      "id": "ar-b-avellaneda",
+      "indec_id": "06035",
+      "nombre": "Avellaneda",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 220
+    },
+    {
+      "id": "ar-b-avellaneda-avellaneda",
+      "indec_id": "0603501002",
+      "nombre": "Avellaneda",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22001
+    },
+    {
+      "id": "ar-b-avellaneda-crucesita",
+      "indec_id": "0603501003",
+      "nombre": "Crucesita",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22002
+    },
+    {
+      "id": "ar-b-avellaneda-dock-sud",
+      "indec_id": "0603501004",
+      "nombre": "Dock Sud",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22003
+    },
+    {
+      "id": "ar-b-avellaneda-gerli",
+      "indec_id": "0603501005",
+      "nombre": "Gerli",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22004
+    },
+    {
+      "id": "ar-b-avellaneda-pineyro",
+      "indec_id": "0603501006",
+      "nombre": "Piñeyro",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22005
+    },
+    {
+      "id": "ar-b-avellaneda-sarandi",
+      "indec_id": "0603501007",
+      "nombre": "Sarandí",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22006
+    },
+    {
+      "id": "ar-b-avellaneda-villa-dominico",
+      "indec_id": "0603501008",
+      "nombre": "Villa Domínico",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22007
+    },
+    {
+      "id": "ar-b-avellaneda-wilde",
+      "indec_id": "0603501009",
+      "nombre": "Wilde",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22008
+    },
+    {
+      "id": "ar-b-avellaneda-area-reserva-cinturon-ecologico",
+      "indec_id": "0603501001",
+      "nombre": "Área Reserva Cinturón Ecológico",
+      "tipo": "localidad",
+      "parent_id": "ar-b-avellaneda",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-avellaneda"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22009
+    },
+    {
+      "id": "ar-b-lanus",
+      "indec_id": "06434",
+      "nombre": "Lanús",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 221
+    },
+    {
+      "id": "ar-b-lanus-gerli",
+      "indec_id": "0643401001",
+      "nombre": "Gerli",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lanus",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lanus"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22101
+    },
+    {
+      "id": "ar-b-lanus-lanus-este",
+      "indec_id": "0643401002",
+      "nombre": "Lanús Este",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lanus",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lanus"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22102
+    },
+    {
+      "id": "ar-b-lanus-lanus-oeste",
+      "indec_id": "0643401003",
+      "nombre": "Lanús Oeste",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lanus",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lanus"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22103
+    },
+    {
+      "id": "ar-b-lanus-monte-chingolo",
+      "indec_id": "0643401004",
+      "nombre": "Monte Chingolo",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lanus",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lanus"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22104
+    },
+    {
+      "id": "ar-b-lanus-remedios-de-escalada-de-san-martin",
+      "indec_id": "0643401005",
+      "nombre": "Remedios de Escalada de San Martín",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lanus",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lanus"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22105
+    },
+    {
+      "id": "ar-b-lanus-valentin-alsina",
+      "indec_id": "0643401006",
+      "nombre": "Valentín Alsina",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lanus",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lanus"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22106
+    },
+    {
+      "id": "ar-b-lomas-de-zamora",
+      "indec_id": "06490",
+      "nombre": "Lomas de Zamora",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 222
+    },
+    {
+      "id": "ar-b-lomas-de-zamora-banfield",
+      "indec_id": "0649001001",
+      "nombre": "Banfield",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lomas-de-zamora",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lomas-de-zamora"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22201
+    },
+    {
+      "id": "ar-b-lomas-de-zamora-llavallol",
+      "indec_id": "0649001002",
+      "nombre": "Llavallol",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lomas-de-zamora",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lomas-de-zamora"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22202
+    },
+    {
+      "id": "ar-b-lomas-de-zamora-lomas-de-zamora",
+      "indec_id": "0649001003",
+      "nombre": "Lomas de Zamora",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lomas-de-zamora",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lomas-de-zamora"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22203
+    },
+    {
+      "id": "ar-b-lomas-de-zamora-temperley",
+      "indec_id": "0649001004",
+      "nombre": "Temperley",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lomas-de-zamora",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lomas-de-zamora"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22204
+    },
+    {
+      "id": "ar-b-lomas-de-zamora-turdera",
+      "indec_id": "0649001005",
+      "nombre": "Turdera",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lomas-de-zamora",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lomas-de-zamora"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22205
+    },
+    {
+      "id": "ar-b-lomas-de-zamora-villa-centenario",
+      "indec_id": "0649001006",
+      "nombre": "Villa Centenario",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lomas-de-zamora",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lomas-de-zamora"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22206
+    },
+    {
+      "id": "ar-b-lomas-de-zamora-villa-fiorito",
+      "indec_id": "0649001007",
+      "nombre": "Villa Fiorito",
+      "tipo": "localidad",
+      "parent_id": "ar-b-lomas-de-zamora",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-lomas-de-zamora"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22207
+    },
+    {
+      "id": "ar-b-quilmes",
+      "indec_id": "06658",
+      "nombre": "Quilmes",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 223
+    },
+    {
+      "id": "ar-b-quilmes-bernal",
+      "indec_id": "0665801001",
+      "nombre": "Bernal",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22301
+    },
+    {
+      "id": "ar-b-quilmes-bernal-oeste",
+      "indec_id": "0665801002",
+      "nombre": "Bernal Oeste",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22302
+    },
+    {
+      "id": "ar-b-quilmes-don-bosco",
+      "indec_id": "0665801003",
+      "nombre": "Don Bosco",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22303
+    },
+    {
+      "id": "ar-b-quilmes-ezpeleta",
+      "indec_id": "0665801004",
+      "nombre": "Ezpeleta",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22304
+    },
+    {
+      "id": "ar-b-quilmes-ezpeleta-oeste",
+      "indec_id": "0665801005",
+      "nombre": "Ezpeleta Oeste",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22305
+    },
+    {
+      "id": "ar-b-quilmes-quilmes",
+      "indec_id": "0665801006",
+      "nombre": "Quilmes",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22306
+    },
+    {
+      "id": "ar-b-quilmes-quilmes-oeste",
+      "indec_id": "0665801007",
+      "nombre": "Quilmes Oeste",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22307
+    },
+    {
+      "id": "ar-b-quilmes-san-francisco-solano",
+      "indec_id": "0665801008",
+      "nombre": "San Francisco Solano",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22308
+    },
+    {
+      "id": "ar-b-quilmes-villa-la-florida",
+      "indec_id": "0665801009",
+      "nombre": "Villa La Florida",
+      "tipo": "localidad",
+      "parent_id": "ar-b-quilmes",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-quilmes"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22309
+    },
+    {
+      "id": "ar-b-berazategui",
+      "indec_id": "06091",
+      "nombre": "Berazategui",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 224
+    },
+    {
+      "id": "ar-b-berazategui-berazategui",
+      "indec_id": "0609101001",
+      "nombre": "Berazategui",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22401
+    },
+    {
+      "id": "ar-b-berazategui-berazategui-oeste",
+      "indec_id": "0609101002",
+      "nombre": "Berazategui Oeste",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22402
+    },
+    {
+      "id": "ar-b-berazategui-carlos-tomas-sourigues",
+      "indec_id": "0609101003",
+      "nombre": "Carlos Tomás Sourigues",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22403
+    },
+    {
+      "id": "ar-b-berazategui-el-pato",
+      "indec_id": "0609101004",
+      "nombre": "El Pato",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22404
+    },
+    {
+      "id": "ar-b-berazategui-guillermo-enrique-hudson",
+      "indec_id": "0609101005",
+      "nombre": "Guillermo Enrique Hudson",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22405
+    },
+    {
+      "id": "ar-b-berazategui-juan-maria-gutierrez",
+      "indec_id": "0609101006",
+      "nombre": "Juan María Gutiérrez",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22406
+    },
+    {
+      "id": "ar-b-berazategui-pereyra",
+      "indec_id": "0609101007",
+      "nombre": "Pereyra",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22407
+    },
+    {
+      "id": "ar-b-berazategui-platanos",
+      "indec_id": "0609101008",
+      "nombre": "Plátanos",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22408
+    },
+    {
+      "id": "ar-b-berazategui-ranelagh",
+      "indec_id": "0609101009",
+      "nombre": "Ranelagh",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22409
+    },
+    {
+      "id": "ar-b-berazategui-villa-espana",
+      "indec_id": "0609101010",
+      "nombre": "Villa España",
+      "tipo": "localidad",
+      "parent_id": "ar-b-berazategui",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-berazategui"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22410
+    },
+    {
+      "id": "ar-b-florencio-varela",
+      "indec_id": "06274",
+      "nombre": "Florencio Varela",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 225
+    },
+    {
+      "id": "ar-b-florencio-varela-bosques",
+      "indec_id": "0627401001",
+      "nombre": "Bosques",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22501
+    },
+    {
+      "id": "ar-b-florencio-varela-el-tropezon",
+      "indec_id": "0627401010",
+      "nombre": "El Tropezón",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22502
+    },
+    {
+      "id": "ar-b-florencio-varela-estanislao-severo-zeballos",
+      "indec_id": "0627401002",
+      "nombre": "Estanislao Severo Zeballos",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22503
+    },
+    {
+      "id": "ar-b-florencio-varela-gobernador-julio-a-costa",
+      "indec_id": "0627401004",
+      "nombre": "Gobernador Julio A. Costa",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22504
+    },
+    {
+      "id": "ar-b-florencio-varela-ingeniero-juan-allan",
+      "indec_id": "0627401005",
+      "nombre": "Ingeniero Juan Allan",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22505
+    },
+    {
+      "id": "ar-b-florencio-varela-la-capilla",
+      "indec_id": "0627401011",
+      "nombre": "La Capilla",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22506
+    },
+    {
+      "id": "ar-b-florencio-varela-san-juan-bautista",
+      "indec_id": "0627401003",
+      "nombre": "San Juan Bautista",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22507
+    },
+    {
+      "id": "ar-b-florencio-varela-villa-brown",
+      "indec_id": "0627401006",
+      "nombre": "Villa Brown",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22508
+    },
+    {
+      "id": "ar-b-florencio-varela-villa-san-luis",
+      "indec_id": "0627401007",
+      "nombre": "Villa San Luis",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22509
+    },
+    {
+      "id": "ar-b-florencio-varela-villa-santa-rosa",
+      "indec_id": "0627401008",
+      "nombre": "Villa Santa Rosa",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22510
+    },
+    {
+      "id": "ar-b-florencio-varela-villa-vatteone",
+      "indec_id": "0627401009",
+      "nombre": "Villa Vatteone",
+      "tipo": "localidad",
+      "parent_id": "ar-b-florencio-varela",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-florencio-varela"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22511
+    },
+    {
+      "id": "ar-b-almirante-brown",
+      "indec_id": "06028",
+      "nombre": "Almirante Brown",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 226
+    },
+    {
+      "id": "ar-b-almirante-brown-adrogue",
+      "indec_id": "0602801001",
+      "nombre": "Adrogué",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22601
+    },
+    {
+      "id": "ar-b-almirante-brown-burzaco",
+      "indec_id": "0602801002",
+      "nombre": "Burzaco",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22602
+    },
+    {
+      "id": "ar-b-almirante-brown-claypole",
+      "indec_id": "0602801003",
+      "nombre": "Claypole",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22603
+    },
+    {
+      "id": "ar-b-almirante-brown-don-orione",
+      "indec_id": "0602801004",
+      "nombre": "Don Orione",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22604
+    },
+    {
+      "id": "ar-b-almirante-brown-glew",
+      "indec_id": "0602801005",
+      "nombre": "Glew",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22605
+    },
+    {
+      "id": "ar-b-almirante-brown-jose-marmol",
+      "indec_id": "0602801006",
+      "nombre": "José Mármol",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22606
+    },
+    {
+      "id": "ar-b-almirante-brown-longchamps",
+      "indec_id": "0602801007",
+      "nombre": "Longchamps",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22607
+    },
+    {
+      "id": "ar-b-almirante-brown-malvinas-argentinas",
+      "indec_id": "0602801008",
+      "nombre": "Malvinas Argentinas",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22608
+    },
+    {
+      "id": "ar-b-almirante-brown-ministro-rivadavia",
+      "indec_id": "0602801009",
+      "nombre": "Ministro Rivadavia",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22609
+    },
+    {
+      "id": "ar-b-almirante-brown-rafael-calzada",
+      "indec_id": "0602801010",
+      "nombre": "Rafael Calzada",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22610
+    },
+    {
+      "id": "ar-b-almirante-brown-san-francisco-solano",
+      "indec_id": "0602801011",
+      "nombre": "San Francisco Solano",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22611
+    },
+    {
+      "id": "ar-b-almirante-brown-san-jose",
+      "indec_id": "0602801012",
+      "nombre": "San José",
+      "tipo": "localidad",
+      "parent_id": "ar-b-almirante-brown",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-almirante-brown"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22612
+    },
+    {
+      "id": "ar-b-esteban-echeverria",
+      "indec_id": "06260",
+      "nombre": "Esteban Echeverría",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 227
+    },
+    {
+      "id": "ar-b-esteban-echeverria-9-de-abril",
+      "indec_id": "0626001005",
+      "nombre": "9 de Abril",
+      "tipo": "localidad",
+      "parent_id": "ar-b-esteban-echeverria",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-esteban-echeverria"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22701
+    },
+    {
+      "id": "ar-b-esteban-echeverria-canning",
+      "indec_id": "0626001001",
+      "nombre": "Canning",
+      "tipo": "localidad",
+      "parent_id": "ar-b-esteban-echeverria",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-esteban-echeverria"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22702
+    },
+    {
+      "id": "ar-b-esteban-echeverria-el-jaguel",
+      "indec_id": "0626001002",
+      "nombre": "El Jagüel",
+      "tipo": "localidad",
+      "parent_id": "ar-b-esteban-echeverria",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-esteban-echeverria"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22703
+    },
+    {
+      "id": "ar-b-esteban-echeverria-luis-guillon",
+      "indec_id": "0626001003",
+      "nombre": "Luis Guillón",
+      "tipo": "localidad",
+      "parent_id": "ar-b-esteban-echeverria",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-esteban-echeverria"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22704
+    },
+    {
+      "id": "ar-b-esteban-echeverria-monte-grande",
+      "indec_id": "0626001004",
+      "nombre": "Monte Grande",
+      "tipo": "localidad",
+      "parent_id": "ar-b-esteban-echeverria",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-esteban-echeverria"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22705
+    },
+    {
+      "id": "ar-b-ezeiza",
+      "indec_id": "06270",
+      "nombre": "Ezeiza",
+      "tipo": "partido",
+      "parent_id": "ar-b",
+      "ancestors": [
+        "ar",
+        "ar-b"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": false,
+      "activo": true,
+      "orden": 228
+    },
+    {
+      "id": "ar-b-ezeiza-aeropuerto-internacional-ezeiza",
+      "indec_id": "0627001001",
+      "nombre": "Aeropuerto Internacional Ezeiza",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ezeiza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ezeiza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22801
+    },
+    {
+      "id": "ar-b-ezeiza-canning",
+      "indec_id": "0627001002",
+      "nombre": "Canning",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ezeiza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ezeiza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22802
+    },
+    {
+      "id": "ar-b-ezeiza-carlos-spegazzini",
+      "indec_id": "0627001003",
+      "nombre": "Carlos Spegazzini",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ezeiza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ezeiza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22803
+    },
+    {
+      "id": "ar-b-ezeiza-jose-maria-ezeiza",
+      "indec_id": "0627001004",
+      "nombre": "José María Ezeiza",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ezeiza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ezeiza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22804
+    },
+    {
+      "id": "ar-b-ezeiza-la-union",
+      "indec_id": "0627001005",
+      "nombre": "La Unión",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ezeiza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ezeiza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22805
+    },
+    {
+      "id": "ar-b-ezeiza-tristan-suarez",
+      "indec_id": "0627001006",
+      "nombre": "Tristán Suárez",
+      "tipo": "localidad",
+      "parent_id": "ar-b-ezeiza",
+      "ancestors": [
+        "ar",
+        "ar-b",
+        "ar-b-ezeiza"
+      ],
+      "selectable_by_pro": true,
+      "selectable_by_client": true,
+      "activo": true,
+      "orden": 22806
+    }
+  ],
+  "agrupaciones": [
+    {
+      "id": "grp-gba-norte",
+      "nombre": "Zona Norte (GBA)",
+      "region_id": "ar-b",
+      "miembros": [
+        "ar-b-vicente-lopez",
+        "ar-b-san-isidro",
+        "ar-b-san-fernando",
+        "ar-b-tigre",
+        "ar-b-general-san-martin",
+        "ar-b-malvinas-argentinas",
+        "ar-b-jose-c-paz",
+        "ar-b-san-miguel"
+      ]
+    },
+    {
+      "id": "grp-gba-oeste",
+      "nombre": "Zona Oeste (GBA)",
+      "region_id": "ar-b",
+      "miembros": [
+        "ar-b-la-matanza",
+        "ar-b-tres-de-febrero",
+        "ar-b-moron",
+        "ar-b-hurlingham",
+        "ar-b-ituzaingo",
+        "ar-b-merlo",
+        "ar-b-moreno"
+      ]
+    },
+    {
+      "id": "grp-gba-sur",
+      "nombre": "Zona Sur (GBA)",
+      "region_id": "ar-b",
+      "miembros": [
+        "ar-b-avellaneda",
+        "ar-b-lanus",
+        "ar-b-lomas-de-zamora",
+        "ar-b-quilmes",
+        "ar-b-berazategui",
+        "ar-b-florencio-varela",
+        "ar-b-almirante-brown",
+        "ar-b-esteban-echeverria",
+        "ar-b-ezeiza"
+      ]
+    }
+  ]
+}

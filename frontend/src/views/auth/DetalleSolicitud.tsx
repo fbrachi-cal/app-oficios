@@ -307,7 +307,7 @@ const DetalleSolicitud: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <div className="text-xs text-slate-400 font-semibold uppercase flex items-center gap-1 mb-1"><FiMapPin /> Zona</div>
-              <div className="text-sm font-medium text-slate-900">{solicitud.zona}</div>
+              <div className="text-sm font-medium text-slate-900">{solicitud.zona_nombre || solicitud.zona}</div>
             </div>
             <div>
               <div className="text-xs text-slate-400 font-semibold uppercase flex items-center gap-1 mb-1"><FiBriefcase /> Servicio</div>

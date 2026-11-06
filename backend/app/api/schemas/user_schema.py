@@ -5,6 +5,7 @@ class UsuarioRegistro(BaseModel):
     id: str
     nombre: str
     tipo: str  # "cliente" o "profesional"
+    cobertura_ids: Optional[List[str]] = None
     zonas: Optional[List[str]] = None
     categorias: Optional[List[str]] = []
     subcategorias: Optional[List[str]] = None
@@ -16,9 +17,10 @@ class UsuarioRegistro(BaseModel):
     oficios: Optional[List[str]] = None
     
 class UsuarioUpdate(BaseModel):
-    id: Optional[str]
-    nombre: Optional[str]
-    tipo: Optional[str]
+    id: Optional[str] = None
+    nombre: Optional[str] = None
+    tipo: Optional[str] = None
+    cobertura_ids: Optional[List[str]] = None
     zonas: Optional[List[str]] = None
     categorias: Optional[List[str]] = []
     subcategorias: Optional[List[str]] = None

@@ -10,9 +10,10 @@ interface Categoria {
 }
 
 interface BuscadorContextProps {
-  zonasDisponibles: string[];
   categorias: Categoria[];
   subcategoriasDisponibles: { nombre: string; orden: number }[];
+  ubicaciones: string[];
+  setUbicaciones: (ubicaciones: string[]) => void;
   zonas: string[];
   setZonas: (zonas: string[]) => void;
   categoriaSeleccionada: string;
@@ -30,11 +31,10 @@ interface BuscadorContextProps {
 const BuscadorContext = createContext<BuscadorContextProps | undefined>(undefined);
 
 export const BuscadorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
 
-  // Filtros seleccionados
-  const [zonas, setZonas] = useState<string[]>([]);
+  // Filtros seleccionados (IDs de barrios/localidades)
+  const [ubicaciones, setUbicaciones] = useState<string[]>([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
   const [subcategoriasSeleccionadas, setSubcategoriasSeleccionadas] = useState<string[]>([]);
 
@@ -46,13 +46,8 @@ export const BuscadorProvider: React.FC<{ children: ReactNode }> = ({ children }
   const [tieneMas, setTieneMas] = useState(false);
   const [haBuscado, setHaBuscado] = useState(false);
 
-  // Carga inicial de utilidades (zonas y categorías)
+  // Carga inicial de categorías
   useEffect(() => {
-    fetch(`${config.apiBaseUrl}/utils/zonas`)
-      .then((res) => res.json())
-      .then(setZonasDisponibles)
-      .catch((err) => logger.error("Error al cargar zonas", err));
-
     fetchConToken(`${config.apiBaseUrl}/utils/categorias`)
       .then((res) => res.json())
       .then(setCategorias)
@@ -73,7 +68,7 @@ export const BuscadorProvider: React.FC<{ children: ReactNode }> = ({ children }
       setLoading(true);
       try {
         const body = {
-          zonas,
+          ubicaciones,
           categoria: categoriaSeleccionada,
           subcategorias: subcategoriasSeleccionadas,
           limit,
@@ -108,11 +103,11 @@ export const BuscadorProvider: React.FC<{ children: ReactNode }> = ({ children }
         setLoading(false);
       }
     },
-    [zonas, categoriaSeleccionada, subcategoriasSeleccionadas, limit, ultimoId]
+    [ubicaciones, categoriaSeleccionada, subcategoriasSeleccionadas, limit, ultimoId]
   );
 
   const resetFilters = useCallback(() => {
-    setZonas([]);
+    setUbicaciones([]);
     setCategoriaSeleccionada("");
     setSubcategoriasSeleccionadas([]);
     setResultados([]);
@@ -124,11 +119,12 @@ export const BuscadorProvider: React.FC<{ children: ReactNode }> = ({ children }
   return (
     <BuscadorContext.Provider
       value={{
-        zonasDisponibles,
         categorias,
         subcategoriasDisponibles,
-        zonas,
-        setZonas,
+        ubicaciones,
+        setUbicaciones,
+        zonas: ubicaciones,
+        setZonas: setUbicaciones,
         categoriaSeleccionada,
         setCategoriaSeleccionada,
         subcategoriasSeleccionadas,

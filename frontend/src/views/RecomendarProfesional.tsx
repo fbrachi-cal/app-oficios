@@ -6,6 +6,7 @@ import { createProfessionalReferral, ReferralCreatePayload } from "../services/r
 import config from "../config";
 import { logger } from "../utils/logger";
 import { useUser } from "../context/UserContext";
+import GeoAreaPicker from "../components/Geo/GeoAreaPicker";
 
 const RecomendarProfesional: React.FC = () => {
   const { t } = useTranslation();
@@ -23,7 +24,6 @@ const RecomendarProfesional: React.FC = () => {
   const [trabajoPrevio, setTrabajoPrevio] = useState(false);
 
   const [categorias, setCategorias] = useState<any[]>([]);
-  const [zonasDisponibles, setZonasDisponibles] = useState<string[]>([]);
   const [subcategoriasDisponibles, setSubcategoriasDisponibles] = useState<{ nombre: string }[]>([]);
 
   const [error, setError] = useState("");
@@ -38,11 +38,6 @@ const RecomendarProfesional: React.FC = () => {
   }, [user, navigate]);
 
   useEffect(() => {
-    fetch(`${config.apiBaseUrl}/utils/zonas`)
-      .then((res) => res.json())
-      .then(setZonasDisponibles)
-      .catch((err) => logger.error("Error fetching zonas", err));
-
     fetch(`${config.apiBaseUrl}/utils/categorias`)
       .then((res) => res.json())
       .then(setCategorias)
@@ -231,17 +226,13 @@ const RecomendarProfesional: React.FC = () => {
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                     {t("zona_principal", { defaultValue: "Zona principal de trabajo" })}
                   </label>
-                  <select
-                    value={zona}
-                    onChange={(e) => setZona(e.target.value)}
-                    disabled={isSubmitting}
-                    className="w-full p-3 bg-white text-blueGray-600 rounded text-sm shadow border-0 focus:outline-none focus:ring ease-linear transition-all duration-150"
-                  >
-                    <option value="">{t("seleccionar")}</option>
-                    {zonasDisponibles.map((z) => (
-                      <option key={z} value={z}>{z}</option>
-                    ))}
-                  </select>
+                  <GeoAreaPicker
+                    mode="single-leaf"
+                    selectedIds={zona ? [zona] : []}
+                    onChange={(ids) => setZona(ids[0] || "")}
+                    compact
+                    placeholder="Buscar barrio o localidad principal..."
+                  />
                 </div>
 
                 <div className="relative w-full mb-3">

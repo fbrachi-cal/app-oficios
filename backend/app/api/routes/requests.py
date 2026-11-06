@@ -3,7 +3,7 @@ from app.domain.services.request_service import RequestService
 from app.ports.request_repository import RequestRepository
 from app.ports.rating_repository import RatingRepository
 from fastapi import APIRouter, Depends, Form, File, UploadFile, HTTPException, Body
-from typing import List
+from typing import List, Optional
 from app.api.dependencies import get_current_verified_user_id, get_request_repo, get_user_repo, get_file_uploader, get_notification_service, get_calificacion_repo
 from app.domain.services.notification_service import NotificationService
 from app.shared.logger import log
@@ -156,7 +156,8 @@ async def listar_mis_solicitudes(
 @router.post("/{profesional_id}")
 async def crear_solicitud(
     profesional_id: str,
-    zona: str = Form(...),
+    zona: Optional[str] = Form(None),
+    zona_id: Optional[str] = Form(None),
     subcategoria: str = Form(...),
     descripcion: str = Form(...),
     fotos: List[UploadFile] = File([]),
@@ -166,6 +167,20 @@ async def crear_solicitud(
     user_repo: UserRepository = Depends(get_user_repo),
     notification_service: NotificationService = Depends(get_notification_service),
 ):
+    profesional = user_repo.get_user_by_id(profesional_id) if user_repo else None
+    if not profesional or profesional.get("tipo") != "profesional":
+        raise HTTPException(status_code=404, detail="Profesional no encontrado")
+
+    target_zona = zona_id or zona
+    if not target_zona:
+        raise HTTPException(status_code=422, detail="Debes seleccionar una ubicación válida para la solicitud.")
+
+    service = RequestService(request_repo)
+    try:
+        service.geo_catalog.validate_request_location(profesional.get("cobertura_ids"), target_zona)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
     urls = []
     for foto in fotos:
         try:
@@ -174,11 +189,12 @@ async def crear_solicitud(
         except Exception as e:
             log.error(f"Error subiendo imagen: {foto.filename} - {e}")
 
-    service = RequestService(request_repo)
     solicitud = await service.crear_solicitud(
         solicitante_id=user_id,
         profesional_id=profesional_id,
-        zona=zona,
+        zona=target_zona,
+        zona_id=target_zona,
+        profesional_data=profesional,
         subcategoria=subcategoria,
         descripcion=descripcion,
         fotos_urls=urls
@@ -188,12 +204,13 @@ async def crear_solicitud(
     try:
         client = user_repo.get_user_by_id(user_id)
         client_name = client.get("nombre", "Un cliente") if client else "Un cliente"
+        zona_display = solicitud.get("zona_nombre") or solicitud.get("zona") or target_zona
         await notification_service.create_and_send_notification(
             recipient_uid=profesional_id,
             actor_uid=user_id,
             type="request_created",
             title="Nueva solicitud de servicio",
-            body=f"{client_name} te ha enviado una solicitud de {subcategoria} en {zona}.",
+            body=f"{client_name} te ha enviado una solicitud de {subcategoria} en {zona_display}.",
             related_entity_type="request",
             related_entity_id=solicitud["id"]
         )

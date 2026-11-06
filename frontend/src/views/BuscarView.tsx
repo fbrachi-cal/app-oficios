@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { FiSearch, FiMapPin, FiX } from "react-icons/fi";
 import { useBuscador } from "../hooks/useBuscador";
 import ProfessionalCard from "../components/Cards/ProfessionalCard";
+import GeoAreaPicker from "../components/Geo/GeoAreaPicker";
 import { logger } from "../utils/logger";
 
 const BuscarView: React.FC = () => {
@@ -26,26 +27,22 @@ const BuscarView: React.FC = () => {
       </div>
 
       {/* Filters Form */}
-      <div className="bg-white rounded-2xl shadow-[var(--shadow-card)] border border-neutral-200/60 p-5 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          
-          {/* Zona Filter */}
-          <div className="relative">
-            <label className="input-label flex items-center gap-1.5">
-              <FiMapPin size={14} /> Zona
-            </label>
-            <select
-              className="input-base"
-              value={buscador.zonas[0] || ""}
-              onChange={(e) => buscador.setZonas(e.target.value ? [e.target.value] : [])}
-            >
-              <option value="">Todas las zonas</option>
-              {buscador.zonasDisponibles.map((z) => (
-                <option key={z} value={z}>{z}</option>
-              ))}
-            </select>
-          </div>
+      <div className="bg-white rounded-2xl shadow-[var(--shadow-card)] border border-neutral-200/60 p-5 mb-8 space-y-4">
+        {/* Multi-location Hierarchical Selector */}
+        <div>
+          <label className="input-label flex items-center gap-1.5 mb-2">
+            <FiMapPin size={14} /> Barrios o localidades (podés elegir uno o varios)
+          </label>
+          <GeoAreaPicker
+            mode="client-search"
+            selectedIds={buscador.ubicaciones}
+            onChange={buscador.setUbicaciones}
+            compact
+            placeholder="Buscar barrio o localidad (ej. Palermo, Olivos, Martínez)..."
+          />
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Categoría Filter */}
           <div className="relative">
             <label className="input-label flex items-center gap-1.5">
@@ -81,7 +78,7 @@ const BuscarView: React.FC = () => {
           )}
 
           {/* Search Button */}
-          <div className="flex items-end gap-2 lg:col-start-4">
+          <div className="flex items-end gap-2 md:col-start-3">
             <button
               onClick={() => buscador.buscar(true)}
               disabled={buscador.loading}
@@ -89,7 +86,7 @@ const BuscarView: React.FC = () => {
             >
               {buscador.loading ? t("cargando") : t("buscar")}
             </button>
-            {(buscador.zonas.length > 0 || buscador.categoriaSeleccionada) && (
+            {(buscador.ubicaciones.length > 0 || buscador.categoriaSeleccionada) && (
               <button
                 onClick={buscador.resetFilters}
                 className="btn-secondary h-[46px] px-3 shrink-0 text-neutral-400 hover:text-neutral-600"
@@ -99,7 +96,6 @@ const BuscarView: React.FC = () => {
               </button>
             )}
           </div>
-
         </div>
       </div>
 
