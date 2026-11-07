@@ -65,9 +65,13 @@ const Footer: React.FC = () => {
               </a>
               .
             </div>
-            <div className="text-sm py-1">
+            <div className="text-sm py-1 flex items-center justify-center gap-2 flex-wrap">
               <Link to="/privacy" className="text-blueGray-500 hover:text-blueGray-800">
-                Política de privacidad
+                {t("politica_privacidad")}
+              </Link>
+              <span className="text-blueGray-400" aria-hidden="true">·</span>
+              <Link to="/terms" className="text-blueGray-500 hover:text-blueGray-800">
+                {t("terminos_condiciones")}
               </Link>
             </div>
             <VersionDisplay className="mt-1 !text-blueGray-400 !font-normal" />

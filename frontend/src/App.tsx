@@ -29,6 +29,7 @@ import { GamificationProvider } from './context/GamificationContext';
 import RequireVerifiedPhone from './utils/RequireVerifiedPhone';
 import VerificacionTelefonoPage from './views/auth/VerificacionTelefonoPage';
 import PrivacyPolicyPage from './views/PrivacyPolicyPage';
+import TermsPage from './views/TermsPage';
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
         <Route path="/bloqueado" element={<BlockedPage />} />
         <Route path="/terminos-y-condiciones" element={<TermsAndConditionsPage />} />
         <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
 
         {/* Rutas protegidas por teléfono y T&C */}
         <Route element={<RequireVerifiedPhone />}>
